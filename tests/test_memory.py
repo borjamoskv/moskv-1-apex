@@ -8,9 +8,10 @@ async def test_memory_store_connect_mocked():
     store = MemoryStore()
     mock_driver = AsyncMock()
     
-    with patch("moskv_1.memory.AsyncGraphDatabase.driver", return_value=mock_driver) as mock_driver_cls:
+    with patch("moskv_1.memory.AsyncGraphDatabase") as mock_db_class:
+        mock_db_class.driver.return_value = mock_driver
         await store.connect()
-        mock_driver_cls.assert_called_once_with(
+        mock_db_class.driver.assert_called_once_with(
             "bolt://localhost:7687",
             auth=("neo4j", "password"),
             max_connection_pool_size=50,
