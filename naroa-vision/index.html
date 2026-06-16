@@ -1,41 +1,18 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NAROA GUTIERREZ GIL | Artista Plástica</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NAROA GUTIERREZ GIL | C5-REAL</title>
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-    <div class="gallery-container">
-        <!-- Las imágenes se inyectarán aquí -->
-        <section class="slide" id="slide-1">
-            <div class="image-wrapper">
-                <img src="/real_portrait.jpg" alt="Obra 1" loading="lazy">
-            </div>
-            <div class="overlay">
-                <h1>NAROA GUTIERREZ GIL</h1>
-                <p>Hiperrealismo POP</p>
-            </div>
-        </section>
-        
-        <section class="slide" id="slide-2">
-            <div class="image-wrapper">
-                <img src="/real_art_2.jpg" alt="Obra 2" loading="lazy">
-            </div>
-        </section>
-        
-        <section class="slide" id="slide-3">
-            <div class="image-wrapper">
-                <img src="/real_art_3.jpg" alt="Obra 3" loading="lazy">
-            </div>
-        </section>
-    </div>
-    
-    <div class="scroll-indicator">
-        <span>↓</span>
-    </div>
-    
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <!-- WebGL Canvas Container -->
+    <div id="webgl-container"></div>
+
     <script type="module" src="/main.js"></script>
 </body>
 </html>
