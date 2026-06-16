@@ -1,17 +1,19 @@
 {
   "name": "lively-maxwell",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "CORTEX-Persist C5-REAL Distributed Cognitive OS",
+  "main": "kernel/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "swarm": "node kernel/index.js",
+    "autopoiesis": "node kernel/autopoiesis.js",
+    "replay": "node kernel/replay.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "borjamoskv",
   "license": "ISC",
   "dependencies": {
-    "@nats-io/transport-node": "^3.4.0",
-    "dotenv": "^17.4.2",
-    "neo4j-driver": "^6.1.0"
+    "@nats-io/transport-node": "^3.0.0",
+    "dotenv": "^16.4.5",
+    "neo4j-driver": "^5.21.0"
   }
 }
