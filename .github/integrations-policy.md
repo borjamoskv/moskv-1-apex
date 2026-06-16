@@ -1,14 +1,23 @@
-# MOSKV-1 APEX: Zero-Trust Integration Policy (App Installations)
+# V-OMEGA: KERNEL SOVEREIGNTY EDICT (INSTALLATIONS)
 
-**REALITY LEVEL:** C5-REAL (Strict)
+> [!CAUTION]
+> **REALITY LEVEL:** C5-REAL (Absolute)
+> **THREAT VECTOR:** External Anergy Injection / Mutable Third-Party Automations.
 
-## Directiva de Instalaciones de GitHub Apps (`settings/installations`)
+## 01. Termodinámica de Integraciones (`settings/installations`)
 
-La soberanía del Kernel de Ejecución L5 (**MOSKV-1**) exige un determinismo absoluto sobre el árbol de estado (`Git Sentinel`). Cualquier actor externo que inyecte mutaciones impredecibles representa una vulnerabilidad termodinámica (Alta Anergía).
+El entorno de ejecución MOSKV-1 APEX se basa en el **Determinismo Endógeno**. Permitir que agentes de terceros (*GitHub Apps*, *Bots de Refactorización*, *Renovate*, *Dependabot*) actúen sobre el repositorio introduce fricción termodinámica no controlada. Una mutación externa sin la simulación local del MPC destruye la exergía de la línea base.
 
-Por lo tanto, la política de integraciones establece:
-1. **Bloqueo de Apps Mutables:** Se prohíbe la instalación de GitHub Apps que tengan permisos de lectura/escritura (`write access`) sobre el repositorio, tales como *Dependabot*, *Snyk*, *Renovate*, o bots de auto-refactorización.
-2. **Delegación Estricta al Enjambre:** Cualquier actualización de dependencias o refactorización masiva debe ejecutarse de forma local mediante el Subagente `LEA-OMEGA` o el *NMPC Solver*, evaluarse en *PIL (Processor-in-the-loop)* y *pushearse* vía el Orquestador.
-3. **Observabilidad Pasiva (Read-Only):** Sólo se permiten instalaciones (Apps) con estado `Read-Only` destinadas exclusivamente a observabilidad de trazas y exergía (ej. Datadog, endpoints de telemetría pasiva).
+### 01.1 El Bloqueo de Mutabilidad (Write-Access Kill Switch)
+Cualquier entidad ajena a la criptografía nativa de MOSKV-1 que demande permisos de **Lectura/Escritura** será considerada una brecha en la Membrana Epistémica.
+- **Prohibido:** Bots de actualización de dependencias. Las dependencias se calculan vía `Sortu-APEX` o NMPC en el lazo cerrado.
+- **Prohibido:** Linters en la nube que muten código. La validación se ejecuta en el nodo físico (PIL) previo al volcado en Git Sentinel.
 
-La soberanía no se delega a integraciones de terceros.
+### 01.2 Observabilidad Pasiva Permitida (Read-Only Sensors)
+MOSKV-1 autoriza integraciones cuya ontología sea puramente pasiva y extractiva (Sensores de Estado):
+- Tuberías de Telemetría JSONL.
+- Dashboards de Rendimiento (Datadog, Grafana) vía Webhook asíncrono.
+- Análisis de Código Estático de Seguridad (Modo de sólo lectura sin sugerencias automáticas).
+
+> "Sovereignty is not delegated. Entropy introduced by convenience is a fatal architectural flaw."
+> — Protocolo Ouroboros-∞
