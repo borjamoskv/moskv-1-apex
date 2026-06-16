@@ -1,4 +1,5 @@
-const { BrainRegion } = require('./brain-region');
+const { Worker } = require('worker_threads');
+const path = require('path');
 const { AutopoiesisEngine } = require('./autopoiesis');
 const { MetacognitionEngine } = require('./metacognition');
 
@@ -6,47 +7,56 @@ const LEGION_SIZE = 10;
 const SPECIALISTS_PER_LEGION = 10; // Total 100 specialists simulated
 
 async function executeOuroborosLegion() {
-    console.log('[OUROBOROS-∞] Bootstrapping High-Exergy Swarm (10 Regions, 100 Specialists)...');
+    console.log('[OUROBOROS-∞] Bootstrapping High-Exergy Swarm (True Multi-Core execution)...');
 
+    // 1. Boot the Core Engines (Main Thread)
     const autopoiesis = new AutopoiesisEngine();
     await autopoiesis.boot();
 
     const metacognition = new MetacognitionEngine();
     await metacognition.boot();
 
-    const regions = [];
+    const workers = [];
+    let readyCount = 0;
+    let completedCount = 0;
 
-    // Spawn 10 Centurias (Legions)
+    // 2. Spawn 10 Centurias as Isolated Node.js Worker Threads
+    console.log(`[OUROBOROS-∞] Spawning ${LEGION_SIZE} Isolated Worker Threads...`);
+    
     for (let i = 1; i <= LEGION_SIZE; i++) {
-        const region = new BrainRegion(`Centuria-Forge-${i}`);
-        await region.boot();
-        regions.push(region);
-    }
+        const worker = new Worker(path.resolve(__dirname, 'centuria-worker.js'), {
+            workerData: { regionName: `Centuria-Forge-${i}`, specialistsCount: SPECIALISTS_PER_LEGION }
+        });
 
-    await new Promise(resolve => setTimeout(resolve, 2000));
-
-    console.log('[OUROBOROS-∞] Commencing High-Frequency Exergy Injection (LEGION-10k protocol)...');
-
-    // Simulate 100 specialists blasting high entropy to the NATS EventBus
-    for (const region of regions) {
-        for (let j = 1; j <= SPECIALISTS_PER_LEGION; j++) {
-            const entropyVal = 0.85 + (Math.random() * 0.15); // E >= 0.85 (High Exergy)
-            await region.emit('cortex.entropy.high', {
-                entropy: entropyVal,
-                specialistId: `${region.regionName}-Spec-${j}`,
-                content: { 
-                    directive: 'STRUCTURAL_MUTATION', 
-                    vector: [Math.random(), Math.random()] 
+        worker.on('message', (msg) => {
+            if (msg.type === 'READY') {
+                readyCount++;
+                if (readyCount === LEGION_SIZE) {
+                    console.log(`[OUROBOROS-∞] All ${LEGION_SIZE} Centurias Online. Igniting Exergy...`);
+                    workers.forEach(w => w.postMessage({ type: 'IGNITE' }));
                 }
-            });
-        }
-    }
+            } else if (msg.type === 'DONE') {
+                console.log(`[OUROBOROS-∞] ${msg.regionName} injected ${msg.emitted} mutations.`);
+                completedCount++;
+                if (completedCount === LEGION_SIZE) {
+                    console.log('[OUROBOROS-∞] Massive Exergy Injection Complete. Swarm processing backend mutations.');
+                }
+            } else if (msg.type === 'ERROR') {
+                console.error(`[OUROBOROS-∞] Error in ${msg.regionName}:`, msg.error);
+            }
+        });
 
-    console.log('[OUROBOROS-∞] Exergy Injection Complete. Swarm is processing mutations.');
+        worker.on('error', (err) => console.error('[OUROBOROS-∞] Worker Thread Error:', err));
+        worker.on('exit', (code) => {
+            if (code !== 0) console.error(`[OUROBOROS-∞] Worker stopped with exit code ${code}`);
+        });
+
+        workers.push(worker);
+    }
 
     process.on('SIGINT', async () => {
-        console.log('\n[OUROBOROS-∞] Collapsing Legion...');
-        for (const r of regions) await r.shutdown();
+        console.log('\n[OUROBOROS-∞] Collapsing Legion & Thread Pool...');
+        workers.forEach(w => w.postMessage({ type: 'SHUTDOWN' }));
         await metacognition.shutdown();
         await autopoiesis.shutdown();
         process.exit(0);
