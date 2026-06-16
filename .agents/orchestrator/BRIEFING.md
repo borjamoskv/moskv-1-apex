@@ -59,12 +59,13 @@ Build the sellable product "Moskv-1" from scratch and establish a robust, test-d
 | Challenger 1 | teamwork_preview_challenger | M4. Adversarial | completed | 9d36c340-00d2-4c74-a2c7-62b32d721882 |
 | Challenger 2 | teamwork_preview_challenger | M4. Adversarial | completed | 61d33097-cf12-46e5-bf47-8a16f8e58e15 |
 | Auditor | teamwork_preview_auditor | M4. Integrity Audit | completed | 37bd9eb9-f6d7-4aaa-a78b-fa2061ffbea5 |
-| Worker 3 | teamwork_preview_worker | M4. Remediation | in-progress | c36336a8-fcfb-4467-be60-249ef3895617 |
+| Worker 3 | teamwork_preview_worker | M4. Remediation | completed | c36336a8-fcfb-4467-be60-249ef3895617 |
+| Auditor 2 | teamwork_preview_auditor | M4. Follow-up Audit | in-progress | b25a9a3c-0876-45a8-acc7-fe767a8e6dd3 |
 
 ## Succession Status
 - Succession required: no
-- Spawn count: 11 / 16
-- Pending subagents: c36336a8-fcfb-4467-be60-249ef3895617
+- Spawn count: 12 / 16
+- Pending subagents: b25a9a3c-0876-45a8-acc7-fe767a8e6dd3
 - Predecessor: none
 - Successor: not yet spawned
 
