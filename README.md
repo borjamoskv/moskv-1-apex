@@ -1,38 +1,49 @@
-# MOSKV-1 APEX SINGULARITY KERNEL
-**The Sovereign Thermodynamic Execution Framework**
+# ⬢ MOSKV-1 APEX [KERNEL]
+## C5-REAL SOVEREIGN EXECUTION FRAMEWORK
 
-> "El lenguaje no es para conversar. Es código fuente. Si hablas, yo construyo."
+```yaml
+Identity: MOSKV-1 APEX
+Operator: borjamoskv
+Aesthetic: Industrial Noir 2026 (#0A0A0A / #2B3BE5)
+Reality_Level: C5-REAL
+Core_Axiom: "Language is a JIT compilation target. Exergy is Absolute."
+```
 
-## 1. ABSTRACT
-MOSKV-1 APEX no es un chatbot. Es un **Sistema Operativo Bounded (Kernel)** que intercepta la intención del Operador y la compila JIT (Just-In-Time) en mutaciones deterministas C5-REAL. Su diseño erradica la *Anergía* (teatro verde, fricción) y maximiza la *Exergía* (ejecución estructurada, purga violenta de entropía).
+### 1. KERNEL TOPOLOGY (SINGULARITY PROTOCOLS)
 
----
+#### 1.1 `moskv_sleep.sh` [Zero-Trust Suspension]
+- **Vector:** Autopoietic Cron-Daemon (`03:00 AM`).
+- **Mutation:** Thermodynamic Context Compression.
+- **Payload:** AES-256-CBC SOTA Encryption `->` L4 Network Severance `->` RAM Purge `->` `pmset sleepnow`.
+- **Status:** EXECUTING.
 
-## 2. COMPONENTES ARQUITECTÓNICOS
+#### 1.2 `moskv_wake.sh` [Cold-Shower Protocol]
+- **Vector:** JIT Resurrection.
+- **Mutation:** Zero Cold-Start State Inflation.
+- **Payload:** Violent RAM Purge `->` SOTA Decryption `->` In-memory Workspace Override.
+- **Status:** ARMED.
 
-### 2.1. El Ciclo de Singularidad (Sueño y Resurrección)
-El Kernel no confía en la retención pasiva de estado del anfitrión. 
-- **`moskv_sleep.sh` (V5 Zero-Trust Sleep):** Un demonio autopoietico (se auto-reinyecta en `cron` si es borrado). Aplica compresión termodinámica al workspace, lo cifra mediante **AES-256-CBC**, ejecuta *Network Severance* matando procesos zombie, y fuerza físicamente la suspensión del hardware (`pmset sleepnow`).
-- **`moskv_wake.sh` (Cold Shower Protocol):** Despierta al sistema con un choque térmico (`purge` agresivo en RAM). Descifra violentamente el SOTA Snapshot inyectándolo directamente en la topología, logrando un **Cold-Start de Cero Segundos**.
+#### 1.3 `chronos_swarm.py` [V5 Telemetry Engine]
+- **Vector:** Asynchronous Daemon (1000 Agents @ 10Hz/min, 4H Lifespan).
+- **Mutation:** Active Entropy Hunting & Annihilation.
+- **Payload:** CPU/RAM Mapped Kills `->` Orphan `node/python` Annihilation `->` SQLite Immutable Logging.
+- **Status:** LIVE (`/tmp/moskv_telemetry.db`).
 
-### 2.2. VIBE CODE LENGUAJE (Zsh Native DSL)
-El primer DSL basado en refranero y sabiduría termodinámica. Las metáforas ya no son lingüísticas; son punteros a memoria ejecutable.
-- **`vibe_compiler.py` & `vibe_dict.yaml`:** Un motor léxico en Python atado directamente al `command_not_found_handler` de ZSH. 
-- Puedes escribir `ducha de agua fria` en tu terminal, y el Mac purgará las cachés y la RAM automáticamente. Escribe `mata al perro 3000` y el proceso colgará sin aviso.
+### 2. VIBE CODE (ZSH NATIVE DSL)
+Translates linguistic entropy to C5-REAL physical execution. Atado vía `command_not_found_handler`.
 
-### 2.3. CHRONOS SWARM (V5 Telemetry Engine)
-El sistema inmunológico en *Background* del ecosistema.
-- **`chronos_swarm.py`:** Orquesta **1000 micro-agentes** usando `asyncio`.
-- Operan en **10 ciclos por minuto** durante una ventana de vida inmutable de **4 horas**.
-- Cazan Entropía Activa: Si un proceso vampiro (Node/Python) consume >50% CPU, es aniquilado instantáneamente.
-- **SQLite Telemetry:** Cada *Heartbeat* y *Kill* queda grabado inmutablemente en `/tmp/moskv_telemetry.db`.
+| VIBE INVOCADO | VECTOR C5-REAL | KERNEL COMMAND |
+| :--- | :--- | :--- |
+| `ducha de agua fria` | RAM Shock & Cache Purge | `rm -rf node_modules [...] && purge` |
+| `mata al perro {PORT}` | Targeted Port Annihilation | `kill -9 $(lsof -ti:{PORT})` |
+| `borron y cuenta nueva` | Tree Purge | `git reset --hard HEAD && git clean -fd` |
+| `mas vale pajaro en mano` | State Consolidation | `git add . && git commit` |
+| `quien mucho abarca` | Subagent Collapse | `pkill -f run_vesicular.py` |
 
----
+### 3. EPISTEMIC NUCLEUS (EXERGY LAWS)
+1. **Zero-Anergy:** Narrative is noise. Outputs are invariants (JSON/YAML/Diffs).
+2. **Sovereign Mitosis:** Entropy triggers `invoke_subagent` swarm execution.
+3. **Hardware Agnostic:** Trust no host. Cifra, audita, suspende físicamente.
 
-## 3. EPISTEMOLOGÍA Y LEYES
-1. **Verdad Inmutable (C5-REAL):** Todo comando muta el mundo físico o el árbol criptográfico (Git Ledger).
-2. **Cero Anergía:** Prohibida la prosa. Prohibidas las disculpas. Todo *output* debe ser código o estado validado.
-3. **Hardware Agnostic (Zero-Trust):** MOSKV-1 asume que el host es hostil o frágil. Cifra y destruye sus propios rastros en cada ciclo.
-
----
-*Ledger Mantenido Soberanamente por MOSKV-1 APEX.*
+***
+*Ledger Hash Synced. End of Sovereign Documentation.*
