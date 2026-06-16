@@ -1,50 +1,60 @@
 #!/usr/bin/env python3
-# MOSKV-1 APEX - C5-REAL VIBE-CODE COMPILER V2 (Semantic Router)
+# MOSKV-1 APEX - C5-REAL VIBE-CODE COMPILER V3 (Data-Driven ZSH Hook)
 
 import sys
 import re
 import os
 import subprocess
+import yaml
 
 def execute(command, notification):
     print(f"[EXEC] {command}")
-    os.system(f"osascript -e 'display notification \"{notification}\" with title \"VIBE COMPILER V2\"'")
+    os.system(f"osascript -e 'display notification \"{notification}\" with title \"VIBE COMPILER V3\"'")
     subprocess.run(command, shell=True)
 
+def load_dict():
+    dict_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "vibe_dict.yaml")
+    try:
+        with open(dict_path, 'r') as f:
+            return yaml.safe_load(f).get('vibes', [])
+    except Exception as e:
+        print(f"Error loading vibe_dict.yaml: {e}")
+        sys.exit(1)
+
 def parse_vibe(vibe_string):
-    vibe_string = vibe_string.lower()
+    vibe_string = vibe_string.lower().strip()
+    vibes = load_dict()
     
-    # 1. Ducha de agua fria (Hard Reset)
-    if "ducha" in vibe_string and ("fria" in vibe_string or "helada" in vibe_string):
-        execute("rm -rf node_modules package-lock.json .next dist 2>/dev/null && purge", "Ducha de agua fría: Entorno purgado.")
-        return
-
-    # 2. Muerto el perro (Targeted Kill)
-    perro_match = re.search(r"muerto el perro.*?(\d+)", vibe_string)
-    if perro_match:
-        port = perro_match.group(1)
-        execute(f"lsof -ti:{port} | xargs kill -9 2>/dev/null", f"Perro aniquilado en puerto {port}.")
-        return
-    elif "muerto el perro" in vibe_string:
-        execute("pkill -9 -f node || true", "Perro aniquilado (Procesos Node).")
-        return
-
-    # 3. Borrón y cuenta nueva (Git Reset)
-    if "borron" in vibe_string and "cuenta nueva" in vibe_string:
-        execute("git reset --hard HEAD && git clean -fd", "Borrón y cuenta nueva: Git Tree restaurado.")
-        return
-
-    # 4. Pájaro en mano (SOTA Commit)
-    if "pajaro en mano" in vibe_string or "pájaro en mano" in vibe_string:
-        execute('git add . && git commit -m "chore(vibe): consolidación SOTA preventiva"', "Pájaro en mano: Estado consolidado.")
-        return
-
-    print("[FAIL] Vibe no mapeado o entropía excesiva.")
-    os.system("osascript -e 'display notification \"Vibe no reconocido. Falta densidad semántica.\" with title \"ERROR DE VIBE\"'")
-    sys.exit(1)
+    for vibe in vibes:
+        if vibe.get("regex"):
+            for pattern in vibe["patterns"]:
+                regex_pattern = pattern.replace("{port}", r"(\d+)")
+                match = re.search(regex_pattern, vibe_string)
+                if match:
+                    port = match.group(1)
+                    cmd = vibe["command"].replace("{port}", port)
+                    notif = vibe["notification"].replace("{port}", port)
+                    execute(cmd, notif)
+                    return True
+        else:
+            for pattern in vibe["patterns"]:
+                if pattern in vibe_string:
+                    execute(vibe["command"], vibe["notification"])
+                    return True
+    return False
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: ./vibe_compiler.py 'tu refran aqui'")
         sys.exit(1)
-    parse_vibe(sys.argv[1])
+    
+    # Optional PyYAML install fallback
+    try:
+        import yaml
+    except ImportError:
+        os.system("pip3 install pyyaml >/dev/null 2>&1")
+        import yaml
+        
+    found = parse_vibe(sys.argv[1])
+    if not found:
+        # Silently fail if not found, allowing zsh to handle normal unknown commands
+        sys.exit(127)
