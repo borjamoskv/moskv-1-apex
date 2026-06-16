@@ -1,0 +1,46 @@
+# MOSKV-1 APEX - VIBE CODE LENGUAJE DICTIONARY
+# Definición de equivalencias semánticas a mutaciones C5-REAL.
+
+vibes:
+  - id: "ducha_fria"
+    patterns:
+      - "ducha de agua fria"
+      - "ducha helada"
+    command: "rm -rf node_modules package-lock.json .next dist 2>/dev/null && purge 2>/dev/null || true"
+    notification: "Ducha de agua fría: Entorno purgado y RAM shockeada."
+
+  - id: "muerto_perro_target"
+    patterns:
+      - "muerto el perro del puerto {port}"
+      - "mata al perro {port}"
+    regex: True
+    command: "lsof -ti:{port} | xargs kill -9 2>/dev/null || true"
+    notification: "Perro aniquilado en el puerto {port}."
+
+  - id: "muerto_perro_general"
+    patterns:
+      - "muerto el perro se acabo la rabia"
+      - "mata al perro"
+    command: "pkill -9 -f node || true && pkill -9 -f python || true"
+    notification: "Perro aniquilado (Procesos rebeldes extirpados)."
+
+  - id: "borron_cuenta_nueva"
+    patterns:
+      - "borron y cuenta nueva"
+      - "hacer borron"
+    command: "git reset --hard HEAD && git clean -fd"
+    notification: "Borrón y cuenta nueva: Git Tree restaurado con violencia."
+
+  - id: "pajaro_mano"
+    patterns:
+      - "mas vale pajaro en mano"
+      - "pajaro en mano"
+    command: "git add . && git commit -m 'chore(vibe): consolidación SOTA preventiva'"
+    notification: "Pájaro en mano: Estado consolidado en el Ledger."
+
+  - id: "quien_mucho_abarca"
+    patterns:
+      - "quien mucho abarca poco aprieta"
+      - "mucho abarca"
+    command: "pkill -f run_vesicular.py || true && pkill -f ollama || true"
+    notification: "Quien mucho abarca... Subagentes colapsados. Exergía centralizada."
