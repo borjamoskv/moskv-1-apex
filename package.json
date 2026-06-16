@@ -7,7 +7,8 @@
     "swarm": "node kernel/index.js",
     "autopoiesis": "node kernel/autopoiesis.js",
     "replay": "node kernel/replay.js",
-    "init:graph": "node scripts/init-neo4j.js"
+    "init:graph": "node scripts/init-neo4j.js",
+    "legion": "node kernel/legion.js"
   },
   "keywords": [],
   "author": "borjamoskv",
