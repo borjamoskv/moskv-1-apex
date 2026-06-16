@@ -46,6 +46,23 @@ class EventBus {
         return { hash: currentHash, seq: Date.now() };
     }
 
+    async subscribe(subject, callback, durableName = null) {
+        const listener = (event) => {
+            const msg = {
+                seq: Date.now(),
+                ack: () => Promise.resolve(),
+                nak: () => Promise.resolve()
+            };
+            callback(event, msg);
+        };
+        this.emitter.on(subject, listener);
+        return {
+            stop: () => {
+                this.emitter.off(subject, listener);
+            }
+        };
+    }
+
     async on(subject, callback) {
         this.emitter.on(subject, callback);
     }
