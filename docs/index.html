@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOSKV-1 APEX KERNEL</title>
+    <style>
+        body { margin: 0; background-color: #0A0A0A; overflow: hidden; color: #2B3BE5; font-family: monospace; }
+        #canvas-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+        #overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2; text-align: center; text-shadow: 0 0 10px #2B3BE5; }
+        h1 { font-size: 3rem; letter-spacing: 0.5rem; margin-bottom: 0.5rem; color: #FFFFFF; }
+        p { font-size: 1.2rem; margin-top: 0; }
+        .badge-container { margin-top: 2rem; display: flex; justify-content: center; gap: 1rem; }
+    </style>
+</head>
+<body>
+    <div id="canvas-container">
+        <canvas id="swarm-canvas"></canvas>
+    </div>
+    <div id="overlay">
+        <h1>MOSKV-1 APEX</h1>
+        <p>C5-REAL SOVEREIGN EXECUTION KERNEL</p>
+        <div class="badge-container">
+            <img src="../assets/badges/c5-real.svg" alt="C5-REAL">
+            <img src="../assets/badges/exergy-100.svg" alt="Exergy 100%">
+        </div>
+    </div>
+    <script>
+        const canvas = document.getElementById('swarm-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const particles = [];
+        for (let i = 0; i < 500; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                vx: (Math.random() - 0.5) * 2,
+                vy: (Math.random() - 0.5) * 2
+            });
+        }
+        
+        function draw() {
+            ctx.fillStyle = 'rgba(10, 10, 10, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#2B3BE5';
+            
+            particles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+                if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+                ctx.fillRect(p.x, p.y, 2, 2);
+            });
+            requestAnimationFrame(draw);
+        }
+        draw();
+    </script>
+</body>
+</html>
