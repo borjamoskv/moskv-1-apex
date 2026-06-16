@@ -58,6 +58,26 @@ def calculate_exergy(transcript_path: str):
     else:
         print("[✓] ESTADO: Alta Densidad Exergética. Operación Turbo.")
 
+
+def ingest_mac_maestro_ndjson(log_path: str):
+    """
+    Ingests structural logs from Mac-Maestro physical UI mutations.
+    """
+    if not os.path.exists(log_path):
+        return 0
+    mutations = 0
+    with open(log_path, 'r', encoding='utf-8') as f:
+        for line in f:
+            if not line.strip():
+                continue
+            try:
+                event = json.loads(line)
+                if event.get("action") == "mutation":
+                    mutations += 1
+            except json.JSONDecodeError:
+                pass
+    return mutations
+
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Usage: python3 exergy_sensor.py <path_to_transcript.jsonl>")
