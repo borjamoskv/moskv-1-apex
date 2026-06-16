@@ -52,12 +52,18 @@ Build the sellable product "Moskv-1" from scratch and establish a robust, test-d
 | Explorer 1 | teamwork_preview_explorer | M1. Exploration | completed | 047a2c4e-bceb-44ea-9a3b-beb09b80fc08 |
 | Explorer 2 | teamwork_preview_explorer | M1. Exploration | completed | 495e6d7c-64f2-4657-9b76-2c7aeec5eb7f |
 | Explorer 3 | teamwork_preview_explorer | M1. Exploration | completed | d1d09765-97fd-41e4-9222-5caa8f2728df |
-| Worker 1 | teamwork_preview_worker | M2-M4. Implementation | in-progress | 8f36c124-c0ab-4d8c-b9ab-ace84d9989f1 |
+| Worker 1 | teamwork_preview_worker | M2-M4. Implementation | completed | 8f36c124-c0ab-4d8c-b9ab-ace84d9989f1 |
+| Worker 2 | teamwork_preview_worker | M2-M4. Verification | blocked | 8b3697aa-aaf9-4da1-a35d-2d1b3199aaa8 |
+| Reviewer 1 | teamwork_preview_reviewer | M4. Spec Compliance | in-progress | c3f0f3c8-39aa-4636-94ba-6302a10dba98 |
+| Reviewer 2 | teamwork_preview_reviewer | M4. Spec Compliance | in-progress | 9103580a-51fc-4654-a508-1bba08d5af29 |
+| Challenger 1 | teamwork_preview_challenger | M4. Adversarial | in-progress | 9d36c340-00d2-4c74-a2c7-62b32d721882 |
+| Challenger 2 | teamwork_preview_challenger | M4. Adversarial | in-progress | 61d33097-cf12-46e5-bf47-8a16f8e58e15 |
+| Auditor | teamwork_preview_auditor | M4. Integrity Audit | in-progress | 37bd9eb9-f6d7-4aaa-a78b-fa2061ffbea5 |
 
 ## Succession Status
 - Succession required: no
-- Spawn count: 4 / 16
-- Pending subagents: 8f36c124-c0ab-4d8c-b9ab-ace84d9989f1
+- Spawn count: 10 / 16
+- Pending subagents: c3f0f3c8-39aa-4636-94ba-6302a10dba98, 9103580a-51fc-4654-a508-1bba08d5af29, 9d36c340-00d2-4c74-a2c7-62b32d721882, 61d33097-cf12-46e5-bf47-8a16f8e58e15, 37bd9eb9-f6d7-4aaa-a78b-fa2061ffbea5
 - Predecessor: none
 - Successor: not yet spawned
 
