@@ -58,8 +58,8 @@ async def test_non_serializable_payload_crashes_and_mutates():
     with pytest.raises(TypeError):
         await bus.publish("cortex.test", bad_payload)
         
-    # The state was mutated despite serialization crash
-    assert bus.last_hash != initial_hash, "last_hash mutated even though publish crashed"
+    # The state is NOT mutated on serialization crash because it happens before mutation
+    assert bus.last_hash == initial_hash, "last_hash should not have mutated since serialization failed in _hash"
 
 
 # =====================================================================
@@ -73,27 +73,38 @@ async def test_concurrent_publish_race_condition():
     get interleaved, leading to out-of-order or duplicate chains.
     """
     bus = EventBus()
+    events_published = []
     
     # We mock js.publish to yield control, simulating network latency
     async def delayed_publish(topic, data):
-        await asyncio.sleep(0.05)
+        event = CortexEvent.from_json(data.decode('utf-8'))
+        # If it's step 1, sleep longer. If step 2, sleep shorter.
+        if event.payload["step"] == 1:
+            await asyncio.sleep(0.05)
+        else:
+            await asyncio.sleep(0.01)
+        events_published.append(event)
         
     mock_js = AsyncMock()
     mock_js.publish = AsyncMock(side_effect=delayed_publish)
     bus.js = mock_js
     
-    # We trigger two concurrent publishes
-    # If tasks yield before the state is updated, they might read the same last_hash.
-    # Note: Because the assignment `self.last_hash = current_hash` is synchronous,
-    # in a single-threaded loop they run sequentially up to the first `await`.
-    # However, if any await occurs *before* self.last_hash is updated, a race occurs.
-    # Right now, `current_hash = self._hash(payload, self.last_hash)` and assignment
-    # are synchronous. But if a publish fails during the `await js.publish`,
-    # the second task has already read the mutated `last_hash`!
+    # Trigger concurrent publishes
+    await asyncio.gather(
+        bus.publish("cortex.test", {"step": 1}),
+        bus.publish("cortex.test", {"step": 2})
+    )
     
-    # Let's verify that the second publish depends on the first's hash,
-    # but if the first fails, the chain is broken.
-    pass
+    # The order in the list represents the order of delivery in the NATS stream.
+    # Because of the lack of locking, Step 2 completes and is written to NATS before Step 1.
+    assert len(events_published) == 2
+    assert events_published[0].payload["step"] == 2
+    assert events_published[1].payload["step"] == 1
+    
+    # Verify the chain in the order it was written to the stream:
+    # 1st item in stream has prev_hash = hash_1, but hash_1 is defined in the 2nd item!
+    # This means a reader processing the stream sequentially will fail validation immediately.
+    assert events_published[0].prev_hash == events_published[1].hash
 
 
 # =====================================================================
@@ -153,7 +164,7 @@ async def test_neo4j_transaction_lifecycle_violation():
             pass
 
     mock_driver = MagicMock()
-    mock_driver.session = MagicMock(return_value=RealisticSession())
+    mock_driver.session = MagicMock(side_effect=RealisticSession)
     store.driver = mock_driver
     
     event = CortexEvent(

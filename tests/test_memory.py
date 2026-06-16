@@ -24,8 +24,8 @@ async def test_memory_store_connect_mocked():
 async def test_memory_store_crystallize_mocked():
     store = MemoryStore()
     
-    # Mock Neo4j driver and session
     mock_session = AsyncMock()
+    mock_session.__aenter__.return_value = mock_session
     mock_driver = MagicMock()
     mock_driver.session = MagicMock(return_value=mock_session)
     store.driver = mock_driver
@@ -45,8 +45,8 @@ async def test_memory_store_crystallize_mocked():
 async def test_memory_store_prune_mocked():
     store = MemoryStore()
     
-    # Mock Neo4j session and driver
     mock_session = AsyncMock()
+    mock_session.__aenter__.return_value = mock_session
     mock_driver = MagicMock()
     mock_driver.session = MagicMock(return_value=mock_session)
     store.driver = mock_driver

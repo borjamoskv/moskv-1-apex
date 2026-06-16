@@ -50,9 +50,11 @@ async def test_event_bus_publish_mocked():
 @pytest.mark.asyncio
 async def test_event_bus_connect_mocked():
     bus = EventBus()
-    mock_nc = AsyncMock()
+    mock_nc = MagicMock()
+    mock_nc.drain = AsyncMock()
+    mock_nc.close = AsyncMock()
     mock_js = AsyncMock()
-    mock_nc.jetstream.return_value = mock_js
+    mock_nc.jetstream = MagicMock(return_value=mock_js)
     
     with patch("nats.connect", new_callable=AsyncMock, return_value=mock_nc) as mock_connect:
         await bus.connect()

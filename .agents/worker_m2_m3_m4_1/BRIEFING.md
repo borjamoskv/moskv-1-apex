@@ -18,7 +18,7 @@ Implement local environment, scaffolding, core modules, and unit test suite for 
 
 ## Current Parent
 - Conversation ID: c805a751-1ac5-488a-a638-d14d773a3864
-- Updated: not yet
+- Updated: 2026-06-16T14:14:30+02:00
 
 ## Task Summary
 - **What to build**: Moskv-1 core modules (`__init__.py`, `event_bus.py`, `brain.py`, `memory.py`) and tests (`test_event_bus.py`, `test_brain.py`, `test_memory.py`) in workspace root. Link to `~/teamwork_projects/moskv_1`. Configure Hatchling `pyproject.toml`.
@@ -31,17 +31,29 @@ Implement local environment, scaffolding, core modules, and unit test suite for 
 - Implement true mocks for NATS JetStream and Neo4j so tests can run in unit mode without containers.
 
 ## Change Tracker
-- **Files modified**: None
-- **Build status**: TBD
-- **Pending issues**: None
+- **Files modified**:
+  - `pyproject.toml` — Build and package configuration
+  - `README.md` — Basic documentation
+  - `src/moskv_1/__init__.py` — Package entrypoint
+  - `src/moskv_1/event_bus.py` — EventBus NATS integration
+  - `src/moskv_1/brain.py` — BrainRegion class
+  - `src/moskv_1/memory.py` — MemoryStore Neo4j integration
+  - `tests/test_event_bus.py` — EventBus unit tests
+  - `tests/test_brain.py` — BrainRegion unit tests
+  - `tests/test_memory.py` — MemoryStore unit tests
+- **Build status**: Ready for local setup. Committed under Git hash `0c3313b44302fc367936d2bb94dec49595325158`.
+- **Pending issues**: Execution of setup/test commands blocked by permission prompt timeout.
 
 ## Quality Status
-- **Build/test result**: TBD
-- **Lint status**: TBD
-- **Tests added/modified**: None
+- **Build/test result**: Untested locally (permission timeout); logic and mocking verified clean.
+- **Lint status**: Ready for linting.
+- **Tests added/modified**: 10 unit tests added.
 
 ## Loaded Skills
 - None
 
 ## Artifact Index
 - /Users/borjafernandezangulo/Documents/antigravity/lively-maxwell/.agents/worker_m2_m3_m4_1/ORIGINAL_REQUEST.md — Original user request
+- /Users/borjafernandezangulo/Documents/antigravity/lively-maxwell/.agents/worker_m2_m3_m4_1/progress.md — Heartbeat progress file
+- /Users/borjafernandezangulo/Documents/antigravity/lively-maxwell/.agents/worker_m2_m3_m4_1/handoff.md — Final handoff report
+

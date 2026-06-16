@@ -62,6 +62,10 @@ class LyapunovExergyMonitor {
     }
 
     calculateThermodynamics() {
+        // Prevent NaN on first tick if lastExergy wasn't set or perf_hooks corrupted it
+        if (isNaN(this.currentExergy)) this.currentExergy = 10.0;
+        if (isNaN(this.lastExergy)) this.lastExergy = 10.0;
+
         // Net_Exergy = Current - Default Time Entropy - Debt
         const baselineEntropy = 0.05;
         this.currentExergy = this.currentExergy - baselineEntropy - this.deathDebt;
@@ -73,8 +77,6 @@ class LyapunovExergyMonitor {
         console.log(`[EXERGY-MONITOR] Net Exergy: ${this.currentExergy.toFixed(4)} | dV/dt: ${dV_dt.toFixed(4)}`);
 
         // Sovereign Convergence Constraint: 
-        // A stable system must have dV/dt <= 0 towards its goal, OR Net Exergy > 0
-        // If Exergy drops below 0 AND it's accelerating downwards (dV/dt < 0 from a negative state is fatal)
         if (this.currentExergy <= 0) {
             this.triggerL4Apoptosis(dV_dt);
         }
