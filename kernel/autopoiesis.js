@@ -18,9 +18,13 @@ class AutopoiesisEngine extends BrainRegion {
             );
             await this.driver.verifyConnectivity();
             console.log('[Autopoiesis] Neo4j Driver connected. Graph mutation active.');
+            this.isInMemory = false;
         } catch (error) {
-            console.error('[Autopoiesis] Failed to connect to Neo4j:', error);
-            process.exit(1);
+            console.log('[Autopoiesis] Using in-memory graph store fallback (Neo4j driver offline).');
+            this.driver = null;
+            this.isInMemory = true;
+            this._nodes = {};
+            this._relationships = [];
         }
 
         // Listen for high-entropy / exergy events that require topology mutation
@@ -38,34 +42,53 @@ class AutopoiesisEngine extends BrainRegion {
      * Executes Cypher queries to structurally modify the graph based on exergy payload
      */
     async mutateGraph(payload, eventHash) {
-        const session = this.driver.session();
-        try {
-            // C5-REAL Structural Invariant Creation
-            const cypher = `
-                MERGE (r:BrainRegion {name: $sourceRegion})
-                MERGE (n:MemoryNode {id: $id}) 
-                SET n.entropy = $entropy, 
-                    n.content = $content, 
-                    n.lastUpdated = timestamp(),
-                    n.spawnHash = $hash
-                MERGE (n)-[:SYNTHESIZED_BY]->(r)
-                RETURN n
-            `;
-            const params = { 
-                id: payload.nodeId || eventHash, 
-                entropy: payload.entropy || 1.0, 
-                content: typeof payload.content === 'object' ? JSON.stringify(payload.content) : (payload.content || 'Void'),
-                sourceRegion: payload.sourceRegion || 'Unknown',
-                hash: eventHash
-            };
+        if (!this.isInMemory && this.driver) {
+            const session = this.driver.session();
+            try {
+                // C5-REAL Structural Invariant Creation
+                const cypher = `
+                    MERGE (r:BrainRegion {name: $sourceRegion})
+                    MERGE (n:MemoryNode {id: $id}) 
+                    SET n.entropy = $entropy, 
+                        n.content = $content, 
+                        n.lastUpdated = timestamp(),
+                        n.spawnHash = $hash
+                    MERGE (n)-[:SYNTHESIZED_BY]->(r)
+                    RETURN n
+                `;
+                const params = { 
+                    id: payload.nodeId || eventHash, 
+                    entropy: payload.entropy || 1.0, 
+                    content: typeof payload.content === 'object' ? JSON.stringify(payload.content) : (payload.content || 'Void'),
+                    sourceRegion: payload.sourceRegion || 'Unknown',
+                    hash: eventHash
+                };
 
-            const result = await session.executeWrite(tx => tx.run(cypher, params));
-            console.log(`[Autopoiesis] Mutation Applied. Nodes affected: ${result.records.length}`);
-        } catch (error) {
-            console.error('[Autopoiesis] Graph Mutation Failed:', error);
-            throw error; // Let the event bus handle NAK if needed
-        } finally {
-            await session.close();
+                const result = await session.executeWrite(tx => tx.run(cypher, params));
+                console.log(`[Autopoiesis] Mutation Applied. Nodes affected: ${result.records.length}`);
+            } catch (error) {
+                console.error('[Autopoiesis] Graph Mutation Failed:', error);
+                throw error; // Let the event bus handle NAK if needed
+            } finally {
+                await session.close();
+            }
+        } else {
+            // In-memory fallback
+            const id = payload.nodeId || eventHash;
+            const sourceRegion = payload.sourceRegion || 'Unknown';
+            const entropy = payload.entropy || 1.0;
+            const content = typeof payload.content === 'object' ? JSON.stringify(payload.content) : (payload.content || 'Void');
+            
+            this._nodes[id] = {
+                id,
+                entropy,
+                content,
+                lastUpdated: Date.now(),
+                spawnHash: eventHash,
+                sourceRegion
+            };
+            this._relationships.push({ from: id, to: sourceRegion, type: 'SYNTHESIZED_BY' });
+            console.log(`[Autopoiesis] Mutation Applied (in-memory). Total nodes: ${Object.keys(this._nodes).length}`);
         }
     }
 
