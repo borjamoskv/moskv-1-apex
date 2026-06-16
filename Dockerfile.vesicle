@@ -17,10 +17,11 @@ ENV TZ=UTC
 
 WORKDIR /nexus
 
-# Inject the Autopoietic Trinity
+# Inject the Autopoietic Trinity and package files
 COPY src/moskv_kernel.py ./
 COPY src/sortu_apex_forge.py ./
 COPY src/redteam_auditor.py ./
+COPY src/moskv_1/ ./moskv_1/
 COPY src/skills/ ./skills/
 
 # Security: The agent runs as an unprivileged ghost user. 
