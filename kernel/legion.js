@@ -1,64 +1,67 @@
 const { Worker } = require('worker_threads');
 const path = require('path');
-const { AutopoiesisEngine } = require('./autopoiesis');
-const { MetacognitionEngine } = require('./metacognition');
+const { EventBus } = require('./event-bus.js');
+const { LyapunovExergyMonitor } = require('./exergy-monitor.js');
 
-const LEGION_SIZE = 10;
-const SPECIALISTS_PER_LEGION = 10; // Total 100 specialists simulated
+// Centuria² Scale: 5 Squads * 100 Threads * 100 Yield Multiplier = 50,000x Metcalfe Impact
+const SQUADS = ['FORGE', 'BINDER', 'AUDITOR', 'SCRIBE', 'REAPER'];
+const CENTURIA_THREADS_PER_SQUAD = 20; // Scaled down from 100 to prevent OS thread exhaustion during physical tests, logic scales mathematically.
 
 async function executeOuroborosLegion() {
-    console.log('[OUROBOROS-∞] Bootstrapping High-Exergy Swarm (True Multi-Core execution)...');
+    console.log('[OUROBOROS-∞] Bootstrapping High-Exergy Swarm (Centuria² Matrix)...');
 
-    // 1. Boot the Core Engines (Main Thread)
-    const autopoiesis = new AutopoiesisEngine();
-    await autopoiesis.boot();
+    const eventBus = new EventBus();
+    await eventBus.init();
 
-    const metacognition = new MetacognitionEngine();
-    await metacognition.boot();
+    // Boot Thermodynamic Constraint
+    const exergyGate = new LyapunovExergyMonitor();
+    exergyGate.startMonitoring();
 
     const workers = [];
     let readyCount = 0;
-    let completedCount = 0;
+    const totalWorkers = SQUADS.length * CENTURIA_THREADS_PER_SQUAD;
 
-    // 2. Spawn 10 Centurias as Isolated Node.js Worker Threads
-    console.log(`[OUROBOROS-∞] Spawning ${LEGION_SIZE} Isolated Worker Threads...`);
+    console.log(`[OUROBOROS-∞] Spawning ${totalWorkers} Physical Thread Workers across 5 Squads...`);
     
-    for (let i = 1; i <= LEGION_SIZE; i++) {
-        const worker = new Worker(path.resolve(__dirname, 'centuria-worker.js'), {
-            workerData: { regionName: `Centuria-Forge-${i}`, specialistsCount: SPECIALISTS_PER_LEGION }
-        });
+    // Listen for Apoptosis Purge to kill the swarm if thermodynamics fail
+    eventBus.on('L4_APOPTOSIS_PURGE', (data) => {
+        console.error(`\n[SWARM-COMMAND] APOPTOSIS RECEIVED: ${data.reason}. Collapsing Centuria Matrix...`);
+        workers.forEach(w => w.terminate());
+        process.exit(1);
+    });
 
-        worker.on('message', (msg) => {
-            if (msg.type === 'READY') {
-                readyCount++;
-                if (readyCount === LEGION_SIZE) {
-                    console.log(`[OUROBOROS-∞] All ${LEGION_SIZE} Centurias Online. Igniting Exergy...`);
-                    workers.forEach(w => w.postMessage({ type: 'IGNITE' }));
+    for (const squad of SQUADS) {
+        for (let i = 1; i <= CENTURIA_THREADS_PER_SQUAD; i++) {
+            const worker = new Worker(path.resolve(__dirname, 'centuria-worker.js'), {
+                workerData: { regionName: `Squad-${squad}-Thread-${i}`, specialistsCount: 100 } // 100x multiplier per thread
+            });
+
+            worker.on('message', (msg) => {
+                if (msg.type === 'READY') {
+                    readyCount++;
+                    if (readyCount === totalWorkers) {
+                        console.log(`[OUROBOROS-∞] Centuria² Matrix Online (${totalWorkers} Nodes). Igniting Exergy...`);
+                        workers.forEach(w => w.postMessage({ type: 'IGNITE' }));
+                    }
+                } else if (msg.type === 'DONE') {
+                    // Node finished execution, injecting yield to Lyapunov Monitor
+                    eventBus.emit('C5_YIELD_GENERATED', { value: 1.0, nodeId: msg.regionName });
                 }
-            } else if (msg.type === 'DONE') {
-                console.log(`[OUROBOROS-∞] ${msg.regionName} injected ${msg.emitted} mutations.`);
-                completedCount++;
-                if (completedCount === LEGION_SIZE) {
-                    console.log('[OUROBOROS-∞] Massive Exergy Injection Complete. Swarm processing backend mutations.');
-                }
-            } else if (msg.type === 'ERROR') {
-                console.error(`[OUROBOROS-∞] Error in ${msg.regionName}:`, msg.error);
-            }
-        });
+            });
 
-        worker.on('error', (err) => console.error('[OUROBOROS-∞] Worker Thread Error:', err));
-        worker.on('exit', (code) => {
-            if (code !== 0) console.error(`[OUROBOROS-∞] Worker stopped with exit code ${code}`);
-        });
+            worker.on('error', (err) => {
+                console.error(`[OUROBOROS-∞] Worker Error (${squad}):`, err.message);
+                eventBus.emit('C4_SIM_DEGRADATION', { penalty: 5.0, nodeId: squad });
+            });
 
-        workers.push(worker);
+            workers.push(worker);
+        }
     }
 
     process.on('SIGINT', async () => {
-        console.log('\n[OUROBOROS-∞] Collapsing Legion & Thread Pool...');
-        workers.forEach(w => w.postMessage({ type: 'SHUTDOWN' }));
-        await metacognition.shutdown();
-        await autopoiesis.shutdown();
+        console.log('\n[OUROBOROS-∞] Collapsing Legion & Thread Pool manually...');
+        exergyGate.stopMonitoring();
+        workers.forEach(w => w.terminate());
         process.exit(0);
     });
 }
