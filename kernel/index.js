@@ -1,5 +1,6 @@
 const { BrainRegion } = require('./brain-region');
 const { AutopoiesisEngine } = require('./autopoiesis');
+const { MetacognitionEngine } = require('./metacognition');
 
 async function bootstrap() {
     console.log('[GENESIS-L5] Initializing Swarm Orchestrator...');
@@ -14,6 +15,10 @@ async function bootstrap() {
 
     const reasoning = new BrainRegion('Reasoning');
     await reasoning.boot();
+
+    // 3. Boot Metacognition Engine (Sleep Cycles & Pruning)
+    const metacognition = new MetacognitionEngine();
+    await metacognition.boot();
 
     // Wait for event bus to be fully ready
     await new Promise(resolve => setTimeout(resolve, 1000));
@@ -30,6 +35,7 @@ async function bootstrap() {
         console.log('\n[GENESIS-L5] SIGINT Received. Terminating Swarm gracefully...');
         await vision.shutdown();
         await reasoning.shutdown();
+        await metacognition.shutdown();
         await autopoiesis.shutdown();
         process.exit(0);
     });
