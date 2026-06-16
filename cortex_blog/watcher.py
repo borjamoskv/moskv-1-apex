@@ -22,6 +22,11 @@ class CortexBlogHandler(FileSystemEventHandler):
             self.process_image(filepath)
 
     def process_image(self, image_path):
+        date_str = datetime.datetime.now().strftime("%Y-%m-%d")
+        # Purga de recursividad: ignorar webp ya procesados
+        if image_path.suffix.lower() == '.webp' and image_path.stem.startswith(date_str):
+            return
+            
         # 1. Espera termodinámica (asegurar que el FS termine el I/O)
         time.sleep(0.5)
         
