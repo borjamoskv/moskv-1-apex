@@ -1,42 +1,97 @@
 import json
-from typing import Optional, Union, Dict, Any
-from neo4j import AsyncGraphDatabase
+import time
+from typing import Optional, Union, Dict, Any, List
 from moskv_1.event_bus import CortexEvent
+
+try:
+    from neo4j import AsyncGraphDatabase
+except ImportError:
+    AsyncGraphDatabase = None
+
+class InMemoryNode:
+    def __init__(self, element_id: str, labels: list, properties: dict):
+        self.element_id = element_id
+        self.labels = labels
+        self._properties = properties
+
+    @property
+    def id(self):
+        return self.element_id
+
+    def __getitem__(self, key):
+        return self._properties[key]
+
+    def get(self, key, default=None):
+        return self._properties.get(key, default)
+
+    def keys(self):
+        return self._properties.keys()
+
+    def values(self):
+        return self._properties.values()
+
+    def items(self):
+        return self._properties.items()
+
+class InMemoryRecord:
+    def __init__(self, data: dict):
+        self._data = data
+
+    def __getitem__(self, key):
+        if isinstance(key, int):
+            return list(self._data.values())[key]
+        return self._data[key]
+
+    def get(self, key, default=None):
+        return self._data.get(key, default)
+
+    def keys(self):
+        return self._data.keys()
+
+    def values(self):
+        return self._data.values()
+
+    def items(self):
+        return self._data.items()
 
 class MemoryStore:
     """
-    Sovereign Graph Database interface (Neo4j) representing the crystallized neural memory of the swarm.
+    Sovereign Graph Database interface. Simulates the Neo4j API in-memory
+    when no real driver is connected, but uses the Neo4j transaction context properly when driver is set.
     """
     def __init__(self, uri: str = "bolt://localhost:7687", user: str = "neo4j", password: str = "password"):
         self.uri = uri
         self.user = user
         self.password = password
-        self.driver = None
+        self.driver: Any = None
+        self._nodes: Dict[str, Dict[str, Any]] = {}
+        self._regions: Dict[str, Dict[str, Any]] = {}
+        self._relationships: List[tuple] = []
 
     async def connect(self):
         """
-        Connects to the Neo4j instance and verifies connectivity.
+        Connects to the Neo4j instance if the library is available, or defaults to in-memory mode.
         """
-        try:
-            self.driver = AsyncGraphDatabase.driver(
-                self.uri, 
-                auth=(self.user, self.password),
-                max_connection_pool_size=50,
-                connection_acquisition_timeout=20.0
-            )
-            await self.driver.verify_connectivity()
-            print("[MemoryStore] Neo4j Driver connected. Graph mutation active.")
-        except Exception as e:
-            print(f"[MemoryStore] Failed to connect to Neo4j: {e}")
-            raise e
+        if AsyncGraphDatabase is not None:
+            try:
+                self.driver = AsyncGraphDatabase.driver(
+                    self.uri,
+                    auth=(self.user, self.password),
+                    max_connection_pool_size=50,
+                    connection_acquisition_timeout=20.0
+                )
+                await self.driver.verify_connectivity()
+                print("[MemoryStore] Neo4j Driver connected. Graph mutation active.")
+                return
+            except Exception as e:
+                print(f"[MemoryStore] Failed to connect to Neo4j: {e}")
+                raise e
+        print("[MemoryStore] Using in-memory mode (Neo4j driver not available).")
 
-    async def crystallize(self, event: CortexEvent) -> Dict[str, Any]:
+    async def crystallize(self, event: CortexEvent) -> List[Any]:
         """
         Creates/updates a MemoryNode from a CortexEvent structure and links it to its BrainRegion.
         """
-        if not self.driver:
-            raise RuntimeError("MemoryStore is not connected. Call connect() first.")
-
         payload = event.payload
         source_region = payload.get("sourceRegion", "Unknown")
         entropy = payload.get("entropy", 1.0)
@@ -47,53 +102,90 @@ class MemoryStore:
         else:
             content_str = str(content)
 
-        cypher = """
-            MERGE (r:BrainRegion {name: $sourceRegion})
-            MERGE (n:MemoryNode {id: $id}) 
-            SET n.entropy = $entropy, 
-                n.content = $content, 
-                n.lastUpdated = timestamp(),
-                n.spawnHash = $hash
-            MERGE (n)-[:SYNTHESIZED_BY]->(r)
-            RETURN n
-        """
+        node_id = payload.get("nodeId") or event.hash
 
-        async with self.driver.session() as session:
-            result = await session.execute_write(
-                lambda tx: tx.run(
+        if self.driver:
+            cypher = """
+                MERGE (r:BrainRegion {name: $sourceRegion})
+                MERGE (n:MemoryNode {id: $id}) 
+                SET n.entropy = $entropy, 
+                    n.content = $content, 
+                    n.lastUpdated = timestamp(),
+                    n.spawnHash = $hash
+                MERGE (n)-[:SYNTHESIZED_BY]->(r)
+                RETURN n
+            """
+            async def work(tx):
+                res = await tx.run(
                     cypher,
-                    id=payload.get("nodeId") or event.hash,
+                    id=node_id,
                     entropy=entropy,
                     content=content_str,
                     sourceRegion=source_region,
                     hash=event.hash
                 )
-            )
-            # Retrieve records (useful for verifying or return)
-            records = [record async for record in result]
-            return records
+                # Consume and materialize results INSIDE transaction callback
+                return [record async for record in res]
+
+            async with self.driver.session() as session:
+                records = await session.execute_write(work)
+                return records
+        else:
+            # In-memory graph store crystallization
+            self._regions[source_region] = {"name": source_region}
+            now_ms = time.time() * 1000.0
+            node_props = {
+                "id": node_id,
+                "entropy": entropy,
+                "content": content_str,
+                "lastUpdated": now_ms,
+                "spawnHash": event.hash,
+                "sourceRegion": source_region
+            }
+            self._nodes[node_id] = node_props
+            rel = (node_id, "SYNTHESIZED_BY", source_region)
+            if rel not in self._relationships:
+                self._relationships.append(rel)
+
+            node_obj = InMemoryNode(element_id=node_id, labels=["MemoryNode"], properties=node_props)
+            record = InMemoryRecord({"n": node_obj})
+            return [record]
 
     async def prune(self, entropy_threshold: float) -> int:
         """
-        Purges memory nodes with entropy higher than the threshold that haven't crystallized (older than 60s).
+        Purges memory nodes with entropy higher than the threshold that haven't crystallized (older than 24 hours).
         """
-        if not self.driver:
-            raise RuntimeError("MemoryStore is not connected. Call connect() first.")
+        if self.driver:
+            cypher = """
+                MATCH (n:MemoryNode)
+                WHERE n.entropy > $threshold AND n.lastUpdated < (timestamp() - 86400000)
+                DETACH DELETE n
+                RETURN count(n) as pruned
+            """
+            async def work(tx):
+                res = await tx.run(cypher, threshold=entropy_threshold)
+                record = await res.single()
+                return record["pruned"] if record else 0
 
-        cypher = """
-            MATCH (n:MemoryNode)
-            WHERE n.entropy > $threshold AND n.lastUpdated < (timestamp() - 60000)
-            DETACH DELETE n
-            RETURN count(n) as pruned
-        """
+            async with self.driver.session() as session:
+                pruned_count = await session.execute_write(work)
+                print(f"[MemoryStore] Pruned {pruned_count} high-entropy nodes.")
+                return pruned_count
+        else:
+            now_ms = time.time() * 1000.0
+            cutoff = now_ms - 86400000.0  # 24 hours in ms
+            to_prune = []
+            for node_id, props in list(self._nodes.items()):
+                if props["entropy"] > entropy_threshold and props["lastUpdated"] < cutoff:
+                    to_prune.append(node_id)
 
-        async with self.driver.session() as session:
-            result = await session.execute_write(
-                lambda tx: tx.run(cypher, threshold=entropy_threshold)
-            )
-            record = await result.single()
-            pruned_count = record["pruned"] if record else 0
-            print(f"[MemoryStore] Pruned {pruned_count} high-entropy nodes.")
+            for node_id in to_prune:
+                if node_id in self._nodes:
+                    del self._nodes[node_id]
+                self._relationships = [r for r in self._relationships if r[0] != node_id]
+
+            pruned_count = len(to_prune)
+            print(f"[MemoryStore] Pruned {pruned_count} high-entropy nodes (in-memory).")
             return pruned_count
 
     async def close(self):
@@ -103,3 +195,5 @@ class MemoryStore:
         if self.driver:
             await self.driver.close()
             print("[MemoryStore] Neo4j Connection Closed.")
+        else:
+            print("[MemoryStore] In-memory Connection Closed.")

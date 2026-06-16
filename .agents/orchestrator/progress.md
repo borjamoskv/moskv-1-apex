@@ -10,5 +10,5 @@ Last visited: 2026-06-16T14:20:00+02:00
 
 ## Iteration Status
 Current iteration: 1 / 32
-Spawn count: 10
+Spawn count: 11
 Succession threshold: 16
