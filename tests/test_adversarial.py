@@ -6,13 +6,13 @@ from moskv_1.event_bus import EventBus, CortexEvent
 from moskv_1.memory import MemoryStore
 
 # =====================================================================
-# 1. TEST: Hash Chain Gap on Publish Failure
+# 1. TEST: Hash Chain Gap on Publish Failure (Fixed)
 # =====================================================================
 @pytest.mark.asyncio
 async def test_hash_chain_gap_on_publish_failure():
     """
-    Exposes the bug where a failed publish mutates `last_hash` anyway,
-    leaving a gap in the published chain.
+    Verifies that a failed publish does NOT mutate `last_hash`,
+    leaving NO gaps in the published chain.
     """
     bus = EventBus()
     bus.js = AsyncMock()
@@ -27,26 +27,26 @@ async def test_hash_chain_gap_on_publish_failure():
         await bus.publish("cortex.test", {"step": 2})
         
     hash_failed = bus.last_hash
-    assert hash_failed != hash_1, "last_hash should have been mutated"
+    # Fixed behavior: last_hash is NOT mutated on failed publishes!
+    assert hash_failed == hash_1, "last_hash should NOT have been mutated on failure"
     
     # Third publish succeeds
     bus.js.publish.side_effect = None
     event_3 = await bus.publish("cortex.test", {"step": 3})
     
-    # The third event is chained to the failed event's hash, which was never published!
-    assert event_3.prev_hash == hash_failed
-    # The chain on NATS now has a gap: Event 1 (hash_1) -> Event 3 (prev_hash = hash_failed).
-    # Event 2 was never published, breaking verification.
+    # The third event is correctly chained to the first event's hash
+    assert event_3.prevHash == hash_1
+    assert event_3.prevHash != "genesis_failed"
 
 
 # =====================================================================
-# 2. TEST: Non-deterministic Payload & Crash State Mutation
+# 2. TEST: Non-deterministic Payload & Crash State Mutation (Fixed)
 # =====================================================================
 @pytest.mark.asyncio
 async def test_non_serializable_payload_crashes_and_mutates():
     """
-    Exposes the bug where a non-serializable payload (e.g., set) causes
-    to_json/publish to crash, but `last_hash` is mutated regardless.
+    Verifies that a non-serializable payload (e.g., set) causes
+    publish to crash, and `last_hash` is not mutated.
     """
     bus = EventBus()
     bus.js = AsyncMock()
@@ -58,19 +58,17 @@ async def test_non_serializable_payload_crashes_and_mutates():
     with pytest.raises(TypeError):
         await bus.publish("cortex.test", bad_payload)
         
-    # The state is NOT mutated on serialization crash because it happens before mutation
-    assert bus.last_hash == initial_hash, "last_hash should not have mutated since serialization failed in _hash"
+    assert bus.last_hash == initial_hash, "last_hash should not have mutated since serialization failed"
 
 
 # =====================================================================
-# 3. TEST: Concurrent Publish Race Condition (No Locking)
+# 3. TEST: Concurrent Publish Race Condition (Fixed with asyncio.Lock)
 # =====================================================================
 @pytest.mark.asyncio
 async def test_concurrent_publish_race_condition():
     """
-    Simulates concurrent publishing. Because there is no asyncio.Lock
-    protecting the read-modify-write of last_hash, concurrent tasks can
-    get interleaved, leading to out-of-order or duplicate chains.
+    Verifies that concurrent publishing is safely serialized using asyncio.Lock,
+    ensuring that events are chained and recorded sequentially without race conditions.
     """
     bus = EventBus()
     events_published = []
@@ -89,26 +87,24 @@ async def test_concurrent_publish_race_condition():
     mock_js.publish = AsyncMock(side_effect=delayed_publish)
     bus.js = mock_js
     
-    # Trigger concurrent publishes
+    # Trigger concurrent publishes. With the lock, Step 1 will complete publishing before
+    # Step 2 can acquire the lock and calculate its hash.
     await asyncio.gather(
         bus.publish("cortex.test", {"step": 1}),
         bus.publish("cortex.test", {"step": 2})
     )
     
-    # The order in the list represents the order of delivery in the NATS stream.
-    # Because of the lack of locking, Step 2 completes and is written to NATS before Step 1.
+    # With locking, Step 1 is fully completed and published before Step 2 publishes.
     assert len(events_published) == 2
-    assert events_published[0].payload["step"] == 2
-    assert events_published[1].payload["step"] == 1
+    assert events_published[0].payload["step"] == 1
+    assert events_published[1].payload["step"] == 2
     
-    # Verify the chain in the order it was written to the stream:
-    # 1st item in stream has prev_hash = hash_1, but hash_1 is defined in the 2nd item!
-    # This means a reader processing the stream sequentially will fail validation immediately.
-    assert events_published[0].prev_hash == events_published[1].hash
+    # Verify the chain: the 2nd item has prevHash equal to the 1st item's hash
+    assert events_published[1].prevHash == events_published[0].hash
 
 
 # =====================================================================
-# 4. TEST: Neo4j Transaction Lifecycle Violation Simulation
+# 4. TEST: Neo4j Transaction Lifecycle Violation (Fixed)
 # =====================================================================
 class MockClosedTransactionError(Exception):
     pass
@@ -116,9 +112,9 @@ class MockClosedTransactionError(Exception):
 @pytest.mark.asyncio
 async def test_neo4j_transaction_lifecycle_violation():
     """
-    Demonstrates that MemoryStore.crystallize and MemoryStore.prune access
-    transaction results outside the execute_write transaction context, which
-    violates Neo4j async driver rules and raises errors in production.
+    Verifies that MemoryStore.crystallize and MemoryStore.prune access
+    transaction results INSIDE the execute_write transaction context,
+    preventing ClosedTransactionError in production.
     """
     store = MemoryStore()
     
@@ -169,16 +165,14 @@ async def test_neo4j_transaction_lifecycle_violation():
     
     event = CortexEvent(
         hash="test_hash",
-        prev_hash="prev_hash",
+        prevHash="prev_hash",
         timestamp=1000.0,
         payload={"sourceRegion": "Test", "content": "test"}
     )
     
-    # In a realistic driver simulation, this should fail because crystallize
-    # tries to iterate the results *after* execute_write has completed.
-    with pytest.raises(MockClosedTransactionError, match="Result consumed outside transaction context"):
-        await store.crystallize(event)
-        
-    # Same for prune: it tries to call result.single() after execute_write returns
-    with pytest.raises(MockClosedTransactionError, match="Result consumed outside transaction context"):
-        await store.prune(0.90)
+    # The transaction context operations must succeed without MockClosedTransactionError
+    records = await store.crystallize(event)
+    assert isinstance(records, list)
+    
+    pruned_count = await store.prune(0.90)
+    assert pruned_count == 10

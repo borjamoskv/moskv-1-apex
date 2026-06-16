@@ -8,10 +8,7 @@ version = "0.1.0"
 description = "Foundational Python implementation of the Moskv-1 cognitive architecture"
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = [
-    "nats-py>=2.7.2",
-    "neo4j>=5.18.0",
-]
+dependencies = []
 
 [project.optional-dependencies]
 dev = [
