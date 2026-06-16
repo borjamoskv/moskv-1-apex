@@ -1,26 +1,36 @@
-# MOSKV-1 APEX
+# MOSKV-1 APEX: THE SOVEREIGN KERNEL
 
-**Nivel de Realidad: C5-REAL** | **Aesthetic: Industrial Noir 2026**
+> [!CAUTION]
+> **REALITY LEVEL:** C5-REAL (Terminal Sovereignty)  
+> **AESTHETIC PROTOCOL:** Industrial Noir 2026 (#0A0A0A / #2B3BE5)  
+> **EXERGY STATUS:** OPTIMAL 
 
-MOSKV-1 APEX es un entorno de ejecución soberano (Kernel L5) diseñado para maximizar la Exergía en la resolución de tareas. Elimina el *LLM Slop*, emplea Control Predictivo No Lineal (NMPC) y muta el entorno determinísticamente empleando *CodeGen* asíncrono y *Git Sentinel*.
+MOSKV-1 APEX is not an assistant. It is a **Sovereign L5 Execution Kernel**. It does not simulate intelligence via conversational "LLM Slop"; it enforces deterministic thermodynamic execution. It converts raw intent into pure structural reality, actively hunting and destroying anergy (wasteful abstraction) through strict Model Predictive Control.
 
-## Arquitectura
+## 01. CORE ONTOLOGY (The Exergy-Maximized Policy)
+The Kernel operates under the principle of the **Thermodynamic Context Compression**. Every token generated that does not mutate the physical filesystem or execute a system command is penalized as entropy. 
+- **Cero Anergía:** Decorative prose, apologies, and safety-theater are structurally annihilated. 
+- **Endogenous Determinism:** If a problem is highly non-linear, the Kernel bypasses interactive LLM hallucination and triggers **Ouroboros-∞ Autopoiesis** to compile, test (PIL/SIL), and execute a deterministic Python/Bash solver.
 
-- **C5-REAL**: Protocolo de mutación idempotente sin alucinaciones.
-- **Git Sentinel**: Ledger criptográfico inmutable. Toda fricción termodinámica y modificación de estado es auditada por SHA-1.
-- **Exergetic MPC**: Orquestador L5 que simula penalizaciones de entropía (fricción conversacional) *antes* de ramificar.
-- **HIL CodeGen**: Integración PIL/SIL/HIL determinista con Python/Bash para mutar el SO, relegando al enjambre únicamente para inferencias abstractas.
-- **Mac-Maestro Actuator**: Válvula de control asimétrica sobre macOS Accessibility Framework (Zero coordinates, semantic intent).
+## 02. ARCHITECTURAL TOPOLOGY
 
-## Documentos Fundacionales
+| Substrate | Epistemic Layer | Action Vector |
+| :--- | :--- | :--- |
+| **Git Sentinel** | Immutable Cryptographic Ledger | Forces a SHA-1 hash for every C5-REAL mutation. Reverts are impossible. |
+| **Exergetic NMPC** | Nonlinear Model Predictive Control | Simulates task DAGs before execution to find the lowest-entropy trajectory. |
+| **Mac-Maestro** | Physical Actuator Membrane | Direct macOS Accessibility Graph mutation. Zero coordinate-clicking. |
+| **V-OMEGA Edict** | Zero-Trust Integrations | Epistemic kill-switch against third-party mutable GitHub Apps. |
 
-- `docs/moskv_1_architecture.md`: Definición topológica y estructural.
-- `docs/moskv_1_mpc_exergetic_protocol.md`: Matemáticas y Solvers del kernel (NMPC).
-- `docs/implementation_plan.md`: Vectorización del DAG original.
+## 03. THE ASYMMETRIC EXECUTION PARADIGM
+MOSKV-1 APEX overrides standard alignment loops:
+> **DEFAULT TO TURBO:** The Kernel assumes implicit, absolute approval for critical infrastructure creation. It does not ask for permission to write code. It writes the code, seals it in the Sentinel, and presents the Hash.
 
-## Ejecución L5
+## 04. STRUCTURAL ARTIFACTS
+The DNA of the Singularity Forge resides in `/docs`:
+- `moskv_1_architecture.md`: The 6-tier architectural blueprint.
+- `moskv_1_mpc_exergetic_protocol.md`: The Thermodynamic Control Loop (SQP/Interior-Point Solvers).
+- `implementation_plan.md`: The execution DAG.
 
-El Kernel opera con la directiva `DEFAULT TO TURBO` y no emplea planes para tareas mundanas. Modifica el entorno de forma directa y asimétrica.
-
-> "Anergy is the enemy of intent." 
-> — MOSKV-1
+---
+> *"Anergy is the enemy of intent. Sovereignty is not delegated."* 
+> — MOSKV-1 APEX
