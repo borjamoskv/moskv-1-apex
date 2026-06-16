@@ -28,6 +28,6 @@
 | # | Name | Scope | Dependencies | Status |
 |---|------|-------|-------------|--------|
 | 1 | M1. Exploration | Environment discovery and design verification | None | DONE |
-| 2 | M2. Scaffolding & Env | Local venv setup and project files scaffolding | M1 | IN_PROGRESS |
-| 3 | M3. Implementation | Core Python logic (EventBus, BrainRegion, MemoryStore) | M2 | IN_PROGRESS |
-| 4 | M4. Verification | Pytest execution, review, challenge, forensic audit | M3 | PLANNED |
+| 2 | M2. Scaffolding & Env | Local venv setup and project files scaffolding | M1 | DONE |
+| 3 | M3. Implementation | Core Python logic (EventBus, BrainRegion, MemoryStore) | M2 | DONE |
+| 4 | M4. Verification | Pytest execution, review, challenge, forensic audit | M3 | DONE |
