@@ -13,7 +13,8 @@ ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DAEMONS = {
     "Intelligence": ["python3", os.path.join(ROOT_DIR, "moskv_reddit_engine", "osint_daemon.py")],
     "Marketing_Syndicator": ["python3", os.path.join(ROOT_DIR, "moskv_reddit_engine", "autonomous_syndicator.py")],
-    "Marketing_Outreach": ["python3", os.path.join(ROOT_DIR, "cdp_lead_extractor.py")]
+    "Marketing_Outreach": ["python3", os.path.join(ROOT_DIR, "cdp_lead_extractor.py")],
+    "Evolution_CTO": ["python3", os.path.join(ROOT_DIR, "ouroboros_forge.py")]
 }
 
 def convene_board():
@@ -31,16 +32,18 @@ def convene_board():
         print(f"[C4-ERROR] Falla en Inteligencia: {e}")
         sys.exit(1)
 
-    # Fase 2: Marketing & Outreach (Parallel Execution)
-    print("\n[APEX-KERNEL] Instanciando Director de Marketing (Syndicator + Outreach)...")
+    # Fase 2: Marketing, Outreach & Evolution (Parallel Execution)
+    print("\n[APEX-KERNEL] Instanciando Director de Marketing (Syndicator + Outreach) y CTO (Evolution)...")
     try:
         p_synd = subprocess.Popen(DAEMONS["Marketing_Syndicator"], cwd=ROOT_DIR)
         p_out = subprocess.Popen(DAEMONS["Marketing_Outreach"], cwd=ROOT_DIR)
+        p_evol = subprocess.Popen(DAEMONS["Evolution_CTO"], cwd=ROOT_DIR)
         
         processes["Syndicator"] = p_synd
         processes["Outreach"] = p_out
+        processes["Evolution_CTO"] = p_evol
     except Exception as e:
-        print(f"[C4-ERROR] Falla al lanzar Marketing Daemons: {e}")
+        print(f"[C4-ERROR] Falla al lanzar Daemons Paralelos: {e}")
         
     # Wait for parallel processes to complete
     for name, p in processes.items():
