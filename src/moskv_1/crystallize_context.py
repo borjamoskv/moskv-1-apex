@@ -40,8 +40,8 @@ def extract_directives_from_file(transcript_path: str) -> List[str]:
                 for text in (content, thinking):
                     if not text:
                         continue
-                    # Match pattern like: [P0] Do X, Rule: Do Y, Directive: Do Z, MUST Do W, NEVER Do V
-                    matches = re.findall(r'(?:\[P[0-2]\]|Rule:|Directive:|MUST|NEVER)\s*([^\n\.\#\*]+)', text)
+                    # Match patterns like: [P0] Do X, Rule: Do Y, Directive: Do Z, Axiom: Do W, MUST Do V, NEVER Do U
+                    matches = re.findall(r'(?:\[P[0-2]\]|Rule:|Directive:|Axiom:|Enforce:|Constraint:|Policy:|MUST|NEVER)\s*([^\n\.\#\*]+)', text)
                     for match in matches:
                         cleaned = match.strip()
                         # Clean markdown wrappers or trailing spaces
@@ -114,12 +114,26 @@ def update_cursorrules(directives: List[str]) -> bool:
     return True
 
 def main() -> int:
-    transcript_path = find_latest_transcript()
+    import sys
+    if len(sys.argv) > 1:
+        target = sys.argv[1]
+        if os.path.exists(target):
+            transcript_path = target
+        else:
+            potential_path = os.path.expanduser(f"~/.gemini/antigravity/brain/{target}/.system_generated/logs/transcript.jsonl")
+            if os.path.exists(potential_path):
+                transcript_path = potential_path
+            else:
+                print(f"[ContextCrystallizer] Target path or conversation ID not found: {target}")
+                return 1
+    else:
+        transcript_path = find_latest_transcript()
+        
     if not transcript_path:
         print("[ContextCrystallizer] Error: No transcript found.")
         return 1
         
-    print(f"[ContextCrystallizer] Reading latest transcript: {transcript_path}")
+    print(f"[ContextCrystallizer] Reading transcript: {transcript_path}")
     directives = extract_directives_from_file(transcript_path)
     directives = prune_and_deduplicate_directives(directives)
     print(f"[ContextCrystallizer] Extracted & synthesized {len(directives)} directives.")

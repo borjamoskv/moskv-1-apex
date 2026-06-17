@@ -53,6 +53,14 @@ def convene_board():
         else:
             print(f"[C4-ERROR] Daemon '{name}' finalizó con código {p.returncode}.")
 
+    # Phase 3: Dynamic Context Crystallization (Pruning narrative and updating .cursorrules)
+    print("\n[APEX-KERNEL] Phase 3: Dynamic Context Crystallization...")
+    try:
+        subprocess.run(["python3", os.path.join(ROOT_DIR, "src", "moskv_1", "crystallize_context.py")], cwd=ROOT_DIR, check=True)
+        print("[APEX-KERNEL] Context crystallized successfully. Signal-to-Anergy ratio optimized.")
+    except Exception as e:
+        print(f"[C4-ERROR] Falla al ejecutar Context Crystallizer: {e}")
+
     print("-" * 60)
     print(f"[{datetime.now(timezone.utc).isoformat()}] [APEX-KERNEL] Sesión del Board completada. Ledger mutado. Iniciando Auto-Apoptosis de la sesión.")
 

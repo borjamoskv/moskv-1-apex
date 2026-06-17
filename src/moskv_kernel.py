@@ -118,6 +118,9 @@ class ExergyMaximizationKernel:
         # Ingest dynamic transcript anergy penalty
         penalty = 1.0
         try:
+            project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            if project_root not in sys.path:
+                sys.path.append(project_root)
             from exergy_sensor import get_historical_anergy_threshold
             from moskv_1.crystallize_context import find_latest_transcript
             import json
@@ -180,6 +183,14 @@ class OuroborosInfinity:
         await self.bus.connect()
         await self.store.connect()
         
+        # Clean up stale worker scripts from previous sessions
+        import glob
+        for stale in glob.glob(os.path.join("src", "skills", "worker_*.py")):
+            try:
+                os.remove(stale)
+            except Exception:
+                pass
+                
         # Compile C FFI operation target
         print("[OUROBOROS] Phase 0: Hardware-Software FFI Co-Design Compilation...")
         self.ffi = OuroborosFFIEngine(target_dir="src/skills")
@@ -221,10 +232,12 @@ class OuroborosInfinity:
         print("[OUROBOROS] Phase 2: Mitosis & Dynamic Tool Generation...")
         # Parse intent keywords to target correct vectors
         if any(kw in raw_prompt.upper() for kw in ["CONTEXTO", "EXERGIA", "CONTEXT"]):
+            from moskv_1.crystallize_context import find_latest_transcript
+            t_path = find_latest_transcript()
             vectors = [
                 SwarmVector(
                     role="Thermodynamic Context Compressor",
-                    logic='import subprocess; import sys; res = subprocess.run([sys.executable, "src/moskv_1/crystallize_context.py"], capture_output=True, text=True); print(res.stdout); print(res.stderr); print("[Thermodynamic-Compressor] Context pruned successfully. Signal-to-Anergy ratio optimized.") if res.returncode == 0 else print("[Thermodynamic-Compressor] Crystallization failed.")',
+                    logic=f'import subprocess; import sys; res = subprocess.run([sys.executable, "src/moskv_1/crystallize_context.py", "{t_path}"], capture_output=True, text=True); print(res.stdout); print(res.stderr); print("[Thermodynamic-Compressor] Context pruned successfully. Signal-to-Anergy ratio optimized.") if res.returncode == 0 else print("[Thermodynamic-Compressor] Crystallization failed.")',
                     target_module="context_compressor"
                 )
             ]
@@ -331,6 +344,15 @@ class OuroborosInfinity:
             }
         )
         await self.store.crystallize(execution_event)
+
+        # Phase 4.5: Autopoietic Apoptosis (Cleanup of temporary agent scripts to maximize context exergy)
+        print("[OUROBOROS] Phase 4.5: Cleaning temporary subagent files...")
+        for filepath in survived_paths:
+            try:
+                os.remove(filepath)
+                print(f"[APOPTOSIS] Erased temporary worker script: {os.path.basename(filepath)}")
+            except Exception as e:
+                print(f"[APOPTOSIS] Failed to delete temporary worker: {e}")
 
         # 5. Ledger Commit & Exergy evaluation
         token_cost = 100 + len(vectors) * 10
