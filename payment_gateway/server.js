@@ -156,3 +156,5 @@ app.listen(PORT, () => {
     console.log(`[CORTEX-PAYMENT] Stripe/SEPA Gateway listening on port ${PORT}`);
     console.log(`[CORTEX-PAYMENT] Serving static files from root directory at http://localhost:${PORT}`);
 });
+
+module.exports = app;
