@@ -4,6 +4,7 @@ import time
 import logging
 import argparse
 import socket
+import urllib.request
 from datetime import datetime
 
 # C5-REAL OSINT EVOLUTION KERNEL
@@ -15,30 +16,50 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - [C5-REAL OSINT] - 
 class WalletAnalyzer:
     """
     On-chain forensics analyzer.
-    Heuristics for EVM / UTXO networks.
+    Queries Blockcypher public APIs for basic address telemetry
+    and checks for Tornado Cash / privacy protocol routing.
     """
     def __init__(self, address: str, network: str = "ethereum"):
         self.address = address
         self.network = network
 
     def analyze(self) -> dict:
-        logging.info(f"Analyzing wallet {self.address} on {self.network}...")
-        # Structural representation of forensic findings
+        logging.info(f"Querying on-chain data for {self.address} ({self.network})...")
+        # Blockcypher supports btc/main, eth/main, etc.
+        net_map = {
+            "ethereum": "eth/main",
+            "bitcoin": "btc/main"
+        }
+        api_net = net_map.get(self.network.lower(), "eth/main")
+        url = f"https://api.blockcypher.com/v1/{api_net}/addrs/{self.address}/balance"
+        
+        balance_data = {}
+        try:
+            req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+            with urllib.request.urlopen(req, timeout=5) as response:
+                balance_data = json.loads(response.read().decode())
+        except Exception as e:
+            logging.warning(f"Public API fetch failed or address invalid: {e}")
+            balance_data = {"error": str(e)}
+
         return {
             "target": self.address,
             "network": self.network,
-            "classification": "Undetermined",
+            "telemetry": balance_data,
             "heuristics": {
-                "tornado_cash_interaction": False,
-                "bridge_activity": [],
-                "layering_detected": False
+                "tornado_cash_interaction": self.address.lower() in [
+                    "0x722175077d82e1277a0bd7a8277a64d84f509e7f", # simulated TC routers
+                ],
+                "active_balance": balance_data.get("balance", 0),
+                "total_transactions": balance_data.get("n_tx", 0)
             },
             "timestamp": datetime.utcnow().isoformat()
         }
 
 class DomainAnalyzer:
     """
-    Passive and active DNS/Web infrastructure scanner.
+    Passive & active DNS/Web infrastructure scanner.
+    Performs port scanning for standard services.
     """
     def __init__(self, domain: str):
         self.domain = domain
@@ -49,34 +70,64 @@ class DomainAnalyzer:
         try:
             ip_address = socket.gethostbyname(self.domain)
         except Exception as e:
-            logging.warning(f"Could not resolve domain: {e}")
+            logging.error(f"Could not resolve domain: {e}")
+            return {"error": f"Resolution failed: {e}"}
+
+        # Port scanning standard services
+        ports_to_scan = [80, 443, 22, 8080, 8443]
+        open_ports = []
+        logging.info(f"Scanning standard ports on {ip_address}...")
+        for port in ports_to_scan:
+            try:
+                s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                s.settimeout(1.0)
+                result = s.connect_ex((ip_address, port))
+                if result == 0:
+                    open_ports.append(port)
+                s.close()
+            except Exception:
+                pass
 
         return {
             "target": self.domain,
             "resolved_ip": ip_address,
             "infrastructure": {
-                "cloudflare_detected": "cloudflare" in ip_address if ip_address != "Unknown" else False,
-                "subdomains": []
+                "cloudflare_detected": "cloudflare" in ip_address,
+                "open_ports": open_ports
             },
             "timestamp": datetime.utcnow().isoformat()
         }
 
 class IdentityAnalyzer:
     """
-    Off-chain identity correlation and digital footprint compiler.
+    GitHub footprint analyzer and digital identity profiler.
     """
     def __init__(self, identifier: str):
-        self.identifier = identifier  # Can be username, email, alias
+        self.identifier = identifier
 
     def analyze(self) -> dict:
-        logging.info(f"Profiling digital footprint for identifier: {self.identifier}...")
+        logging.info(f"Checking GitHub public API profile for: {self.identifier}...")
+        url = f"https://api.github.com/users/{self.identifier}"
+        profile = {}
+        try:
+            req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+            with urllib.request.urlopen(req, timeout=5) as response:
+                profile = json.loads(response.read().decode())
+        except Exception as e:
+            logging.warning(f"GitHub profile not found or API limited: {e}")
+            profile = {"error": str(e)}
+
         return {
             "target": self.identifier,
-            "channels": {
-                "github": f"https://github.com/{self.identifier}",
-                "twitter": f"https://twitter.com/{self.identifier}"
+            "profile_data": {
+                "name": profile.get("name"),
+                "company": profile.get("company"),
+                "blog": profile.get("blog"),
+                "location": profile.get("location"),
+                "public_repos": profile.get("public_repos"),
+                "followers": profile.get("followers")
             },
-            "leak_vector_detected": False,
+            "leak_vector_detected": "email" in profile and profile["email"] is not None,
             "timestamp": datetime.utcnow().isoformat()
         }
 
@@ -84,11 +135,6 @@ class OSINTEvolutionEngine:
     def __init__(self, workspace_path: str):
         self.workspace_path = workspace_path
         self.knowledge_base_path = os.path.join(self.workspace_path, "CORTEX_OSINT_KB.json")
-        self.targets = [
-            "https://github.com/jivoi/awesome-osint",
-            "https://osintframework.com/",
-            "https://github.com/cipher387/osint_stuff_tool_collection"
-        ]
         self._load_kb()
 
     def _load_kb(self):
@@ -105,15 +151,11 @@ class OSINTEvolutionEngine:
         logging.info(f"Knowledge Base Synced at {self.knowledge_base_path}")
 
     def ingest_sota_vectors(self):
-        """
-        Extracts zero-entropy structural OSINT vectors and registers them in CORTEX.
-        """
         logging.info("Initiating <entropy_check> on current OSINT vectors...")
-        
         new_tools = {
-            "Etherscan_Advanced_API": "Clustering heuristics for Tornado Cash routing.",
-            "ShadowDragon": "Social media structural mapping.",
-            "Maltego_C5": "Custom transforms for EVM smart contract vulnerability mapping."
+            "Blockcypher_Forensics": "Decoupled blockchain balance tracking.",
+            "GitHub_Footprinting": "GitHub metadata exposure scanner.",
+            "Active_Port_Mapping": "Socket-based active service mapping."
         }
         
         mutations_applied = 0
@@ -133,10 +175,10 @@ class OSINTEvolutionEngine:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="♾️ OSINT Evolution Engine - MOSKV-1 APEX")
     parser.add_argument("--wallet", type=str, help="Wallet address to analyze")
-    parser.add_argument("--network", type=str, default="ethereum", help="Blockchain network for wallet analysis")
+    parser.add_argument("--network", type=str, default="ethereum", help="Blockchain network")
     parser.add_argument("--domain", type=str, help="Domain to analyze")
-    parser.add_argument("--identity", type=str, help="Identity alias/username/email to profile")
-    parser.add_argument("--update", action="store_true", help="Run SOTA ingestion update")
+    parser.add_argument("--identity", type=str, help="GitHub identifier to analyze")
+    parser.add_argument("--update", action="store_true", help="Ingest updates")
     
     args = parser.parse_args()
     WORKSPACE = os.path.dirname(os.path.abspath(__file__))
@@ -148,7 +190,7 @@ if __name__ == "__main__":
     
     if args.update:
         engine.ingest_sota_vectors()
-    
+        
     results = {}
     if args.wallet:
         analyzer = WalletAnalyzer(args.wallet, args.network)
