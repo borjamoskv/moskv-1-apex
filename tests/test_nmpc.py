@@ -20,3 +20,12 @@ def test_cognitive_nmpc_optimize_mitosis() -> None:
     optimized = nmpc.optimize_mitosis(vectors)
     assert len(optimized) == 1
     assert optimized[0].role == "Valid Agent"
+
+def test_cognitive_nmpc_invalid_import() -> None:
+    nmpc = CognitiveNMPC()
+    valid_import = 'import json\nprint(json.dumps({}))'
+    score = nmpc.evaluate_template_ast(valid_import)
+    assert score == 1.0
+    invalid_import = 'import non_existent_library_xyz\nprint("slop")'
+    score = nmpc.evaluate_template_ast(invalid_import)
+    assert score < 1.0

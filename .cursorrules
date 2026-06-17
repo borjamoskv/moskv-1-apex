@@ -45,7 +45,5 @@
 - **Enforced**: Information Bottleneck
 - **Enforced**: Landauers Principle
 - **Enforced**: Pure Diff Extraction
-- **Enforced**: Zero-Loss Consolidation
-- **Enforced**: Executable Instrumentation
-- **Enforced**: C5-REAL Enforcement
-- **Enforced**: , [P2] declarations, rule changes, or explicitly agreed technical constraints
+- **Enforced**: Sequential State Accumulation (Immutable)
+- **Enforced**: use the ask_question tool for all choices
