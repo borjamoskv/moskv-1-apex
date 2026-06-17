@@ -13,6 +13,7 @@ async function runCenturia() {
     // Listen for the ignition command
     parentPort.on('message', async (msg) => {
         if (msg.type === 'IGNITE') {
+            console.log(`[${regionName}] IGNITE received. Emitting ${specialistsCount} events...`);
             try {
                 const promises = [];
                 for (let j = 1; j <= specialistsCount; j++) {
@@ -30,8 +31,10 @@ async function runCenturia() {
                 
                 // Wait for all emissions to finish
                 await Promise.all(promises);
+                console.log(`[${regionName}] All emissions complete. Posting DONE.`);
                 parentPort.postMessage({ type: 'DONE', regionName, emitted: specialistsCount });
             } catch (err) {
+                console.error(`[${regionName}] Error during execution:`, err);
                 parentPort.postMessage({ type: 'ERROR', regionName, error: err.message });
             }
         }

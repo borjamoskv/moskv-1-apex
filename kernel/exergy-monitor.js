@@ -32,8 +32,8 @@ class LyapunovExergyMonitor {
         this.obs.observe({ entryTypes: ['measure', 'function'], buffered: true });
 
         // Event hooks
-        this.eventBus.on('C5_YIELD_GENERATED', (data) => this.recordYield(data.value, data.nodeId));
-        this.eventBus.on('C4_SIM_DEGRADATION', (data) => this.increaseDeathDebt(data.penalty, data.nodeId));
+        this.eventBus.on('C5_YIELD_GENERATED', (event) => this.recordYield(event.payload.value, event.payload.nodeId));
+        this.eventBus.on('C4_SIM_DEGRADATION', (event) => this.increaseDeathDebt(event.payload.penalty, event.payload.nodeId));
     }
 
     startMonitoring() {
