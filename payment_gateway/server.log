@@ -1,0 +1,2 @@
+◇ injected env (0) from .env // tip: ⌘ suppress logs { quiet: true }
+[CORTEX-PAYMENT] Stripe/SEPA Gateway listening on port 4242

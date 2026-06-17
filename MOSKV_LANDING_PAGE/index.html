@@ -329,15 +329,38 @@
     </section>
 
     <script>
-        function initiateProtocol() {
+        async function initiateProtocol() {
             const btn = document.querySelector('.btn-primary');
-            btn.innerHTML = 'SYNCING...';
+            btn.innerHTML = 'SYNCING LEDGER...';
             btn.style.backgroundColor = '#fff';
             btn.style.color = '#000';
-            setTimeout(() => {
-                btn.innerHTML = 'PROTOCOL ACTIVE';
-                btn.style.backgroundColor = '#0f0';
-            }, 1500);
+            
+            try {
+                const response = await fetch('http://localhost:4242/create-checkout-session', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ tier: 'C5-REAL' })
+                });
+                
+                const session = await response.json();
+                
+                if (session.id) {
+                    btn.innerHTML = 'GATEWAY SECURED';
+                    btn.style.backgroundColor = '#0f0';
+                    console.log("[C5-REAL] Checkout Session:", session.id);
+                    // In a real environment, redirect to Stripe checkout here:
+                    // stripe.redirectToCheckout({ sessionId: session.id })
+                    setTimeout(() => {
+                        alert("C5-REAL MOCK GATEWAY TRIGGERED. Session ID: " + session.id);
+                    }, 500);
+                } else {
+                    throw new Error("Invalid Session");
+                }
+            } catch (error) {
+                btn.innerHTML = 'ERROR: OFFLINE';
+                btn.style.backgroundColor = 'red';
+                console.error("[C4-SIM ERROR]", error);
+            }
         }
     </script>
 </body>
