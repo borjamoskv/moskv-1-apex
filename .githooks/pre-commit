@@ -9,9 +9,16 @@ else
 fi
 
 # Check for Anergy in staged files
-if git diff --cached --name-only | xargs grep -i -e "apologize" -e "as an AI"; then
+if git diff --cached --name-only | xargs grep -i -e "apologize" -e "as an AI" >/dev/null 2>&1; then
     echo -e "\033[0;31m[CRITICAL] ANERGY DETECTED IN STAGED FILES.\033[0m"
     echo "MOSKV-1 APEX does not tolerate LLM Slop. Purge the noise and commit again."
+    exit 1
+fi
+
+# Check for R5 Critical Path Violations in staged files (macOS / Colima protect)
+if git diff --cached --name-only | xargs grep -i -E "/private/var/db/|/System/Volumes/Data/System/Library/AssetsV2|~/Library/Mobile\ Documents|colima" >/dev/null 2>&1; then
+    echo -e "\033[0;31m[CRITICAL] R5 CRITICAL PATH VIOLATION DETECTED.\033[0m"
+    echo "Attempts to mutate system critical paths (/private/var/db, System, Mobile Documents, Colima) are blocked by Git Sentinel."
     exit 1
 fi
 
