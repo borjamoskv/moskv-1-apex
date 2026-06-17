@@ -15,6 +15,7 @@ from moskv_1.memory import MemoryStore
 from moskv_1.brain import BrainRegion
 from sortu_apex_forge import SortuApexMitosis, SwarmVector
 from redteam_auditor import RedTeamCrucible
+from moskv_1.mpc_controller import CognitiveNMPC
 
 # ==============================================================================
 # MOSKV-1 APEX KERNEL (v10.0)
@@ -176,6 +177,7 @@ class OuroborosInfinity:
         self.store = MemoryStore()
         self.forge = SortuApexMitosis(output_dir="src/skills")
         self.auditor = RedTeamCrucible(target_dir="src/skills")
+        self.nmpc = CognitiveNMPC()
         self.ffi: Optional[OuroborosFFIEngine] = None
         
     async def initialize(self):
@@ -263,6 +265,9 @@ class OuroborosInfinity:
                 )
             ]
             
+        # 2b. Optimize Swarm Mitosis using NMPC before deploying to physical substrate
+        vectors = self.nmpc.optimize_mitosis(vectors)
+        
         # Deploy compiled code to disk
         paths = self.forge.deploy_swarm(vectors)
         
