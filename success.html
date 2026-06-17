@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CORTEX-PERSIST // Aprovisionamiento Completado</title>
+    <title>CORTEX-PERSIST // Provisioning Complete</title>
     <!-- Premium Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -69,38 +69,38 @@
 <body>
     <div class="analog-grain"></div>
     <div class="glow-orb orb-1" style="background: radial-gradient(circle, rgba(0, 230, 118, 0.15) 0%, transparent 70%);"></div>
-
+ 
     <div class="container">
         <div class="success-container">
             <div class="success-panel">
                 <div class="success-icon">✓</div>
-                <h1>Aprovisionamiento Completado</h1>
-                <p>El pago de tu licencia ha sido validado físicamente en nuestro ledger. Hemos inicializado el canal de exergía e inyectado las llaves correspondientes en el kernel.</p>
+                <h1>Provisioning Complete</h1>
+                <p>Your license payment has been physically validated in our ledger. We have successfully initialized the exergy channel and injected the corresponding keys into the local kernel.</p>
                 
                 <div class="session-info">
-                    SESSION_ID: <span id="session-id-display">Cargando...</span>
+                    SESSION_ID: <span id="session-id-display">Loading...</span>
                 </div>
-
+ 
                 <div class="activation-checklist">
                     <div class="activation-item">
-                        <span>✓</span> Hardware UUID registrado y enlazado
+                        <span>✓</span> Hardware UUID registered and bound
                     </div>
                     <div class="activation-item">
-                        <span>✓</span> Llaves criptográficas Ed25519 inyectadas
+                        <span>✓</span> Cryptographic Ed25519 keys injected
                     </div>
                     <div class="activation-item">
-                        <span>✓</span> Bus local de NATS habilitado en segundo plano
+                        <span>✓</span> Local NATS bus enabled in the background
                     </div>
                     <div class="activation-item">
-                        <span>✓</span> Factura tributaria (Norma Foral Bizkaia) emitida por SEPA
+                        <span>✓</span> Fiscal tax invoice (SEPA) successfully generated
                     </div>
                 </div>
-
-                <a href="/" class="btn btn-primary btn-full">Volver al Inicio</a>
+ 
+                <a href="/" class="btn btn-primary btn-full">Return to Hub</a>
             </div>
         </div>
     </div>
-
+ 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const params = new URLSearchParams(window.location.search);
