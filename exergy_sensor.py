@@ -113,8 +113,85 @@ def ingest_mac_maestro_ndjson(log_path: str):
                 pass
     return mutations
 
+def calculate_workspace_exergy(root_dir: str):
+    """
+    Scans the local filesystem workspace and calculates Code Density as a measure of structural Exergy.
+    Excludes .git, .venv, node_modules, and build outputs.
+    """
+    exclude_dirs = {".git", ".venv", "venv", "node_modules", ".vercel", "__pycache__", "borjamoskv_wiki", "reports", "sprol_audits"}
+    extensions = {".py", ".js", ".html", ".css", ".json", ".sh"}
+    
+    total_files = 0
+    total_lines = 0
+    code_lines = 0
+    anergic_lines = 0  # Comments & blank lines
+    
+    print("\n=== MOSKV-1 WORKSPACE EXERGY SCAN ===")
+    print(f"Scanning directory: {root_dir}")
+    print("-------------------------------------")
+    
+    for root, dirs, files in os.walk(root_dir):
+        # Prune excluded directories in-place
+        dirs[:] = [d for d in dirs if d not in exclude_dirs]
+        
+        for file in files:
+            file_path = Path(root) / file
+            if file_path.suffix.lower() not in extensions:
+                continue
+                
+            total_files += 1
+            file_lines = 0
+            file_code = 0
+            file_anergy = 0
+            
+            try:
+                with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
+                    for line in f:
+                        file_lines += 1
+                        stripped = line.strip()
+                        if not stripped:
+                            file_anergy += 1
+                        elif stripped.startswith("#") or stripped.startswith("//") or (stripped.startswith("/*") and stripped.endswith("*/")):
+                            file_anergy += 1
+                        else:
+                            file_code += 1
+            except Exception:
+                continue
+                
+            total_lines += file_lines
+            code_lines += file_code
+            anergic_lines += file_anergy
+            
+            # Print files with low density (< 50%) as targets for optimization
+            density = file_code / file_lines if file_lines > 0 else 1.0
+            if density < 0.5 and file_lines > 15:
+                print(f"[!] Low exergy file: {file_path.relative_to(root_dir)} (Density: {density:.2%}, Lines: {file_lines})")
+                
+    exergy_index = (code_lines / total_lines) * 100 if total_lines > 0 else 100.0
+    
+    print("-------------------------------------")
+    print(f"Total Scanned Files: {total_files}")
+    print(f"Total Workspace Lines: {total_lines}")
+    print(f"Active Code Lines: {code_lines}")
+    print(f"Anergic Lines (Comments/Blanks): {anergic_lines}")
+    print(f"Global Workspace Exergy Index: {exergy_index:.2f}%")
+    
+    if exergy_index < 75.0:
+        print("[!] WARN: Low code density detected. Target code refactoring recommended to clean up narrative comments.")
+    else:
+        print("[✓] SUCCESS: Optimal exergy density. Minimal code comments/slop.")
+
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Usage: python3 exergy_sensor.py <path_to_transcript.jsonl>")
-        sys.exit(1)
-    calculate_exergy(sys.argv[1])
+    import argparse
+    parser = argparse.ArgumentParser(description="MOSKV-1 Exergy and Telemetry Sensor")
+    parser.add_argument("--transcript", type=str, help="Path to transcript.jsonl to verify cognitive exergy")
+    parser.add_argument("--workspace", action="store_true", help="Scan the current workspace for structural code exergy")
+    
+    args = parser.parse_args()
+    
+    if args.workspace:
+        calculate_workspace_exergy(os.path.dirname(os.path.abspath(__file__)))
+    elif args.transcript:
+        calculate_exergy(args.transcript)
+    else:
+        calculate_workspace_exergy(os.path.dirname(os.path.abspath(__file__)))
