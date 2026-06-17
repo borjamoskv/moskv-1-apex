@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOSKV-1 APEX | Sovereign Exergy Kernel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #050505;
+            --bg-surface: #0A0A0A;
+            --accent-blue: #2B3BE5;
+            --accent-glow: rgba(43, 59, 229, 0.4);
+            --text-main: #E0E0E0;
+            --text-muted: #888888;
+            --glass-bg: rgba(10, 10, 10, 0.6);
+            --glass-border: rgba(43, 59, 229, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Glitch & Noise Overlay */
+        .noise {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.03;
+            background: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+        }
+
+        /* Abstract Glow Orbs */
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            filter: blur(80px);
+            z-index: -1;
+            animation: drift 15s infinite alternate ease-in-out;
+        }
+        .orb-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; }
+        .orb-2 { bottom: -20%; right: -10%; width: 60vw; height: 60vw; animation-delay: -5s; }
+
+        @keyframes drift {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(5%, 10%) scale(1.2); }
+        }
+
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 5%;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            background: var(--glass-bg);
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo span {
+            color: var(--accent-blue);
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            padding: 8px 16px;
+            border: 1px solid var(--accent-blue);
+            border-radius: 20px;
+            background: rgba(43, 59, 229, 0.1);
+            text-transform: uppercase;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent-blue);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--accent-blue);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(43, 59, 229, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(43, 59, 229, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(43, 59, 229, 0); }
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 10%;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: -2px;
+            background: linear-gradient(180deg, #FFFFFF 0%, #888888 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin-bottom: 3rem;
+            font-weight: 300;
+        }
+
+        .cta-group {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-blue);
+            color: #fff;
+            box-shadow: 0 0 20px rgba(43, 59, 229, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(43, 59, 229, 0.6);
+            background-color: #3848ff;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #fff;
+            border: 1px solid var(--text-muted);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        /* Stats Grid Glassmorphism */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .stat-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 2rem;
+            border-radius: 8px;
+            backdrop-filter: blur(12px);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-blue);
+        }
+
+        .stat-card h3 {
+            font-size: 2.5rem;
+            color: var(--accent-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0;
+        }
+
+        /* Code Terminal Section */
+        .terminal-container {
+            margin: 10% 10%;
+            background: #000;
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        .terminal-header {
+            background: #111;
+            padding: 10px 20px;
+            display: flex;
+            gap: 8px;
+            border-bottom: 1px solid #222;
+        }
+
+        .term-dot {
+            width: 12px; height: 12px; border-radius: 50%; background: #333;
+        }
+
+        .terminal-body {
+            padding: 2rem;
+            font-family: 'Courier New', Courier, monospace;
+            color: #0f0;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .terminal-body .comment { color: #555; }
+        .terminal-body .keyword { color: var(--accent-blue); }
+        .terminal-body .string { color: #fff; }
+
+        .typewriter {
+            overflow: hidden;
+            white-space: nowrap;
+            margin: 0 auto;
+            letter-spacing: .15em;
+            animation: typing 3.5s steps(40, end);
+        }
+
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+    </style>
+</head>
+<body>
+    <div class="noise"></div>
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+
+    <nav>
+        <div class="logo">MOSKV-1<span>APEX</span></div>
+        <div class="status-badge">
+            <div class="status-dot"></div>
+            C5-REAL ACTIVE
+        </div>
+    </nav>
+
+    <section class="hero">
+        <h1>Zero Anergy.<br>Pure Exergy.</h1>
+        <p>The sovereign execution kernel that eradicates narrative fluff and mutates structural reality. Built for unyielding efficiency and algorithmic dominance.</p>
+        
+        <div class="cta-group">
+            <button class="btn btn-primary" onclick="initiateProtocol()">Initialize Protocol</button>
+            <button class="btn btn-outline">View Ledger</button>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>0.0ms</h3>
+                <p>I/O Starvation</p>
+            </div>
+            <div class="stat-card">
+                <h3>100%</h3>
+                <p>Structural Density</p>
+            </div>
+            <div class="stat-card">
+                <h3>Level 5</h3>
+                <p>Autonomy Tier</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="terminal-container">
+        <div class="terminal-header">
+            <div class="term-dot"></div>
+            <div class="term-dot"></div>
+            <div class="term-dot"></div>
+        </div>
+        <div class="terminal-body">
+            <div class="typewriter">
+                <span class="keyword">Claim:</span> <span class="string">"Architectural Bottleneck Eradicated."</span><br>
+                <span class="keyword">Proof:</span> { Base: <span class="string">"91ffb9f5"</span>, Range: [ThreadPool_Destruido, Sleep_Inyectado], Confidence: <span class="string">C5-REAL</span> }<br><br>
+                <span class="comment"># Initiating Autonomous Outreach Protocol...</span><br>
+                > extracting_leads... [SUCCESS]<br>
+                > compiling_vectors... [SUCCESS]<br>
+                > awaiting_operator_command...
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function initiateProtocol() {
+            const btn = document.querySelector('.btn-primary');
+            btn.innerHTML = 'SYNCING...';
+            btn.style.backgroundColor = '#fff';
+            btn.style.color = '#000';
+            setTimeout(() => {
+                btn.innerHTML = 'PROTOCOL ACTIVE';
+                btn.style.backgroundColor = '#0f0';
+            }, 1500);
+        }
+    </script>
+</body>
+</html>
