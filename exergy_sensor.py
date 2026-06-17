@@ -190,17 +190,73 @@ def calculate_workspace_exergy(root_dir: str):
     else:
         print("[✓] SUCCESS: Optimal exergy density. Minimal code comments/slop.")
 
+def calculate_git_diff_exergy() -> float:
+    """
+    Measures the exergy of the current staged git changes.
+    Returns the percentage of active code lines added relative to total lines added.
+    """
+    import subprocess
+    try:
+        res = subprocess.run(
+            ["git", "diff", "--cached"],
+            capture_output=True,
+            text=True,
+            check=True
+        )
+        diff_output = res.stdout
+    except Exception as e:
+        print(f"[GitDiffExergy] Failed to run git diff: {e}")
+        return 100.0
+        
+    if not diff_output.strip():
+        return 100.0
+        
+    added_code = 0
+    added_anergy = 0
+    
+    for line in diff_output.splitlines():
+        if line.startswith("+") and not line.startswith("+++"):
+            content = line[1:].strip()
+            if not content:
+                added_anergy += 1
+            elif content.startswith("#") or content.startswith("//") or (content.startswith("/*") and content.endswith("*/")) or content.startswith("*"):
+                added_anergy += 1
+            else:
+                added_code += 1
+                
+    total_added = added_code + added_anergy
+    if total_added == 0:
+        return 100.0
+        
+    exergy_index = (added_code / total_added) * 100.0
+    print("=== GIT STAGED EXERGY TELEMETRY ===")
+    print(f"Staged Code Lines Added: {added_code}")
+    print(f"Staged Anergic Lines Added (Comments/Blanks): {added_anergy}")
+    print(f"Staged Exergy Index: {exergy_index:.2f}%")
+    
+    if exergy_index < 80.0 and total_added > 5:
+        print("[!] ERROR: Staged changes exergy index is below 80%. High Anergy slop detected in diff.")
+        import sys
+        sys.exit(1)
+        
+    print("[✓] Git Staged Exergy check passed.")
+    return exergy_index
+
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description="MOSKV-1 Exergy and Telemetry Sensor")
     parser.add_argument("--transcript", type=str, help="Path to transcript.jsonl to verify cognitive exergy")
     parser.add_argument("--workspace", action="store_true", help="Scan the current workspace for structural code exergy")
+    parser.add_argument("--git", action="store_true", help="Scan current staged changes for git exergy")
     
     args = parser.parse_args()
     
-    if args.workspace:
+    if args.git:
+        calculate_git_diff_exergy()
+    elif args.workspace:
         calculate_workspace_exergy(os.path.dirname(os.path.abspath(__file__)))
     elif args.transcript:
         calculate_exergy(args.transcript)
     else:
         calculate_workspace_exergy(os.path.dirname(os.path.abspath(__file__)))
+

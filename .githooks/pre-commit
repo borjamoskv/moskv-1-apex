@@ -22,5 +22,10 @@ if git diff --cached --name-only | grep -v "pre-commit" | xargs grep -i -E "/pri
     exit 1
 fi
 
+# Run Git Staged Exergy check via exergy_sensor.py
+if [ -f "exergy_sensor.py" ]; then
+    python3 exergy_sensor.py --git || exit 1
+fi
+
 echo -e "\033[0;34m[MOSKV-1] Exergy Validated. Committing to C5-REAL Ledger.\033[0m"
 exit 0
