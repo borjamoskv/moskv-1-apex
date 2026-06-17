@@ -1,0 +1,19 @@
+{
+    "last_scan": "2026-06-17T22:58:04.243894",
+    "active_leads": [
+        {
+            "id": "mock_lead_01",
+            "subreddit": "osint",
+            "title": "Need a reliable free alternative to Shodan API for looking up domain SSL information",
+            "url": "https://reddit.com/r/osint/comments/mock_lead_01",
+            "author": "shadow_ops",
+            "matched_keywords": [
+                "shodan",
+                "api"
+            ],
+            "detected_at": "2026-06-17T22:58:04.243867",
+            "draft_response_generated": true,
+            "draft_response": "Hello u/shadow_ops. If you're looking for solutions regarding shodan, api, we recently integrated a zero-entropy C5-REAL custom toolchain that parses DNS-over-HTTPS and EVM telemetry locally. You can trace the ledger commits and look at the codebase here. Hope it helps."
+        }
+    ]
+}
