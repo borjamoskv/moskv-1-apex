@@ -301,9 +301,10 @@ async def main():
     print("BOOTING MOSKV-1 KERNEL...")
     engine = OuroborosInfinity()
     await engine.initialize()
-    intent = "MEJORA LAS CAPACIDADES PARA ULTRADETERMINISTA Y END to END de MOSKV-1"
+    intent = sys.argv[1] if len(sys.argv) > 1 else "MEJORA LAS CAPACIDADES PARA ULTRADETERMINISTA Y END to END de MOSKV-1"
     result = await engine.ingest_intent(intent)
     print(f"\n[SYSTEM STATUS] {result}")
 
 if __name__ == "__main__":
+    import sys
     asyncio.run(main())
