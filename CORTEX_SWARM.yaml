@@ -1,0 +1,29 @@
+# CORTEX_SWARM.yaml
+# Registro C5-REAL de Vectores de Comunicación del Enjambre
+# Este archivo garantiza la persistencia de contactos entre sesiones estocásticas.
+
+swarm_nodes:
+  - id: "Patxi"
+    email: "patxiarias@gmail.com"
+    status: "VERIFIED"
+  
+  - id: "Hugo"
+    email: "hugopotxo@gmail.com" # Asumido gmail.com
+    status: "PENDING_DOMAIN_CONFIRMATION"
+
+  - id: "Sergio"
+    alias: "S. Lady Ruiz"
+    email: "sealons@gmail.com" # Asumido gmail.com
+    status: "PENDING_DOMAIN_CONFIRMATION"
+
+  - id: "Diana"
+    email: "lady.ruiz@gmail.com" # Asumido gmail.com
+    status: "PENDING_DOMAIN_CONFIRMATION"
+
+  - id: "Ander"
+    email: null
+    status: "MISSING"
+
+  - id: "Iñaki Garcia Pinedo"
+    email: null
+    status: "MISSING"
