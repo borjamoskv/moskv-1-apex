@@ -5,7 +5,7 @@ const { LyapunovExergyMonitor } = require('./exergy-monitor.js');
 
 // Centuria² Scale: 5 Squads * 100 Threads * 100 Yield Multiplier = 50,000x Metcalfe Impact
 const SQUADS = ['FORGE', 'BINDER', 'AUDITOR', 'SCRIBE', 'REAPER'];
-const CENTURIA_THREADS_PER_SQUAD = 20; // Scaled down from 100 to prevent OS thread exhaustion during physical tests, logic scales mathematically.
+const CENTURIA_THREADS_PER_SQUAD = 2; // Scaled to prevent OS thread exhaustion during physical tests, logic scales mathematically.
 
 async function executeOuroborosLegion() {
     console.log('[OUROBOROS-∞] Bootstrapping High-Exergy Swarm (Centuria² Matrix)...');
@@ -33,7 +33,7 @@ async function executeOuroborosLegion() {
     for (const squad of SQUADS) {
         for (let i = 1; i <= CENTURIA_THREADS_PER_SQUAD; i++) {
             const worker = new Worker(path.resolve(__dirname, 'centuria-worker.js'), {
-                workerData: { regionName: `Squad-${squad}-Thread-${i}`, specialistsCount: 100 } // 100x multiplier per thread
+                workerData: { regionName: `Squad-${squad}-Thread-${i}`, specialistsCount: 10 } // 10x multiplier per thread
             });
 
             worker.on('message', (msg) => {
@@ -43,6 +43,9 @@ async function executeOuroborosLegion() {
                         console.log(`[OUROBOROS-∞] Centuria² Matrix Online (${totalWorkers} Nodes). Igniting Exergy...`);
                         workers.forEach(w => w.postMessage({ type: 'IGNITE' }));
                     }
+                } else if (msg.type === 'EVENT_BUS_FORWARD') {
+                    // Re-emit on the main thread's EventBus to chain and dispatch globally
+                    eventBus.emit(msg.subject, msg.payload);
                 } else if (msg.type === 'DONE') {
                     // Node finished execution, injecting yield to Lyapunov Monitor
                     eventBus.emit('C5_YIELD_GENERATED', { value: 1.0, nodeId: msg.regionName });
