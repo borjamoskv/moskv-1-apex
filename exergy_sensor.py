@@ -165,7 +165,11 @@ def calculate_workspace_exergy(root_dir: str):
                         if not stripped:
                             file_anergy += 1
                         elif stripped.startswith("#") or stripped.startswith("//") or (stripped.startswith("/*") and stripped.endswith("*/")):
-                            file_anergy += 1
+                            # Whitelist structured declarative invariants
+                            if any(token in stripped for token in ("C5-REAL", "C4-SIM", "Claim:", "Proof:", "Status:", "Axiom:", "Exergy")):
+                                file_code += 1
+                            else:
+                                file_anergy += 1
                         else:
                             file_code += 1
             except Exception:

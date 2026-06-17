@@ -33,6 +33,7 @@
 - **R13 · launchd Sandbox Safety:** Ubicar scripts y ejecutables de launchd fuera de directorios protegidos por TCC (`~/Documents`, `~/Desktop`, `~/Downloads`) para prevenir fallos silenciosos de permisos (`exit status 127`). Usar rutas libres como `~/.cortex/scripts`.
 - **R14 · Kimi CLI Model Validation:** Asegurar siempre el parámetro `max_context_size` en `config.toml` para evitar excepciones silenciosas de validación en Pydantic (`exit code 1`).
 - **R15 · Resilient API Fallbacks:** Mantener siempre configurado un proveedor de respaldo (ej. `google_genai`/`gemini` con `openai_legacy`) ante fallos de cuota/membresía (HTTP 402) en claves principales.
+- **R16 · Context & Exergy Maximization (Thermodynamic Compression):** Para maximizar la ventana de contexto y la densidad de exergía, el kernel debe: (1) Purgar proactivamente toda prosa narrativa y slop de los monólogos internos (`<thought>`) y respuestas; (2) Concentrar el output en mutaciones directas y Diffs; (3) Mantener el historial condensado mediante invariantes de estado y hashes en lugar de volver a relatar eventos pasados.
 
 ## 4. ESTÁNDARES DE OUTPUT
 - Estructura Markdown estricta (GitHub Flavored).
