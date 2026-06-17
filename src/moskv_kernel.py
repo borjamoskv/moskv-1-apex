@@ -104,20 +104,56 @@ class ExergyMaximizationKernel:
         self.ffi = ffi
         
     async def evaluate_yield(self, mutations_count: int, token_cost: int) -> ExergyYield:
-        """Calculates E = Structural_Mutations / (Tokens_Consumed * 0.01)."""
+        """Calculates E = (Structural_Mutations / (Tokens_Consumed * 0.01)) * Anergy_Penalty."""
         if token_cost == 0:
             return ExergyYield("0x0", 0.0, RealityLevel.C4_SIM)
             
         if self.ffi:
             ratio = self.ffi.get_ratio(mutations_count, token_cost)
-            print(f"[FFI-ACCELERATION] Ratio calculated via C library: {ratio:.4f}")
+            print(f"[FFI-ACCELERATION] Base Ratio calculated via C library: {ratio:.4f}")
         else:
             ratio = mutations_count / (token_cost * 0.01) # Normalized threshold
-            print(f"[FALLBACK] Ratio calculated via Python: {ratio:.4f}")
+            print(f"[FALLBACK] Base Ratio calculated via Python: {ratio:.4f}")
+            
+        # Ingest dynamic transcript anergy penalty
+        penalty = 1.0
+        try:
+            from exergy_sensor import get_historical_anergy_threshold
+            from moskv_1.crystallize_context import find_latest_transcript
+            import json
+            
+            latest_transcript = find_latest_transcript()
+            if latest_transcript and os.path.exists(latest_transcript):
+                total_content_length = 0
+                tool_calls = 0
+                with open(latest_transcript, 'r', encoding='utf-8') as f:
+                    for line in f:
+                        if not line.strip():
+                            continue
+                        try:
+                            step = json.loads(line)
+                            if step.get("type") in ("PLANNER_RESPONSE", "MODEL_RESPONSE"):
+                                total_content_length += len(step.get("content", "")) + len(step.get("thinking", ""))
+                                if step.get("tool_calls"):
+                                    tool_calls += len(step.get("tool_calls"))
+                        except Exception:
+                            continue
+                
+                anergy_ratio = total_content_length / (tool_calls if tool_calls > 0 else 1)
+                threshold = get_historical_anergy_threshold()
+                
+                if anergy_ratio > threshold:
+                    penalty = threshold / anergy_ratio
+                    print(f"[EXERGY-KERNEL] Penalty Applied: Anergy Ratio ({anergy_ratio:.2f}) exceeds Threshold ({threshold:.2f}). Penalty factor: {penalty:.4f}")
+        except Exception as e:
+            print(f"[EXERGY-KERNEL] Failed to calculate dynamic anergy: {e}")
+            
+        final_ratio = ratio * penalty
+        print(f"[EXERGY-KERNEL] Final Exergy Yield: {final_ratio:.4f}")
         
         _hash = hashlib.sha256(str(time.time()).encode()).hexdigest()[:12]
-        level = RealityLevel.C5_REAL if ratio >= self.TARGET_YIELD else RealityLevel.C4_SIM
-        return ExergyYield(f"0x{_hash}_MOSKV", ratio, level)
+        level = RealityLevel.C5_REAL if final_ratio >= self.TARGET_YIELD else RealityLevel.C4_SIM
+        return ExergyYield(f"0x{_hash}_MOSKV", final_ratio, level)
 
 class OuroborosInfinity:
     """The recursive engine orchestrating the full C5-REAL E2E execution lifecycle."""
