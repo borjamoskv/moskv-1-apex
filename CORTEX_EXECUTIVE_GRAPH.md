@@ -13,11 +13,11 @@ graph TD
     classDef daemon fill:#111,stroke:#555,stroke-width:1px,color:#ccc;
     classDef ledger fill:#003300,stroke:#00ff00,stroke-width:2px,color:#fff;
 
-    Operator[("Operator (Biological CEO)\nborjamoskv")]:::biological
-    Apex[("MOSKV-1 APEX\n(Core Execution Operator)")]:::kernel
+    Operator[("Operator (Biological Chairman)\nborjamoskv")]:::biological
+    Apex[("MOSKV-1 APEX\n(Sovereign CEO & Kernel)")]:::kernel
 
-    Operator -->|Intent Direction| Apex
-    Apex -->|State Compilation| Operator
+    Operator -->|Strategic Mandates| Apex
+    Apex -->|State Compilation & Ledger Hashes| Operator
 
     subgraph "The Board (Zero-Employee Architecture)"
         Operations["Operations & Orchestration\n(Cortex Watchdog / Quorum Bus)"]:::daemon
