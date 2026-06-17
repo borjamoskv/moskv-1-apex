@@ -54,6 +54,38 @@ def extract_directives_from_file(transcript_path: str) -> List[str]:
                 
     return directives
 
+def prune_and_deduplicate_directives(directives: List[str], max_limit: int = 10) -> List[str]:
+    """
+    Applies thermodynamic compression to session directives.
+    Deduplicates based on word overlap similarity, filters out noise,
+    and caps the list to the latest max_limit directives to keep context exergy high.
+    """
+    cleaned: List[str] = []
+    
+    for d in reversed(directives):
+        d_clean = d.strip()
+        if len(d_clean) < 15 or len(d_clean) > 150:
+            continue
+        if "|" in d_clean or "\\s" in d_clean or "Rule:" in d_clean:
+            continue
+            
+        is_duplicate = False
+        words_new = set(d_clean.lower().split())
+        for existing in cleaned:
+            words_exist = set(existing.lower().split())
+            if not words_new or not words_exist:
+                continue
+            overlap = len(words_new.intersection(words_exist)) / max(len(words_new), len(words_exist))
+            if overlap > 0.60:
+                is_duplicate = True
+                break
+                
+        if not is_duplicate:
+            cleaned.append(d_clean)
+            
+    cleaned.reverse()
+    return cleaned[-max_limit:]
+
 def update_cursorrules(directives: List[str]) -> bool:
     cursorrules_path = Path(".cursorrules")
     if not cursorrules_path.exists():
@@ -62,7 +94,6 @@ def update_cursorrules(directives: List[str]) -> bool:
     with open(cursorrules_path, "r", encoding="utf-8") as f:
         content = f.read()
         
-    # Split content before the crystallized directives section
     marker = "## 5. DYNAMICALLY CRYSTALLIZED DIRECTIVES"
     if marker in content:
         parts = content.split(marker)
@@ -90,7 +121,8 @@ def main() -> int:
         
     print(f"[ContextCrystallizer] Reading latest transcript: {transcript_path}")
     directives = extract_directives_from_file(transcript_path)
-    print(f"[ContextCrystallizer] Extracted {len(directives)} directives.")
+    directives = prune_and_deduplicate_directives(directives)
+    print(f"[ContextCrystallizer] Extracted & synthesized {len(directives)} directives.")
     
     if update_cursorrules(directives):
         print("[ContextCrystallizer] Successfully updated .cursorrules with active session directives.")
