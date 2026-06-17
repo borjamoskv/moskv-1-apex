@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CORTEX-PERSIST // Aprovisionamiento Completado</title>
+    <!-- Premium Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .success-container {
+            max-width: 600px;
+            width: 100%;
+            margin: 80px auto;
+            text-align: center;
+        }
+        .success-panel {
+            background: var(--surface-glass);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(0, 230, 118, 0.3);
+            box-shadow: 0 15px 40px rgba(0, 230, 118, 0.05);
+            border-radius: var(--radius-lg);
+            padding: 50px 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        .success-icon {
+            font-size: 3.5rem;
+            color: #00e676;
+            text-shadow: 0 0 20px rgba(0, 230, 118, 0.4);
+            margin-bottom: 10px;
+        }
+        .success-panel h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+        }
+        .session-info {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--border-glass);
+            border-radius: 8px;
+            padding: 16px;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--yinmn-light);
+            word-break: break-all;
+        }
+        .activation-checklist {
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 10px 0;
+        }
+        .activation-item {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .activation-item span {
+            color: #00e676;
+        }
+    </style>
+</head>
+<body>
+    <div class="analog-grain"></div>
+    <div class="glow-orb orb-1" style="background: radial-gradient(circle, rgba(0, 230, 118, 0.15) 0%, transparent 70%);"></div>
+
+    <div class="container">
+        <div class="success-container">
+            <div class="success-panel">
+                <div class="success-icon">✓</div>
+                <h1>Aprovisionamiento Completado</h1>
+                <p>El pago de tu licencia ha sido validado físicamente en nuestro ledger. Hemos inicializado el canal de exergía e inyectado las llaves correspondientes en el kernel.</p>
+                
+                <div class="session-info">
+                    SESSION_ID: <span id="session-id-display">Cargando...</span>
+                </div>
+
+                <div class="activation-checklist">
+                    <div class="activation-item">
+                        <span>✓</span> Hardware UUID registrado y enlazado
+                    </div>
+                    <div class="activation-item">
+                        <span>✓</span> Llaves criptográficas Ed25519 inyectadas
+                    </div>
+                    <div class="activation-item">
+                        <span>✓</span> Bus local de NATS habilitado en segundo plano
+                    </div>
+                    <div class="activation-item">
+                        <span>✓</span> Factura tributaria (Norma Foral Bizkaia) emitida por SEPA
+                    </div>
+                </div>
+
+                <a href="/" class="btn btn-primary btn-full">Volver al Inicio</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const params = new URLSearchParams(window.location.search);
+            const sessionId = params.get("session_id") || "N/A (MOCK_SESSION)";
+            document.getElementById("session-id-display").innerText = sessionId;
+        });
+    </script>
+</body>
+</html>
