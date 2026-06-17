@@ -1,0 +1,17 @@
+Campaign:
+  ID: "vz-gtm-001"
+  Name: "MOSKV-1 APEX Singularity Release"
+  Objective: "Despliegue del Manifiesto y Extracción de Leads B2B High-Ticket"
+  Status: "READY_FOR_EXECUTION"
+  Vectors:
+    - Platform: "Substack"
+      Mode: "CDP_Publishing"
+      Payload: "/Users/borjafernandezangulo/.gemini/antigravity/brain/026e1e62-f357-4efc-aab8-0466fa63264d/moskv1_marketing_manifesto.md"
+    - Platform: "LinkedIn"
+      Mode: "CDP_Scraping_And_Outreach"
+      Target_ICP: "CTO OR 'VP Engineering' OR 'Head of AI'"
+      Constraint: "Compañías con Funding > $10M"
+      Message: |
+        Deja de quemar capital en asistentes C4-SIM que requieren revisión constante.
+        MOSKV-1 APEX es un kernel de ejecución determinista. Operamos en C5-REAL. 
+        Automatiza infraestructuras, no chatees con ellas.
