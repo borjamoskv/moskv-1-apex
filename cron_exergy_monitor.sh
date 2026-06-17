@@ -4,8 +4,13 @@
 TARGET_TRANSCRIPT="$1"
 
 if [ -z "$TARGET_TRANSCRIPT" ]; then
-    # Por defecto, mapea al cerebro local si no se especifica
-    TARGET_TRANSCRIPT="/Users/borjafernandezangulo/.gemini/antigravity/brain/b33d536f-20a9-4a02-a05c-3d7eab16ca42/.system_generated/logs/transcript.jsonl"
+    # Detect dynamically the most recently modified brain directory to find active transcript
+    LATEST_DIR=$(ls -td /Users/borjafernandezangulo/.gemini/antigravity/brain/*/ 2>/dev/null | head -n 1)
+    if [ -n "$LATEST_DIR" ]; then
+        TARGET_TRANSCRIPT="${LATEST_DIR}.system_generated/logs/transcript.jsonl"
+    else
+        TARGET_TRANSCRIPT="/Users/borjafernandezangulo/.gemini/antigravity/brain/3cfc9bef-827d-441c-8453-7e917c32297a/.system_generated/logs/transcript.jsonl"
+    fi
 fi
 
 echo "[MOSKV-1] Iniciando Sensorización Autónoma sobre: $TARGET_TRANSCRIPT"
