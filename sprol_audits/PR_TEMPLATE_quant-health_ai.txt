@@ -8,7 +8,7 @@ Instead of traditional logs that can be tampered with or deleted, we committed t
 https://cortexpersist.com/
 
 This Pull Request appends the cryptographic proof of work (`AUDIT_quant-health_ai.md`) directly to your codebase. You can verify its integrity using the signature:
-`ef61a2dff3ee9dcd8efa7efe3ae96c1ca3d97dedcd336623cd44aded97f038d2`
+`be87ffa7d0ead17ebec1643c1625b8da82b89c42113286f00e9b6d3a5ebfc94e`
 
 - **Check out the verified event details:** [CortexPersist Consola](https://cortexpersist.com/activation)
 

@@ -8,7 +8,7 @@ Instead of traditional logs that can be tampered with or deleted, we committed t
 https://cortexpersist.com/
 
 This Pull Request appends the cryptographic proof of work (`AUDIT_nexus-logistics_dev.md`) directly to your codebase. You can verify its integrity using the signature:
-`7ef0ff24682a93b3982cd5f0926fec1a63bf99cb1ed5d6f72428a72da3e6a12a`
+`01556013e50766d921b2e457329248a53a9f8080101516adc038f3610af3f9f6`
 
 - **Check out the verified event details:** [CortexPersist Consola](https://cortexpersist.com/activation)
 
