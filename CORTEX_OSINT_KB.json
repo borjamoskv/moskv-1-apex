@@ -1,5 +1,5 @@
 {
-    "last_update": "2026-06-17T22:55:04.420517",
+    "last_update": "2026-06-17T22:55:54.974353",
     "vectors": [],
     "tools": {
         "Etherscan_Advanced_API": "Clustering heuristics for Tornado Cash routing.",
@@ -10,7 +10,9 @@
         "Active_Port_Mapping": "Socket-based active service mapping.",
         "Standard_Forensic_Reporter": "Automated Bizkaia-compliant Markdown reporting.",
         "SSL_Certificate_Scanner": "Active SSL metadata parser for tracking code infrastructure.",
-        "Known_Entities_Database": "L1/L2 Bridge and Privacy Pool static DB routing."
+        "Known_Entities_Database": "L1/L2 Bridge and Privacy Pool static DB routing.",
+        "DoH_DNS_Resolver": "Cloudflare DNS-over-HTTPS JSON lookup for MX/TXT/NS records.",
+        "Email_Header_Forensics": "RFC 5322 raw email transit trace parser."
     },
     "heuristics": []
 }
