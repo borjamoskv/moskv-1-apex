@@ -1,0 +1,10 @@
+{
+    "last_update": "2026-06-17T22:52:01.800518",
+    "vectors": [],
+    "tools": {
+        "Etherscan_Advanced_API": "Clustering heuristics for Tornado Cash routing.",
+        "ShadowDragon": "Social media structural mapping.",
+        "Maltego_C5": "Custom transforms for EVM smart contract vulnerability mapping."
+    },
+    "heuristics": []
+}
