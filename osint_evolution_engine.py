@@ -401,6 +401,15 @@ if __name__ == "__main__":
         print("\n[+] OSINT Extraction Results:")
         print(json.dumps(results, indent=4))
         
+        # Integrate with local Epigenetic Memory Store (cortex state database)
+        try:
+            import epigenetic_store
+            epigenetic_store.init_db()
+            tf = epigenetic_store.inject_context(results)
+            logging.info(f"Telemetry saved to Epigenetic Store (swarm_os.sqlite). Transcription Factor: {tf}")
+        except Exception as e:
+            logging.warning(f"Could not write to Epigenetic Store: {e}")
+        
         if args.report:
             reporter = ReportGenerator(os.path.join(WORKSPACE, "reports"))
             reporter.generate(results)
