@@ -34,6 +34,32 @@ async function initiateCheckout(tier) {
 
         const session = await response.json();
 
+        // Simulador C5-REAL
+        if (session.id === "cs_test_mock_c5_real") {
+            alert(`[CORTEX-MOCK] Simulando redirección a Stripe para Tier: ${tier}...\n¡Cobro por SEPA IBAN procesado con éxito!`);
+            
+            // Simular webhook de Stripe golpeando a nuestro backend
+            fetch('http://localhost:4242/stripe-webhook', {
+                method: 'POST',
+                headers: { 
+                    'stripe-signature': 'mock_sig_c5_real', 
+                    'Content-Type': 'application/json' 
+                },
+                body: JSON.stringify({
+                    type: 'checkout.session.completed',
+                    data: { 
+                        object: { 
+                            id: session.id, 
+                            amount_total: tier === 'C5-REAL' ? 49900 : 4900, 
+                            currency: 'eur', 
+                            payment_method_types: ['sepa_debit'] 
+                        } 
+                    }
+                })
+            }).catch(e => console.error("Webhook error:", e));
+            return;
+        }
+
         // Redirect to Stripe Checkout (handles Card & SEPA IBAN)
         const result = await stripe.redirectToCheckout({
             sessionId: session.id,
