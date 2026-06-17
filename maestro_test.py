@@ -7,7 +7,7 @@ sys.path.insert(0, os.path.abspath('mac-maestro'))
 
 try:
     from mac_maestro import MacMaestro, ClickAction
-    from mac_maestro.backends.mock import MockBackend
+    from mac_maestro.backends.ax import NativeAXBackend
     from mac_maestro.models import AXNodeSnapshot
 
     def test_l5_actuator():
@@ -22,7 +22,8 @@ try:
             ],
         )
 
-        maestro = MacMaestro(bundle_id="com.moskv.apex", backend=MockBackend(root=root))
+        # WARNING: This requires SIP modification and Accessibility permissions in macOS Security & Privacy
+        maestro = MacMaestro(bundle_id="com.moskv.apex", backend=NativeAXBackend())
         
         trace = maestro.run([ClickAction(role="AXButton", title="Deploy L5 Kernel")])
 

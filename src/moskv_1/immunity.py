@@ -17,9 +17,15 @@ class ImmunityLayer:
     MOSKV-1 Python Core Immunity Layer.
     Detects, quarantines, and manages semantic necrosis and low-information-density signals.
     """
-    def __init__(self, high_threshold: float = 3.5, mid_threshold: float = 2.5):
-        self.high_threshold = high_threshold
-        self.mid_threshold = mid_threshold
+    def __init__(self, high_threshold: float = None, mid_threshold: float = None):
+        import os
+        # Dynamic calibration based on environment/system state, eradicating hardcoding.
+        # Fallback to standard C5-REAL baseline if not specified.
+        dyn_high = float(os.environ.get("CORTEX_SHANNON_HIGH", 3.5))
+        dyn_mid = float(os.environ.get("CORTEX_SHANNON_MID", 2.5))
+        
+        self.high_threshold = high_threshold if high_threshold is not None else dyn_high
+        self.mid_threshold = mid_threshold if mid_threshold is not None else dyn_mid
 
     @staticmethod
     def calculate_entropy(text: str) -> float:

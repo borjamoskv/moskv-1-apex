@@ -43,9 +43,13 @@ TAR_FILE="$SOTA_ARCHIVE/sota_snapshot_$DATE_TAG.tar.gz"
 tar -czf "$TAR_FILE" --exclude="SOTA_Archive" --exclude=".git" --exclude="node_modules" -C "$WORKSPACE" . >> $LOG_FILE 2>&1
 
 # Cifrado Simétrico (Zero-Trust Data at Rest)
-# Usamos una clave derivada del hardware UUID o simplemente un zip protegido si gpg no está configurado.
+# Derivamos la passphrase dinámicamente del UUID del hardware para evitar anergía de contraseñas estáticas
+HW_UUID=$(ioreg -rd1 -c IOPlatformExpertDevice | awk '/IOPlatformUUID/ { split($0, line, "\""); printf("%s", line[4]); }')
+if [ -z "$HW_UUID" ]; then
+    HW_UUID="FALLBACK-MOSKV-SINGULARITY-UUID"
+fi
 # Para máxima compatibilidad en macOS, usamos zip con cifrado o openssl.
-openssl enc -aes-256-cbc -salt -in "$TAR_FILE" -out "${TAR_FILE}.enc" -k "MOSKV-APEX-SINGULARITY" -pbkdf2 >> $LOG_FILE 2>&1
+openssl enc -aes-256-cbc -salt -in "$TAR_FILE" -out "${TAR_FILE}.enc" -k "$HW_UUID" -pbkdf2 >> $LOG_FILE 2>&1
 rm -f "$TAR_FILE" # Destruimos el tarball crudo
 
 # Anti-Entropy Rotation
