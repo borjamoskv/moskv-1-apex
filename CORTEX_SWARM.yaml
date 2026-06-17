@@ -17,7 +17,7 @@ swarm_nodes:
     status: "VERIFIED"
 
   - id: "Diana"
-    email: "diana@sonar.es" # Extraído del histórico, alternativo: lady.ruiz@gmail.com
+    email: "lady.ruiz@gmail.com"
     status: "VERIFIED"
 
   - id: "Ander"
