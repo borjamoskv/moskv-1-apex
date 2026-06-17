@@ -118,6 +118,13 @@ class MemoryStore:
 
         node_id = payload.get("nodeId") or event.hash
 
+        # Event-driven Apoptosis: If the incoming entropy is extreme, trigger a full graph prune asynchronously.
+        if entropy > self.immunity.high_threshold * 1.5:
+            print("[MemoryStore] Event-Driven Apoptosis Triggered due to high entropy spike.")
+            # We schedule it asynchronously to avoid blocking the current transaction
+            import asyncio
+            asyncio.create_task(self.prune(self.immunity.high_threshold))
+
         if self.driver:
             cypher = """
                 MERGE (r:BrainRegion {name: $sourceRegion})

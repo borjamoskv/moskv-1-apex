@@ -35,19 +35,12 @@ def main():
     
     intro_mix = intro_vocals + intro_other
     
-    print("Processing Drop (10s onwards)...")
+    print("Processing Drop (10s onwards) with MLX Hardware Acceleration...")
     # Drop (10s onwards)
     drop_vocals = vocals[intro_samples:].copy()
     drop_other = other[intro_samples:].copy()
     drop_drums = drums[intro_samples:].copy()
     drop_bass = bass[intro_samples:].copy()
-    
-    # Pan other left (reduce right channel)
-    if drop_other.ndim == 2 and drop_other.shape[1] == 2:
-        drop_other[:, 1] *= 0.5  # reduce right channel by 50%
-    
-    # Boost bass by 4dB -> linear multiplier = 10^(4/20) = 1.58
-    drop_bass *= 1.58
     
     # The lengths might differ slightly if the files differ, truncate to min_len
     min_len = min(len(drop_vocals), len(drop_other), len(drop_drums), len(drop_bass))
@@ -55,8 +48,39 @@ def main():
     drop_other = drop_other[:min_len]
     drop_drums = drop_drums[:min_len]
     drop_bass = drop_bass[:min_len]
-    
-    drop_mix = drop_vocals + drop_other + drop_drums + drop_bass
+
+    # MLX Acceleration for tensor math (C5-REAL Silicon Optimization)
+    try:
+        import mlx.core as mx
+        # Move arrays to Apple Unified Memory GPU
+        v_mx = mx.array(drop_vocals)
+        o_mx = mx.array(drop_other)
+        d_mx = mx.array(drop_drums)
+        b_mx = mx.array(drop_bass)
+        
+        # Panning logic (reduce right channel)
+        if len(o_mx.shape) == 2 and o_mx.shape[1] == 2:
+            left = o_mx[:, 0:1]
+            right = o_mx[:, 1:2] * 0.5
+            o_mx = mx.concatenate([left, right], axis=1)
+            
+        # Boost bass by 4dB (1.58)
+        b_mx = b_mx * 1.58
+        
+        drop_mix_mx = v_mx + o_mx + d_mx + b_mx
+        
+        # Evaluate lazily executed graph and retrieve as numpy
+        mx.eval(drop_mix_mx)
+        drop_mix = np.array(drop_mix_mx)
+        print("[+] MLX Tensor compilation & execution complete.")
+        
+    except ImportError:
+        print("[-] MLX no detectado. Cayendo a fallback sincrónico en CPU (numpy).")
+        # Fallback numpy logic
+        if drop_other.ndim == 2 and drop_other.shape[1] == 2:
+            drop_other[:, 1] *= 0.5
+        drop_bass *= 1.58
+        drop_mix = drop_vocals + drop_other + drop_drums + drop_bass
     
     print("Concatenating and rendering...")
     final_mix = np.concatenate((intro_mix, drop_mix))

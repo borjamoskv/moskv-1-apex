@@ -11,19 +11,15 @@ swarm_nodes:
     email: "hugopotxo@gmail.com"
     status: "VERIFIED"
 
-  - id: "Sergio"
-    alias: "S. Lady Ruiz"
-    email: "sealons@yahoo.es"
-    status: "VERIFIED"
-
-  - id: "Diana"
-    email: "lady.ruiz@gmail.com"
-    status: "VERIFIED"
+  - id: "Sergio_Diana_Node"
+    alias: ["S. Lady Ruiz", "Sergio Alonso", "Diana Ruiz"]
+    emails: 
+      - "sealons@yahoo.es"
+      - "lady.ruiz@gmail.com"
+    status: "VERIFIED_CONSOLIDATED"
 
   - id: "Ander"
     email: "ander.deprado@gmail.com"
     status: "VERIFIED"
 
-  - id: "Iñaki Garcia Pinedo"
-    email: null
-    status: "MISSING"
+# Nodo "Iñaki Garcia Pinedo" PURGADO (Status: MISSING -> APARTADO POR APÓPTOSIS)

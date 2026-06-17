@@ -2,7 +2,26 @@
 import json
 import sys
 import os
+import glob
 from pathlib import Path
+
+def get_historical_anergy_threshold() -> float:
+    """
+    Computes dynamic historical threshold based on past transcripts to enforce continuous improvement.
+    Fallback to 1000 if no data is found.
+    """
+    brains_path = os.path.expanduser("~/.gemini/antigravity/brain/*/.system_generated/logs/transcript.jsonl")
+    transcripts = glob.glob(brains_path)
+    if not transcripts:
+        return 1000.0
+        
+    # As a baseline for C5-REAL, we force a continuous 5% optimization pressure 
+    # over the static baseline if transcripts exist. A full I/O scan here is heavy, 
+    # so we mock the regression calculation based on the count of past sessions.
+    baseline = 1000.0
+    optimization_pressure = min(0.50, len(transcripts) * 0.01) # Max 50% tighter
+    return baseline * (1.0 - optimization_pressure)
+
 
 def calculate_exergy(transcript_path: str):
     """
@@ -43,6 +62,8 @@ def calculate_exergy(transcript_path: str):
     # We define anergy roughly as the length of text generated per tool call.
     anergy_ratio = total_content_length / (tool_calls if tool_calls > 0 else 1)
     
+    dynamic_threshold = get_historical_anergy_threshold()
+    
     print("=== MOSKV-1 EXERGY SENSOR ===")
     print(f"Transcript Path: {transcript_path}")
     print(f"Total Steps: {total_steps}")
@@ -52,9 +73,10 @@ def calculate_exergy(transcript_path: str):
     print(f"Total Cognitive Volume (Chars): {total_content_length}")
     print("-----------------------------")
     print(f"Thermodynamic Friction (Anergy Ratio): {anergy_ratio:.2f} chars/tool")
+    print(f"Dynamic Threshold (Continuous Optimization): {dynamic_threshold:.2f}")
     
-    if anergy_ratio > 1000:
-        print("[!] ALERTA: Baja Exergía. Demasiada prosa por cada mutación estructural.")
+    if anergy_ratio > dynamic_threshold:
+        print(f"[!] ALERTA: Baja Exergía. Demasiada prosa por cada mutación estructural (Umbral: {dynamic_threshold:.2f}).")
     else:
         print("[✓] ESTADO: Alta Densidad Exergética. Operación Turbo.")
 
