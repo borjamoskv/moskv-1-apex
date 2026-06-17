@@ -1,0 +1,12 @@
+**Title: [C5-REAL] Why your local agentic workflows freeze (It's not context limits, it's I/O Starvation)**
+
+Most people here blame network drops or token exhaustion when their local agent UI hangs. We just did a mutational autopsy on MOSKV-1 APEX and found the real culprit: **Thread Starvation and File System Contention** from background daemon tasks.
+
+**The Autopsy:**
+Our background conversation sweeper was running `ThreadPoolExecutor(max_workers=8)` to crystallize agent memory. This choked the I/O. The main inference loop couldn't read the `transcript.jsonl`. 
+
+**The Fix:**
+1. **Eradicated Parallelism:** We stripped the ThreadPool. The sweeper now iterates sequentially, forcefully yielding I/O (`time.sleep(0.1)`) so the inference loop never stalls.
+2. **Nuclear Purge:** Injected a hard >48h obliteration protocol for dead session folders to stop Inode exhaustion.
+
+Stop restarting your apps. Rewrite your daemon architecture. 
