@@ -25,7 +25,6 @@ class WalletAnalyzer:
 
     def analyze(self) -> dict:
         logging.info(f"Querying on-chain data for {self.address} ({self.network})...")
-        # Blockcypher supports btc/main, eth/main, etc.
         net_map = {
             "ethereum": "eth/main",
             "bitcoin": "btc/main"
@@ -131,6 +130,67 @@ class IdentityAnalyzer:
             "timestamp": datetime.utcnow().isoformat()
         }
 
+class ReportGenerator:
+    """
+    Generates standardized markdown reports following the Bizkaia Forensic Template.
+    """
+    def __init__(self, output_dir: str):
+        self.output_dir = output_dir
+        os.makedirs(self.output_dir, exist_ok=True)
+
+    def generate(self, run_results: dict) -> str:
+        timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
+        report_filename = f"OSINT_REPORT_{timestamp}.md"
+        report_path = os.path.join(self.output_dir, report_filename)
+
+        content = []
+        content.append("# INFORME DE INTELIGENCIA OSINT & ANÁLISIS FORENSE CRIPTO")
+        content.append(f"**Fecha de Emisión:** {datetime.utcnow().isoformat()} UTC\n")
+        content.append("## 1. Hallazgo principal")
+        
+        # Determine main findings
+        targets = []
+        if "wallet" in run_results:
+            w = run_results["wallet"]
+            targets.append(f"Wallet EVM {w['target']} ({w['network']})")
+        if "domain" in run_results:
+            d = run_results["domain"]
+            targets.append(f"Dominio {d['target']} ({d.get('resolved_ip', 'Unknown IP')})")
+        if "identity" in run_results:
+            i = run_results["identity"]
+            targets.append(f"Identidad GitHub {i['target']}")
+
+        content.append(f"- Se ha completado la extracción estructural sobre: {', '.join(targets)}.")
+        
+        content.append("\n## 2. Evidencia observada")
+        content.append("```json")
+        content.append(json.dumps(run_results, indent=4))
+        content.append("```")
+
+        content.append("\n## 3. Interpretación técnica")
+        if "wallet" in run_results:
+            content.append("- **On-Chain:** Telemetría de balance y rastreo de transacciones estructurado.")
+        if "domain" in run_results:
+            content.append("- **Infraestructura:** Mapeo activo de puertos y resolución de DNS.")
+        if "identity" in run_results:
+            content.append("- **Digital Footprint:** Datos expuestos en perfil público de GitHub.")
+
+        content.append("\n## 4. Riesgo fiscal o forense")
+        content.append("- **Clasificación Foral:** Evaluación preliminar conforme a la Norma Foral General Tributaria del Territorio Histórico de Bizkaia. Pendiente de contrastación con el Modelo 721 o IRPF si se verifican variaciones patrimoniales.")
+
+        content.append("\n## 5. Nivel de confianza")
+        content.append("- **Nivel:** C5-REAL (Datos estructurados obtenidos directamente de fuentes públicas y APIs criptográficas)")
+
+        content.append("\n## 6. Siguientes pasos recomendados")
+        content.append("- Pivotar sobre las direcciones IPs resueltas o correos electrónicos obtenidos.")
+        content.append("- Expandir clustering de wallets asociadas si se detectan swaps o transacciones complejas.")
+
+        with open(report_path, "w") as f:
+            f.write("\n".join(content))
+
+        logging.info(f"OSINT Forensic Report generated successfully at {report_path}")
+        return report_path
+
 class OSINTEvolutionEngine:
     def __init__(self, workspace_path: str):
         self.workspace_path = workspace_path
@@ -155,7 +215,8 @@ class OSINTEvolutionEngine:
         new_tools = {
             "Blockcypher_Forensics": "Decoupled blockchain balance tracking.",
             "GitHub_Footprinting": "GitHub metadata exposure scanner.",
-            "Active_Port_Mapping": "Socket-based active service mapping."
+            "Active_Port_Mapping": "Socket-based active service mapping.",
+            "Standard_Forensic_Reporter": "Automated Bizkaia-compliant Markdown reporting."
         }
         
         mutations_applied = 0
@@ -179,6 +240,7 @@ if __name__ == "__main__":
     parser.add_argument("--domain", type=str, help="Domain to analyze")
     parser.add_argument("--identity", type=str, help="GitHub identifier to analyze")
     parser.add_argument("--update", action="store_true", help="Ingest updates")
+    parser.add_argument("--report", action="store_true", help="Generate standardized Bizkaia report")
     
     args = parser.parse_args()
     WORKSPACE = os.path.dirname(os.path.abspath(__file__))
@@ -207,3 +269,7 @@ if __name__ == "__main__":
     if results:
         print("\n[+] OSINT Extraction Results:")
         print(json.dumps(results, indent=4))
+        
+        if args.report:
+            reporter = ReportGenerator(os.path.join(WORKSPACE, "reports"))
+            reporter.generate(results)
