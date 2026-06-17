@@ -2,3 +2,6 @@ node_modules/
 .env
 **/.env
 .vercel
+src/skills/worker_*
+src/skills/*.so
+src/skills/native_exergy.c
