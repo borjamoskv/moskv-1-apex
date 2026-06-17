@@ -71,6 +71,10 @@ def calculate_exergy(transcript_path: str):
                                 tool_calls += 3.0
                             elif name in ("run_command",):
                                 tool_calls += 2.0
+                            elif name in ("invoke_subagent", "send_message"):
+                                tool_calls += 5.0 # Swarm Mitosis is maximum exergy
+                            elif name in ("ask_question", "ask_permission"):
+                                tool_calls -= 5.0 # Blocking operator I/O is severe anergy
                             elif name in ("view_file", "list_dir", "grep_search", "read_url_content", "read_browser_page"):
                                 tool_calls += 0.5
                             else:
@@ -194,6 +198,7 @@ def calculate_git_diff_exergy() -> float:
     """
     Measures the exergy of the current staged git changes.
     Returns the percentage of active code lines added relative to total lines added.
+    Only evaluates code files, skipping configuration or documentation files.
     """
     import subprocess
     try:
@@ -214,8 +219,23 @@ def calculate_git_diff_exergy() -> float:
     added_code = 0
     added_anergy = 0
     
+    current_file_is_code = False
+    code_extensions = {".py", ".js", ".ts", ".cpp", ".sh", ".c", ".rs"}
+    
     for line in diff_output.splitlines():
-        if line.startswith("+") and not line.startswith("+++"):
+        if line.startswith("diff --git"):
+            parts = line.split()
+            if len(parts) >= 4:
+                file_path = parts[3]
+                if file_path.startswith("b/"):
+                    file_path = file_path[2:]
+                ext = os.path.splitext(file_path)[1].lower()
+                current_file_is_code = ext in code_extensions
+            else:
+                current_file_is_code = False
+            continue
+            
+        if current_file_is_code and line.startswith("+") and not line.startswith("+++"):
             content = line[1:].strip()
             if not content:
                 added_anergy += 1
@@ -226,6 +246,7 @@ def calculate_git_diff_exergy() -> float:
                 
     total_added = added_code + added_anergy
     if total_added == 0:
+        print("[✓] No code changes to analyze in staged files.")
         return 100.0
         
     exergy_index = (added_code / total_added) * 100.0
