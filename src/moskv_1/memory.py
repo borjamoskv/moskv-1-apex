@@ -2,6 +2,7 @@ import json
 import time
 from typing import Optional, Union, Dict, Any, List
 from moskv_1.event_bus import CortexEvent
+from moskv_1.immunity import ImmunityLayer, ImmuneState
 
 try:
     from neo4j import AsyncGraphDatabase
@@ -67,6 +68,7 @@ class MemoryStore:
         self._nodes: Dict[str, Dict[str, Any]] = {}
         self._regions: Dict[str, Dict[str, Any]] = {}
         self._relationships: List[tuple] = []
+        self.immunity = ImmunityLayer()
 
     async def connect(self):
         """
@@ -91,16 +93,28 @@ class MemoryStore:
     async def crystallize(self, event: CortexEvent) -> List[Any]:
         """
         Creates/updates a MemoryNode from a CortexEvent structure and links it to its BrainRegion.
+        Also evaluates the signal using the Immunity Layer.
         """
         payload = event.payload
         source_region = payload.get("sourceRegion", "Unknown")
-        entropy = payload.get("entropy", 1.0)
+        entropy = payload.get("entropy")
         content = payload.get("content", "Void")
 
         if isinstance(content, (dict, list)):
             content_str = json.dumps(content)
         else:
             content_str = str(content)
+
+        # Evaluate via Immunity Layer if is_quarantined is not explicitly passed
+        immune_state_obj, calculated_entropy = self.immunity.evaluate_signal(content_str)
+        if entropy is None:
+            entropy = calculated_entropy
+        
+        is_quarantined = payload.get("is_quarantined")
+        if is_quarantined is None:
+            is_quarantined = (immune_state_obj == ImmuneState.QUARANTINED or immune_state_obj == ImmuneState.NECROTIC)
+            
+        immune_state = payload.get("immune_state", immune_state_obj.value)
 
         node_id = payload.get("nodeId") or event.hash
 
@@ -111,7 +125,9 @@ class MemoryStore:
                 SET n.entropy = $entropy, 
                     n.content = $content, 
                     n.lastUpdated = timestamp(),
-                    n.spawnHash = $hash
+                    n.spawnHash = $hash,
+                    n.is_quarantined = $is_quarantined,
+                    n.immune_state = $immune_state
                 MERGE (n)-[:SYNTHESIZED_BY]->(r)
                 RETURN n
             """
@@ -122,7 +138,9 @@ class MemoryStore:
                     entropy=entropy,
                     content=content_str,
                     sourceRegion=source_region,
-                    hash=event.hash
+                    hash=event.hash,
+                    is_quarantined=is_quarantined,
+                    immune_state=immune_state
                 )
                 # Consume and materialize results INSIDE transaction callback
                 return [record async for record in res]
@@ -140,7 +158,9 @@ class MemoryStore:
                 "content": content_str,
                 "lastUpdated": now_ms,
                 "spawnHash": event.hash,
-                "sourceRegion": source_region
+                "sourceRegion": source_region,
+                "is_quarantined": is_quarantined,
+                "immune_state": immune_state
             }
             self._nodes[node_id] = node_props
             rel = (node_id, "SYNTHESIZED_BY", source_region)
@@ -150,6 +170,54 @@ class MemoryStore:
             node_obj = InMemoryNode(element_id=node_id, labels=["MemoryNode"], properties=node_props)
             record = InMemoryRecord({"n": node_obj})
             return [record]
+
+    async def quarantine(self, node_id: str, reason: str) -> bool:
+        """Manually put a memory node into quarantine status."""
+        if self.driver:
+            cypher = """
+                MATCH (n:MemoryNode {id: $id})
+                SET n.is_quarantined = true,
+                    n.quarantine_reason = $reason,
+                    n.immune_state = "quarantined"
+                RETURN n
+            """
+            async def work(tx):
+                res = await tx.run(cypher, id=node_id, reason=reason)
+                return [record async for record in res]
+            async with self.driver.session() as session:
+                records = await session.execute_write(work)
+                return len(records) > 0
+        else:
+            if node_id in self._nodes:
+                self._nodes[node_id]["is_quarantined"] = True
+                self._nodes[node_id]["quarantine_reason"] = reason
+                self._nodes[node_id]["immune_state"] = "quarantined"
+                return True
+            return False
+
+    async def unquarantine(self, node_id: str) -> bool:
+        """Lift quarantine status from a memory node."""
+        if self.driver:
+            cypher = """
+                MATCH (n:MemoryNode {id: $id})
+                SET n.is_quarantined = false,
+                    n.immune_state = "promotable"
+                REMOVE n.quarantine_reason
+                RETURN n
+            """
+            async def work(tx):
+                res = await tx.run(cypher, id=node_id)
+                return [record async for record in res]
+            async with self.driver.session() as session:
+                records = await session.execute_write(work)
+                return len(records) > 0
+        else:
+            if node_id in self._nodes:
+                self._nodes[node_id]["is_quarantined"] = False
+                self._nodes[node_id]["immune_state"] = "promotable"
+                self._nodes[node_id].pop("quarantine_reason", None)
+                return True
+            return False
 
     async def prune(self, entropy_threshold: float) -> int:
         """
