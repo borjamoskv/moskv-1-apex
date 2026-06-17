@@ -1,6 +1,8 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const fs = require('fs');
+const path = require('path');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || 'sk_test_mock_c5_real');
 
 const app = express();
@@ -32,9 +34,6 @@ app.post('/stripe-webhook', express.raw({ type: 'application/json' }), (req, res
         const session = event.data.object;
         console.log(`[CORTEX-PAYMENT-OK] Exergy Liquidated. Payment of ${session.amount_total / 100} ${session.currency.toUpperCase()} successful.`);
         console.log(`[CORTEX-PAYMENT-OK] Payment Method: ${session.payment_method_types[0]}`);
-        
-        // Emitting event to MOSKV-1 NATS or EventBus would go here
-        // e.g. emit('PAYMENT_CLEARED', { session_id: session.id, tier: session.metadata.tier });
     }
 
     res.json({ received: true });
@@ -43,9 +42,39 @@ app.post('/stripe-webhook', express.raw({ type: 'application/json' }), (req, res
 // JSON middleware for regular API endpoints
 app.use(express.json());
 
+// Serve static assets from the root directory (so localhost:4242 serves index.html)
+app.use(express.static(path.join(__dirname, '..')));
+
+// B2B Lead capture endpoint - appends to leads_ledger.ndjson
+app.post('/submit-lead', (req, res) => {
+    try {
+        const { name, email, domain, tech_stack } = req.body;
+        if (!email || !domain) {
+            return res.status(400).json({ error: 'Email and Domain are required parameters.' });
+        }
+
+        const lead = {
+            domain: domain,
+            ceo: name || 'Unknown Operator',
+            email: email,
+            tech_stack: Array.isArray(tech_stack) ? tech_stack : [tech_stack || 'React/AWS']
+        };
+
+        const ledgerPath = path.join(__dirname, '../leads_ledger.ndjson');
+        fs.appendFileSync(ledgerPath, JSON.stringify(lead) + '\n');
+        
+        console.log(`[CORTEX-LEAD-OK] Captured lead for ${domain} (${email})`);
+        res.json({ success: true, message: 'Lead recorded to sovereign ledger.' });
+    } catch (e) {
+        console.error('[CORTEX-LEAD-ERR] Failed to save lead:', e);
+        res.status(500).json({ error: e.message });
+    }
+});
+
 app.post('/create-checkout-session', async (req, res) => {
     try {
-        const { tier } = req.body;
+        const { tier, origin } = req.body;
+        const hostOrigin = origin || 'http://localhost:4242';
         
         // Thermodynamic Pricing Engine
         let priceData = {};
@@ -92,8 +121,8 @@ app.post('/create-checkout-session', async (req, res) => {
                 tier: tier,
                 justification: "Rendimientos de Actividades Económicas (Bizkaia)"
             },
-            success_url: 'http://localhost:5173/success.html?session_id={CHECKOUT_SESSION_ID}',
-            cancel_url: 'http://localhost:5173/pricing.html',
+            success_url: `${hostOrigin}/success.html?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${hostOrigin}/#pricing`,
         });
 
         res.json({ id: session.id });
@@ -105,4 +134,5 @@ app.post('/create-checkout-session', async (req, res) => {
 const PORT = process.env.PORT || 4242;
 app.listen(PORT, () => {
     console.log(`[CORTEX-PAYMENT] Stripe/SEPA Gateway listening on port ${PORT}`);
+    console.log(`[CORTEX-PAYMENT] Serving static files from root directory at http://localhost:${PORT}`);
 });
