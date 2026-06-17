@@ -3,7 +3,7 @@ import json
 import time
 import logging
 import urllib.request
-from datetime import datetime
+from datetime import datetime, timezone
 
 # C5-REAL OSINT SWARM MONITOR (REDDIT VECTORS)
 # Autonomous monitoring of subreddits for organic keyword matching.
@@ -67,7 +67,7 @@ class RedditSwarmMonitor:
                                     "url": f"https://reddit.com{permalink}",
                                     "author": pdata.get("author"),
                                     "matched_keywords": matched,
-                                    "detected_at": datetime.utcnow().isoformat(),
+                                    "detected_at": datetime.now(timezone.utc).isoformat(),
                                     "draft_response_generated": False
                                 }
                                 self.leads["active_leads"].append(lead_entry)
@@ -88,7 +88,7 @@ class RedditSwarmMonitor:
                     "url": "https://reddit.com/r/osint/comments/mock_lead_01",
                     "author": "shadow_ops",
                     "matched_keywords": ["shodan", "api"],
-                    "detected_at": datetime.utcnow().isoformat(),
+                    "detected_at": datetime.now(timezone.utc).isoformat(),
                     "draft_response_generated": False
                 }
             ]
@@ -97,7 +97,7 @@ class RedditSwarmMonitor:
                     self.leads["active_leads"].append(ml)
                     new_leads_count += 1
 
-        self.leads["last_scan"] = datetime.utcnow().isoformat()
+        self.leads["last_scan"] = datetime.now(timezone.utc).isoformat()
         self._save_log()
         
         logging.info(f"Scan complete. Found {new_leads_count} new potential leads.")

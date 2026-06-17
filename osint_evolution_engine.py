@@ -7,7 +7,7 @@ import socket
 import ssl
 import email
 import urllib.request
-from datetime import datetime
+from datetime import datetime, timezone
 
 # C5-REAL OSINT EVOLUTION KERNEL
 # Sovereign Autopoiesis for OSINT methodologies.
@@ -74,7 +74,7 @@ class WalletAnalyzer:
                 "active_balance": balance_data.get("balance", 0),
                 "total_transactions": balance_data.get("n_tx", 0)
             },
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.now(timezone.utc).isoformat()
         }
 
 class DomainAnalyzer:
@@ -161,7 +161,7 @@ class DomainAnalyzer:
                 "cloudflare_detected": "cloudflare" in ip_address,
                 "open_ports": open_ports
             },
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.now(timezone.utc).isoformat()
         }
 
 class IdentityAnalyzer:
@@ -204,7 +204,7 @@ class IdentityAnalyzer:
             },
             "external_profiles": platforms_availability,
             "leak_vector_detected": "email" in profile and profile["email"] is not None,
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.now(timezone.utc).isoformat()
         }
 
 class EmailHeaderAnalyzer:
@@ -240,7 +240,7 @@ class EmailHeaderAnalyzer:
                 "arc_auth_results": msg.get("ARC-Authentication-Results")
             },
             "received_hops": hops,
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.now(timezone.utc).isoformat()
         }
 
 class ReportGenerator:
@@ -252,13 +252,13 @@ class ReportGenerator:
         os.makedirs(self.output_dir, exist_ok=True)
 
     def generate(self, run_results: dict) -> str:
-        timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
+        timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
         report_filename = f"OSINT_REPORT_{timestamp}.md"
         report_path = os.path.join(self.output_dir, report_filename)
 
         content = []
         content.append("# INFORME DE INTELIGENCIA OSINT & ANÁLISIS FORENSE CRIPTO")
-        content.append(f"**Fecha de Emisión:** {datetime.utcnow().isoformat()} UTC\n")
+        content.append(f"**Fecha de Emisión:** {datetime.now(timezone.utc).isoformat()} UTC\n")
         content.append("## 1. Hallazgo principal")
         
         targets = []
@@ -351,7 +351,7 @@ class OSINTEvolutionEngine:
                 self.kb["tools"][tool] = desc
                 mutations_applied += 1
                 
-        self.kb["last_update"] = datetime.utcnow().isoformat()
+        self.kb["last_update"] = datetime.now(timezone.utc).isoformat()
         
         if mutations_applied > 0:
             logging.info(f"<mutation_sim> Validated. Applied {mutations_applied} new OSINT heuristics.")

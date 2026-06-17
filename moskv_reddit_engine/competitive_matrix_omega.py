@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 
 # MOSKV-1 APEX: Competitive Destruction Matrix (Vector Omega)
 # Objetivo: Computar termodinámicamente la superioridad de CORTEX-Persist sobre
@@ -29,13 +29,13 @@ MATRIX = {
 }
 
 def generate_destruction_matrix():
-    print(f"[{datetime.utcnow().isoformat()}] [OSINT-OMEGA] Forjando Matriz de Destrucción Competitiva...")
+    print(f"[{datetime.now(timezone.utc).isoformat()}] [OSINT-OMEGA] Forjando Matriz de Destrucción Competitiva...")
     os.makedirs(BLOG_DIR, exist_ok=True)
     
     with open(OUTPUT_MD, 'w', encoding='utf-8') as f:
         f.write("---\n")
         f.write("title: \"Matriz de Destrucción: Por qué LangSmith y Helicone son Anergía\"\n")
-        f.write(f"date: {datetime.utcnow().isoformat()}Z\n")
+        f.write(f"date: {datetime.now(timezone.utc).isoformat()}Z\n")
         f.write("url: https://cortexpersist.com/blog/03_destruction_matrix\n")
         f.write("tags: [\"#C5-REAL\", \"Competitive OSINT\", \"LangSmith\", \"Helicone\"]\n")
         f.write("---\n\n")

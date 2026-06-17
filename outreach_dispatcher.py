@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 
 # MOSKV-1 APEX: Outreach Dispatcher
 # Nivel de Realidad: C5-REAL
@@ -18,7 +18,7 @@ def dispatch_campaign():
         print(f"[C4-ERROR] Campaña base {CAMPAIGN_FILE} no encontrada. Ejecuta outreach_compiler.py primero.")
         return
 
-    print(f"[{datetime.utcnow().isoformat()}] [MDA-OMEGA] Iniciando Motor de Despliegue SMTP...")
+    print(f"[{datetime.now(timezone.utc).isoformat()}] [MDA-OMEGA] Iniciando Motor de Despliegue SMTP...")
     dispatched = []
     
     with open(CAMPAIGN_FILE, 'r', encoding='utf-8') as f:
@@ -36,7 +36,7 @@ def dispatch_campaign():
                 
                 # Mutación de estado
                 lead["status"] = "DISPATCHED"
-                lead["timestamp"] = datetime.utcnow().isoformat()
+                lead["timestamp"] = datetime.now(timezone.utc).isoformat()
                 dispatched.append(lead)
 
     with open(DISPATCH_LEDGER, 'w', encoding='utf-8') as out_f:
