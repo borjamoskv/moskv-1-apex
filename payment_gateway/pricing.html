@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOSKV-1 APEX | Activation Matrix</title>
+    <style>
+        /* AESTHETIC-OMEGA: Industrial Noir 2026 */
+        :root {
+            --bg-base: #0A0A0A;
+            --cortex-accent: #2B3BE5;
+            --cortex-alert: #FF3333;
+            --text-main: #F3F4F6;
+            --text-muted: #6B7280;
+        }
+        
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-w: 1000px;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -0.05em;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-family: monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            font-size: 0.85rem;
+            margin-bottom: 4rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 3rem 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            border-color: var(--cortex-accent);
+            box-shadow: 0 0 30px rgba(43, 59, 229, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .card.premium::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 3px;
+            background: var(--cortex-accent);
+        }
+
+        .tier-name {
+            font-family: monospace;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .price {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+        }
+
+        .price span {
+            font-size: 1rem;
+            color: var(--text-muted);
+            font-weight: normal;
+        }
+
+        .features {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 3rem 0;
+            text-align: left;
+        }
+
+        .features li {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+        }
+
+        .features li::before {
+            content: '■';
+            color: var(--cortex-accent);
+            margin-right: 10px;
+            font-size: 0.6rem;
+        }
+
+        .btn {
+            display: inline-block;
+            width: 100%;
+            padding: 1rem;
+            background: transparent;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-transform: uppercase;
+            font-family: monospace;
+            font-weight: bold;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: white;
+            color: black;
+        }
+
+        .btn.primary {
+            background: var(--cortex-accent);
+            border-color: var(--cortex-accent);
+        }
+
+        .btn.primary:hover {
+            background: transparent;
+            color: var(--cortex-accent);
+        }
+        
+        .alert {
+            margin-top: 4rem;
+            font-family: monospace;
+            color: var(--cortex-alert);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Instanciar Kernel</h1>
+        <div class="subtitle">Purga tu infraestructura de Anergía</div>
+
+        <div class="grid">
+            <!-- C4-SIM -->
+            <div class="card">
+                <div class="tier-name" style="color: var(--text-muted);">C4-SIM</div>
+                <div class="price">€49<span>/mo</span></div>
+                <ul class="features">
+                    <li>Acceso al Swarm Conversacional</li>
+                    <li>Observabilidad Pasiva (Logs)</li>
+                    <li style="color: var(--text-muted); text-decoration: line-through;">Zero I/O Starvation</li>
+                    <li style="color: var(--text-muted); text-decoration: line-through;">Soberanía Criptográfica</li>
+                </ul>
+                <button class="btn" onclick="checkout('C4-SIM')">Inicializar</button>
+            </div>
+
+            <!-- C5-REAL -->
+            <div class="card premium">
+                <div class="tier-name" style="color: var(--cortex-accent);">C5-REAL (APEX)</div>
+                <div class="price">€499<span>/perpetual</span></div>
+                <ul class="features">
+                    <li>Ejecución Asimétrica Soberana</li>
+                    <li>Cortex-Persist Ledger Local</li>
+                    <li>Motor de Mitosis (Zero I/O Starvation)</li>
+                    <li>Autopoiesis & OSINT SOTA</li>
+                </ul>
+                <button class="btn primary" onclick="checkout('C5-REAL')">Activar Sovereign Node</button>
+            </div>
+        </div>
+
+        <div class="alert">
+            // WARNING: C5-REAL REQUIRES HARDWARE UUID BINDING. NO REFUNDS FOR ENTROPIC SYSTEMS.
+        </div>
+    </div>
+
+    <script>
+        async function checkout(tier) {
+            try {
+                // Pointing to the internal payment_gateway express server
+                const res = await fetch('http://localhost:4242/create-checkout-session', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ tier: tier })
+                });
+                const data = await res.json();
+                
+                if (data.id === "cs_test_mock_c5_real") {
+                    window.location.href = `http://localhost:5173/success.html?session_id=${data.id}`;
+                } else {
+                    // Integrate Stripe redirect here if production keys exist
+                    alert("Redirigiendo a Stripe (ID: " + data.id + ")");
+                }
+            } catch (err) {
+                console.error("Fallo Termodinámico:", err);
+                alert("Error de conexión al Cortex Payment Gateway.");
+            }
+        }
+    </script>
+</body>
+</html>

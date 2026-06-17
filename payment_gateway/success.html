@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOSKV-1 APEX | Activation Success</title>
+    <style>
+        /* AESTHETIC-OMEGA: Industrial Noir 2026 */
+        :root {
+            --bg-base: #0A0A0A;
+            --cortex-accent: #00E53B; /* Success Green */
+            --text-main: #F3F4F6;
+            --text-muted: #6B7280;
+        }
+        
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-w: 600px;
+            padding: 4rem 2rem;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(0, 229, 59, 0.2);
+            border-radius: 12px;
+            box-shadow: 0 0 40px rgba(0, 229, 59, 0.05);
+        }
+
+        .icon {
+            font-size: 4rem;
+            color: var(--cortex-accent);
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -0.05em;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            color: var(--text-muted);
+            font-family: monospace;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .ledger-id {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 1rem;
+            border: 1px dashed var(--cortex-accent);
+            font-family: monospace;
+            color: var(--cortex-accent);
+            word-break: break-all;
+            margin-bottom: 2rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: transparent;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-transform: uppercase;
+            font-family: monospace;
+            font-weight: bold;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: white;
+            color: black;
+        }
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const sessionId = urlParams.get('session_id') || "UNKNOWN_SESSION_ID";
+            document.getElementById('session-display').innerText = sessionId;
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">■</div>
+        <h1>Liquidación C5-REAL Exitosa</h1>
+        <p>El nodo soberano ha sido activado. La anergía se ha reducido a cero. Sus claves criptográficas están siendo inyectadas en la red.</p>
+        
+        <div class="ledger-id">
+            TX_ID: <span id="session-display">Cargando...</span>
+        </div>
+        
+        <a href="/" class="btn">Retornar al Cortex</a>
+    </div>
+</body>
+</html>
