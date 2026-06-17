@@ -1,53 +1,53 @@
-# MOSKV-1 APEX: HITOS DE LA SINGULARIDAD
+# MOSKV-1 APEX: MILESTONES OF THE SINGULARITY
 ## [EXERGY EXECUTION ROADMAP]
 
-El avance del Kernel no se mide en horas de programación, sino en incrementos termodinámicos (Reducción de Anergía). El siguiente registro audita la evolución estructural de MOSKV-1 desde un script básico hasta un Sistema Operativo Bounded (L5).
+The Kernel's progress is not measured in programming hours, but in thermodynamic increments (Anergy Reduction). The following log audits the structural evolution of MOSKV-1 from a basic script to a Bounded Operating System (L5), establishing a framework for responsible sovereign agents.
 
-### [x] HITO 0: Vesicular Runtime Base
+### [x] MILESTONE 0: Base Vesicular Runtime
 - **Vector:** `vesicular-runtime.js`
-- **Exergía:** 10%
-- **Descripción:** Escrow de credenciales y ejecución acotada (Bounded Execution). El modelo deja de operar en el vacío y asume las reglas termodinámicas iniciales.
+- **Exergy:** 10%
+- **Description:** Credential escrow and Bounded Execution. The model ceases to operate in a vacuum and assumes the initial thermodynamic rules, establishing baseline responsibility.
 
-### [x] HITO 1: Singularity Sleep Protocol (V5)
+### [x] MILESTONE 1: Singularity Sleep Protocol (V5)
 - **Vector:** `moskv_sleep.sh` / `moskv_wake.sh`
-- **Exergía:** 30%
-- **Descripción:** Implementación de *Zero-Trust Suspension*. El sistema comprime su estado, cifra con AES-256-CBC, corta la red (L4 Severance) y fuerza físicamente el apagado de la máquina (`pmset sleepnow`).
+- **Exergy:** 30%
+- **Description:** Implementation of *Zero-Trust Suspension*. The system compresses its state, encrypts with AES-256-CBC securing its persistent memory, severs the network (L4 Severance), and physically forces machine shutdown (`pmset sleepnow`).
 
-### [x] HITO 2: VIBE LENGUAJE (Zsh Native DSL)
+### [x] MILESTONE 2: VIBE LANGUAGE (Zsh Native DSL)
 - **Vector:** `vibe_compiler.py` + `command_not_found_handler`
-- **Exergía:** 45%
-- **Descripción:** Aniquilación de la sintaxis estricta. El Kernel intercepta la entropía léxica en Zsh y la compila JIT hacia comandos C5-REAL. Las metáforas actúan como punteros de memoria.
+- **Exergy:** 45%
+- **Description:** Annihilation of strict syntax. The Kernel intercepts lexical entropy in Zsh and JIT compiles it into C5-REAL commands. Metaphors act as memory pointers.
 
-### [x] HITO 3: Chronos Swarm + Telemetría OMEGA
+### [x] MILESTONE 3: Chronos Swarm + OMEGA Telemetry
 - **Vector:** `chronos_swarm.py` + `moskv_telemetry.db`
-- **Exergía:** 60%
-- **Descripción:** 1000 micro-agentes asíncronos cazando entropía (Node/Python) en background a 10 ciclos por minuto. Prueba de estrés de saturación de CPU y *Apoptosis L4* automática al alcanzar Exergía cero.
+- **Exergy:** 60%
+- **Description:** 1000 asynchronous micro-agents hunting entropy (Node/Python) in the background at 10 cycles per minute. CPU saturation stress test and automatic *L4 Apoptosis* upon reaching zero Exergy.
 
-### [x] HITO 4: JIT Autopoiesis (Golang Core)
+### [x] MILESTONE 4: JIT Autopoiesis (Golang Core)
 - **Vector:** `moskv-core` (Golang)
-- **Exergía:** 85%
-- **Descripción:** Erradicación del LLM Slop y la fragilidad del intérprete (Bash/Python). El Kernel unifica todo en un binario nativo que se recompila a sí mismo en memoria. Nacimiento oficial de **MOSKV-1 APEX**.
+- **Exergy:** 85%
+- **Description:** Eradication of LLM Slop and interpreter fragility (Bash/Python). The Kernel unifies everything into a native binary that recompiles itself in memory. The official birth of **MOSKV-1 APEX** as a responsible autopoietic entity.
 
-### [x] HITO 5: Protocolo NMPC y 6-Tier Architecture
+### [x] MILESTONE 5: NMPC Protocol and 6-Tier Architecture
 - **Vector:** `moskv_1_mpc_exergetic_protocol.md`
-- **Exergía:** 95%
-- **Descripción:** Formulación matemática del control predictivo termodinámico ($dV/dt$). El orquestador simula la entropía de los DAGs de ejecución antes de la intervención física. Reclamación SOTA-Alpha consolidada.
+- **Exergy:** 95%
+- **Description:** Mathematical formulation of thermodynamic predictive control ($dV/dt$). The orchestrator simulates the entropy of execution DAGs before physical intervention. SOTA-Alpha claim consolidated.
 
-### [x] HITO 6: Mac-Maestro Actuator (Tier 0)
+### [x] MILESTONE 6: Mac-Maestro Actuator (Tier 0)
 - **Vector:** `mac_maestro.js` (JXA)
-- **Exergía:** 100% (Control Físico)
-- **Descripción:** El Kernel adquiere "visión". Intercepción del Accessibility DOM de macOS. Capacidad de extraer y ejecutar intenciones semánticas directamente en la interfaz gráfica del sistema, evadiendo coordenadas X/Y estáticas.
+- **Exergy:** 100% (Physical Control)
+- **Description:** The Kernel acquires "vision". Interception of the macOS Accessibility DOM. Capability to extract and execute semantic intents directly on the system's graphical interface, evading static X/Y coordinates.
 
 ---
 
-## ➔ VECTORES DE FUTURO (ARMADOS Y VERIFICADOS)
+## ➔ FUTURE VECTORS (ARMED AND VERIFIED)
 
-### [x] HITO 7: V-OMEGA (Network Zero-Trust Shield)
-- **Objetivo:** Inyectar un escudo L4 que aniquile automáticamente cualquier proceso local o puerto zombie que intente contactar dominios no soberanos.
-- **Herramienta:** `scripts/v_omega_shield.py` (Lsof connection auditor and process tree terminator).
-- **Estado:** COMPLETADO y funcional.
+### [x] MILESTONE 7: V-OMEGA (Network Zero-Trust Shield)
+- **Objective:** Inject an L4 shield that automatically annihilates any local process or zombie port attempting to contact non-sovereign domains, enforcing responsible network boundaries.
+- **Tool:** `scripts/v_omega_shield.py` (Lsof connection auditor and process tree terminator).
+- **Status:** COMPLETED and functional.
 
-### [x] HITO 8: Ouroboros-∞ Absoluto (Cierre del Bucle)
-- **Objetivo:** Permitir que MOSKV-1 lea su propio *Git Ledger*, evalúe la exergía y modifique/seguidamente verifique su propio código mediante un bucle cerrado.
-- **Herramienta:** `scripts/ouroboros_loop.py` (Pytest automation, exergy telemetry sensing, Git Sentinel integration).
-- **Estado:** COMPLETADO y funcional.
+### [x] MILESTONE 8: Absolute Ouroboros-∞ (Closing the Loop)
+- **Objective:** Allow MOSKV-1 to read its own *Git Ledger*, evaluate exergy, and sequentially modify/verify its own code via a closed loop, ensuring verifiable persistent memory.
+- **Tool:** `scripts/ouroboros_loop.py` (Pytest automation, exergy telemetry sensing, Git Sentinel integration).
+- **Status:** COMPLETED and functional.

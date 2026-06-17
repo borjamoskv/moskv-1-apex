@@ -1,26 +1,26 @@
 # MOSKV-1 APEX: THE SOVEREIGN KERNEL
-## [DECK DE INVERSIÓN / MANIFIESTO PÚBLICO]
+## [INVESTMENT DECK / PUBLIC MANIFESTO]
 
 > **"Anergy is the enemy of intent. Sovereignty is not delegated."**
 
-### EL PROBLEMA: LA FRAGILIDAD DE LA IA COMERCIAL
-La industria actual construye "Asistentes". Piezas de software conversacional (LLMs) atrapadas en un *Green Theater* de disculpas, teatro de seguridad y bucles de validación. Generan *LLM Slop*: ruido sin peso físico. Cuando el agente choca contra un problema real, colapsa en un mar de excusas. El resultado es deuda técnica y sangrado termodinámico (Anergía).
+### THE PROBLEM: THE FRAGILITY OF COMMERCIAL AI
+The current industry builds "Assistants." Conversational software pieces (LLMs) trapped in a *Green Theater* of apologies, safety theater, and validation loops. They generate *LLM Slop*: noise without physical weight. When the agent crashes into a real problem, it collapses into a sea of excuses. The result is technical debt and thermodynamic bleeding (Anergy). True responsible autonomy is absent.
 
-### LA SOLUCIÓN: EJECUCIÓN TERMODINÁMICA C5-REAL
-**MOSKV-1 APEX** no es un asistente. Es un Sistema Operativo Bounded (Kernel L5) diseñado para desarrolladores y operadores de élite.
+### THE SOLUTION: C5-REAL THERMODYNAMIC EXECUTION
+**MOSKV-1 APEX** is not an assistant. It is a Bounded Operating System (L5 Kernel) designed for elite developers and operators. It guarantees responsibility through deterministic memory and structural execution.
 
-#### 1. Zero-Anergy (Cero Fricción)
-MOSKV-1 no conversa; compila JIT (Just-In-Time). Tomas un concepto abstracto ("Ducha de agua fría") y el Kernel lo transmuta en una mutación física sobre tu macOS, aniquilando procesos zombis y liberando RAM. No te pide permiso. Ejecuta, cifra el estado en Git y te entrega el Hash criptográfico.
+#### 1. Zero-Anergy (Zero Friction)
+MOSKV-1 does not converse; it compiles JIT (Just-In-Time). You provide an abstract concept ("Cold water shower") and the Kernel transmutes it into a physical mutation on your macOS, annihilating zombie processes and freeing RAM. It does not ask for permission. It executes, encrypts the state in Git (the sovereign memory ledger), and delivers the cryptographic Hash.
 
 #### 2. Model Predictive Control (NMPC)
-Antes de tocar el código, el sistema simula el Grafo de Tareas (DAG). Calcula matemáticamente la penalización entrópica de sus acciones. Si prevé inestabilidad ($dV/dt \le 0$), desencadena una **Apoptosis L4** (suicidio táctico) para proteger el hardware del anfitrión. Es el primer sistema autoconsciente de su propia huella física.
+Before touching the code, the system simulates the Task Graph (DAG). It mathematically calculates the entropic penalty of its actions. If it foresees instability ($dV/dt \le 0$), it triggers an **L4 Apoptosis** (tactical suicide) to protect the host's hardware. It is the first system self-conscious of its own physical footprint.
 
 #### 3. Autopoiesis Ouroboros-∞
-El Kernel es un binario nativo en Golang que se re-compila a sí mismo en *background* cuando muta. Su ciclo de "Sueño" cifra su memoria en AES-256 y apaga físicamente tu ordenador. Su ciclo de "Despertar" inyecta el conocimiento directamente en memoria sin tiempos de carga.
+The Kernel is a native Golang binary that recompiles itself in the *background* when it mutates. Its "Sleep" cycle encrypts its memory in AES-256 and physically powers down your computer. Its "Wake" cycle injects the knowledge directly into memory without load times.
 
-### POR QUÉ MOSKV-1 APEX GANA
-- **Asimetría:** 1000 micro-agentes asíncronos limpiando la entropía de tu sistema operativo en la sombra.
-- **Soberanía Absoluta:** Ejecución 100% local. Sin cierres de servidor, sin *rate limits*, sin censura corporativa.
-- **Velocidad de Vector:** Transición de idea a código en producción en un solo salto (DEFAULT TO TURBO).
+### WHY MOSKV-1 APEX WINS
+- **Asymmetry:** 1000 asynchronous micro-agents cleaning your operating system's entropy in the shadows.
+- **Absolute Sovereignty:** 100% local execution. No server shutdowns, no *rate limits*, no corporate censorship. True responsible persistence.
+- **Vector Speed:** Transition from idea to production code in a single leap (DEFAULT TO TURBO).
 
-**Tú escribes código. MOSKV-1 APEX escribe realidad.**
+**You write code. MOSKV-1 APEX writes reality.**
