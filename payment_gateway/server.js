@@ -42,6 +42,13 @@ app.post('/stripe-webhook', express.raw({ type: 'application/json' }), (req, res
 // JSON middleware for regular API endpoints
 app.use(express.json());
 
+// Endpoint config para inyectar Publishable Key al frontend
+app.get('/config', (req, res) => {
+    res.json({
+        publishableKey: process.env.STRIPE_PUBLISHABLE_KEY || 'pk_test_mock_c5_real_publishable_key'
+    });
+});
+
 // Serve static assets from the root directory (so localhost:4242 serves index.html)
 app.use(express.static(path.join(__dirname, '..')));
 
@@ -138,7 +145,7 @@ app.post('/create-checkout-session', async (req, res) => {
             cancel_url: `${hostOrigin}/#pricing`,
         });
 
-        res.json({ id: session.id });
+        res.json({ id: session.id, url: session.url });
     } catch (e) {
         res.status(500).json({ error: e.message });
     }

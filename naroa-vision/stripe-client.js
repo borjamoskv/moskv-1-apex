@@ -1,7 +1,10 @@
 // Stripe Client Logic for MOSKV-1 Monetization Matrix
 
-// Replace with the actual Stripe Publishable Key
-const stripe = Stripe('pk_test_mock_c5_real_publishable_key'); 
+// Initialize Stripe dynamically from backend configuration
+let stripe;
+fetch('/config').then(r => r.json()).then(data => {
+    stripe = Stripe(data.publishableKey);
+});
 
 document.getElementById('btn-c4').addEventListener('click', () => {
     initiateCheckout('C4-SIM');

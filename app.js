@@ -330,7 +330,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         // En producción real, redirigir a Stripe
                         consoleOutput.innerHTML += `[${getTimestamp()}] [+] Redirigiendo a pasarela segura de Stripe...<br>`;
                         consoleOutput.scrollTop = consoleOutput.scrollHeight;
-                        window.location.href = `https://checkout.stripe.com/c/pay/${session.id}`;
+                        window.location.href = session.url;
                     }
                 } else {
                     throw new Error(session.error || "Invalid session id");
