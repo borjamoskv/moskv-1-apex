@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOSKV-1 APEX // Terminal de Inteligencia OSINT</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="analog-grain"></div>
+    
+    <div class="container">
+        <!-- HEADER -->
+        <header>
+            <div class="brand">
+                <span class="brand-badge">C5-REAL</span>
+                <h1>MOSKV-1 <span class="accent-text">APEX</span></h1>
+            </div>
+            <div class="system-status">
+                <div class="status-indicator"></div>
+                <span class="status-label">OUROBOROS-∞ ONLINE</span>
+            </div>
+        </header>
+
+        <!-- MAIN LAYOUT -->
+        <main class="dashboard-grid">
+            
+            <!-- LEFT PANEL: CONTROL TERMINAL -->
+            <section class="panel control-panel">
+                <div class="panel-header">
+                    <h2>Terminal de Ejecución</h2>
+                    <span class="panel-sub">Sovereign OSINT Engine</span>
+                </div>
+                
+                <div class="panel-body">
+                    <form id="query-form">
+                        <div class="input-group">
+                            <label for="target-input">Objetivo de Investigación</label>
+                            <input type="text" id="target-input" placeholder="Dirección Wallet, Dominio o Alias Github" required>
+                        </div>
+                        
+                        <div class="selector-group">
+                            <div class="select-wrapper">
+                                <label for="type-select">Vector de Entrada</label>
+                                <select id="type-select">
+                                    <option value="domain">Dominio (DNS / SSL)</option>
+                                    <option value="wallet">Wallet Cripto (On-Chain)</option>
+                                    <option value="identity">Identidad (GitHub / GitLab)</option>
+                                </select>
+                            </div>
+                            
+                            <div class="select-wrapper wallet-onlyhidden">
+                                <label for="network-select">Red Blockchain</label>
+                                <select id="network-select">
+                                    <option value="ethereum">Ethereum (EVM)</option>
+                                    <option value="bitcoin">Bitcoin (UTXO)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            <span>INICIAR EXTRACCIÓN</span>
+                            <div class="btn-glow"></div>
+                        </button>
+                    </form>
+
+                    <div class="console-box">
+                        <div class="console-header">
+                            <span>console.logs</span>
+                            <span class="console-blink">_</span>
+                        </div>
+                        <div class="console-output" id="console-output">
+                            [+] MOSKV-1 APEX OSINT v2.0.1 listo.<br>
+                            [+] OUROBOROS-∞: KB local sincronizada (Hash: e0a741a).<br>
+                            [+] Introduce un objetivo para iniciar el trazado de exergía...
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- RIGHT PANEL: FORENSIC REPORT VIEWER -->
+            <section class="panel report-panel">
+                <div class="panel-header">
+                    <h2>Resultados de Inteligencia</h2>
+                    <button class="btn btn-secondary btn-sm" id="download-report" disabled>Exportar Reporte (.md)</button>
+                </div>
+                
+                <div class="panel-body report-body" id="report-view">
+                    <div class="empty-state">
+                        <div class="empty-icon">♾️</div>
+                        <p>Esperando ejecución de consultas...</p>
+                        <span>El reporte pericial estructurado (Bizkaia Forensic Standard) se renderizará automáticamente en este panel tras el análisis.</span>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
