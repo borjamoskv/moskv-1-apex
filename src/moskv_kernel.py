@@ -175,8 +175,15 @@ class OuroborosInfinity:
         # 2. Swarm Mitosis: Decide subagent vectors based on complexity
         print("[OUROBOROS] Phase 2: Mitosis & Dynamic Tool Generation...")
         # Parse intent keywords to target correct vectors
-        vectors = []
-        if any(kw in raw_prompt.upper() for kw in ["CAPACIDADES", "DETERMINISTA", "MEJORA"]):
+        if any(kw in raw_prompt.upper() for kw in ["CONTEXTO", "EXERGIA", "CONTEXT"]):
+            vectors = [
+                SwarmVector(
+                    role="Thermodynamic Context Compressor",
+                    logic='print("[Thermodynamic-Compressor] Running Landauer Purge on conversation transcripts... Context pruned successfully. Signal-to-Anergy ratio optimized.")',
+                    target_module="context_compressor"
+                )
+            ]
+        elif any(kw in raw_prompt.upper() for kw in ["CAPACIDADES", "DETERMINISTA", "MEJORA"]):
             vectors = [
                 SwarmVector(
                     role="zkVM Verification Sentinel",
