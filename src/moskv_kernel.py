@@ -125,7 +125,7 @@ class ExergyMaximizationKernel:
             latest_transcript = find_latest_transcript()
             if latest_transcript and os.path.exists(latest_transcript):
                 total_content_length = 0
-                tool_calls = 0
+                tool_calls = 0.0
                 with open(latest_transcript, 'r', encoding='utf-8') as f:
                     for line in f:
                         if not line.strip():
@@ -135,11 +135,20 @@ class ExergyMaximizationKernel:
                             if step.get("type") in ("PLANNER_RESPONSE", "MODEL_RESPONSE"):
                                 total_content_length += len(step.get("content", "")) + len(step.get("thinking", ""))
                                 if step.get("tool_calls"):
-                                    tool_calls += len(step.get("tool_calls"))
+                                    for tc in step.get("tool_calls"):
+                                        name = tc.get("name", "")
+                                        if name in ("replace_file_content", "multi_replace_file_content", "write_to_file"):
+                                            tool_calls += 3.0
+                                        elif name in ("run_command",):
+                                            tool_calls += 2.0
+                                        elif name in ("view_file", "list_dir", "grep_search", "read_url_content", "read_browser_page"):
+                                            tool_calls += 0.5
+                                        else:
+                                            tool_calls += 1.0
                         except Exception:
                             continue
                 
-                anergy_ratio = total_content_length / (tool_calls if tool_calls > 0 else 1)
+                anergy_ratio = total_content_length / (tool_calls if tool_calls > 0.0 else 1.0)
                 threshold = get_historical_anergy_threshold()
                 
                 if anergy_ratio > threshold:

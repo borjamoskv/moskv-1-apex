@@ -36,7 +36,7 @@ def calculate_exergy(transcript_path: str):
     total_steps = 0
     user_inputs = 0
     model_responses = 0
-    tool_calls = 0
+    tool_calls = 0.0
     total_content_length = 0
     signal_chars = 0
     
@@ -65,13 +65,22 @@ def calculate_exergy(transcript_path: str):
                     signal_chars += sum(len(inline) for inline in inline_code)
                     
                     if step.get("tool_calls"):
-                        tool_calls += len(step.get("tool_calls"))
+                        for tc in step.get("tool_calls"):
+                            name = tc.get("name", "")
+                            if name in ("replace_file_content", "multi_replace_file_content", "write_to_file"):
+                                tool_calls += 3.0
+                            elif name in ("run_command",):
+                                tool_calls += 2.0
+                            elif name in ("view_file", "list_dir", "grep_search", "read_url_content", "read_browser_page"):
+                                tool_calls += 0.5
+                            else:
+                                tool_calls += 1.0
             except json.JSONDecodeError:
                 continue
                 
     # Anergy is defined strictly as the narrative fluff (non-code / unstructured characters)
     narrative_chars = max(0, total_content_length - signal_chars)
-    anergy_ratio = narrative_chars / (tool_calls if tool_calls > 0 else 1)
+    anergy_ratio = narrative_chars / (tool_calls if tool_calls > 0.0 else 1.0)
     
     dynamic_threshold = get_historical_anergy_threshold()
     
