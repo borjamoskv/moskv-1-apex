@@ -8,3 +8,8 @@ src/skills/native_exergy.c
 __pycache__/
 *.pyc
 **/__pycache__/
+*.log
+*.ndjson
+*ledger.json
+syndication_outbox.md
+

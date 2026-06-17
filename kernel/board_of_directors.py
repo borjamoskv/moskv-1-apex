@@ -13,7 +13,7 @@ ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DAEMONS = {
     "Intelligence": ["python3", os.path.join(ROOT_DIR, "moskv_reddit_engine", "osint_daemon.py")],
     "Marketing_Syndicator": ["python3", os.path.join(ROOT_DIR, "moskv_reddit_engine", "autonomous_syndicator.py")],
-    "Marketing_Outreach": ["python3", os.path.join(ROOT_DIR, "cdp_lead_extractor.py")],
+    "Marketing_Outreach": ["sh", "-c", f"python3 {os.path.join(ROOT_DIR, 'cdp_lead_extractor.py')} && python3 {os.path.join(ROOT_DIR, 'outreach_compiler.py')} && python3 {os.path.join(ROOT_DIR, 'outreach_dispatcher.py')}"],
     "Evolution_CTO": ["python3", os.path.join(ROOT_DIR, "ouroboros_forge.py")]
 }
 
