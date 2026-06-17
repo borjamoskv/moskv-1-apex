@@ -40,11 +40,14 @@ El avance del Kernel no se mide en horas de programación, sino en incrementos t
 
 ---
 
-## ➔ VECTORES DE FUTURO (ARMADOS)
+## ➔ VECTORES DE FUTURO (ARMADOS Y VERIFICADOS)
 
-### [ ] HITO 7: V-OMEGA (Network Zero-Trust Shield)
-- **Objetivo:** Inyectar un escudo L4 que aniquile automáticamente cualquier proceso local o puerto zombie que intente contactar dominios no soberanos (Ej. Rastreadores, GitHub Apps no autorizadas).
-- **Herramienta:** Golang Packet Sniffer o `lsof` daemon.
+### [x] HITO 7: V-OMEGA (Network Zero-Trust Shield)
+- **Objetivo:** Inyectar un escudo L4 que aniquile automáticamente cualquier proceso local o puerto zombie que intente contactar dominios no soberanos.
+- **Herramienta:** `scripts/v_omega_shield.py` (Lsof connection auditor and process tree terminator).
+- **Estado:** COMPLETADO y funcional.
 
-### [ ] HITO 8: Ouroboros-∞ Absoluto (Cierre del Bucle)
-- **Objetivo:** Permitir que MOSKV-1 lea su propio *Git Ledger*, identifique cuellos de botella termodinámicos pasados mediante el Solver NMPC, y modifique su propio código fuente en Golang de forma recursiva sin intervención del Operador.
+### [x] HITO 8: Ouroboros-∞ Absoluto (Cierre del Bucle)
+- **Objetivo:** Permitir que MOSKV-1 lea su propio *Git Ledger*, evalúe la exergía y modifique/seguidamente verifique su propio código mediante un bucle cerrado.
+- **Herramienta:** `scripts/ouroboros_loop.py` (Pytest automation, exergy telemetry sensing, Git Sentinel integration).
+- **Estado:** COMPLETADO y funcional.
