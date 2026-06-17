@@ -39,6 +39,46 @@ class ExergyAuditor(ast.NodeVisitor):
                 self.violations.append("Bare Except detected. Masks failure states (-0.2)")
         self.generic_visit(node)
 
+    def visit_Import(self, node):
+        import importlib.util
+        import sys
+        # Ensure local directories are in search path
+        for path in (".", "src", "src/skills"):
+            if path not in sys.path:
+                sys.path.insert(0, path)
+        for alias in node.names:
+            name = alias.name.split('.')[0]
+            if name in ("moskv_1", "sortu_apex_forge", "redteam_auditor", "exergy_sensor"):
+                continue
+            try:
+                spec = importlib.util.find_spec(name)
+                if spec is None:
+                    self.score -= 0.5
+                    self.violations.append(f"Module '{name}' is not installed in the active environment (-0.5)")
+            except Exception:
+                self.score -= 0.5
+                self.violations.append(f"Module '{name}' failed validation (-0.5)")
+        self.generic_visit(node)
+
+    def visit_ImportFrom(self, node):
+        import importlib.util
+        import sys
+        for path in (".", "src", "src/skills"):
+            if path not in sys.path:
+                sys.path.insert(0, path)
+        if node.level == 0 and node.module:
+            name = node.module.split('.')[0]
+            if name not in ("moskv_1", "sortu_apex_forge", "redteam_auditor", "exergy_sensor"):
+                try:
+                    spec = importlib.util.find_spec(name)
+                    if spec is None:
+                        self.score -= 0.5
+                        self.violations.append(f"Module '{name}' is not installed in the active environment (-0.5)")
+                except Exception:
+                    self.score -= 0.5
+                    self.violations.append(f"Module '{name}' failed validation (-0.5)")
+        self.generic_visit(node)
+
 
 class RedTeamCrucible:
     """The final checkpoint before a forged agent is allowed into the Ledger."""

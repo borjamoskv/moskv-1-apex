@@ -3,7 +3,7 @@
 # Execution Level: C5-REAL
 # Este script escanea directorios por archivos inactivos y ejecuta políticas de purga severa.
 
-WORKSPACE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+WORKSPACE_DIR="${1:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 echo "[C5-REAL] Executing Sortu-APEX Death Protocol scan in $WORKSPACE_DIR"
 
 # Umbral: 7 días de inactividad
