@@ -1,3 +1,4 @@
 {"domain": "startup-alpha.io", "ceo": "Elena Rostova", "email": "founder@startup-alpha.io", "tech_stack": ["React", "AWS"]}
 {"domain": "nexus-logistics.dev", "ceo": "Marcus Vance", "email": "m.vance@nexus-logistics.dev", "tech_stack": ["Node.js", "GCP"]}
 {"domain": "quant-health.ai", "ceo": "Dr. Sarah Chen", "email": "ceo@quant-health.ai", "tech_stack": ["Python", "Azure"]}
+{"domain":"startup-alpha.io","ceo":"Elena Rostova","email":"founder@startup-alpha.io","tech_stack":["React/AWS"]}
