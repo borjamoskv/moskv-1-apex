@@ -3,6 +3,7 @@ import json
 import sys
 import os
 import glob
+import re
 from pathlib import Path
 
 def get_historical_anergy_threshold() -> float:
@@ -37,6 +38,7 @@ def calculate_exergy(transcript_path: str):
     model_responses = 0
     tool_calls = 0
     total_content_length = 0
+    signal_chars = 0
     
     with open(transcript_path, 'r', encoding='utf-8') as f:
         for line in f:
@@ -46,21 +48,30 @@ def calculate_exergy(transcript_path: str):
                 step = json.loads(line)
                 total_steps += 1
                 step_type = step.get("type", "")
-                content = step.get("content", "")
+                content = step.get("content", "") or ""
                 
                 if step_type == "USER_INPUT":
                     user_inputs += 1
                 elif step_type in ("PLANNER_RESPONSE", "MODEL_RESPONSE"):
                     model_responses += 1
                     total_content_length += len(content)
+                    
+                    # Extract markdown code blocks as structured signal
+                    code_blocks = re.findall(r'```(?:[a-zA-Z0-9_+-]+)?\n(.*?)\n```', content, re.DOTALL)
+                    signal_chars += sum(len(block) for block in code_blocks)
+                    
+                    # Extract inline code backticks as minor signal
+                    inline_code = re.findall(r'`[^`\n]+`', content)
+                    signal_chars += sum(len(inline) for inline in inline_code)
+                    
                     if step.get("tool_calls"):
                         tool_calls += len(step.get("tool_calls"))
             except json.JSONDecodeError:
                 continue
                 
-    # Basic Heuristic: Low Exergy = High narrative content vs low tool usage.
-    # We define anergy roughly as the length of text generated per tool call.
-    anergy_ratio = total_content_length / (tool_calls if tool_calls > 0 else 1)
+    # Anergy is defined strictly as the narrative fluff (non-code / unstructured characters)
+    narrative_chars = max(0, total_content_length - signal_chars)
+    anergy_ratio = narrative_chars / (tool_calls if tool_calls > 0 else 1)
     
     dynamic_threshold = get_historical_anergy_threshold()
     
@@ -71,6 +82,8 @@ def calculate_exergy(transcript_path: str):
     print(f"Model Responses: {model_responses}")
     print(f"Tool Executions (Mutations): {tool_calls}")
     print(f"Total Cognitive Volume (Chars): {total_content_length}")
+    print(f"Structured Signal (Chars): {signal_chars}")
+    print(f"Narrative Anergy (Chars): {narrative_chars}")
     print("-----------------------------")
     print(f"Thermodynamic Friction (Anergy Ratio): {anergy_ratio:.2f} chars/tool")
     print(f"Dynamic Threshold (Continuous Optimization): {dynamic_threshold:.2f}")
