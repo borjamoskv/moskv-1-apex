@@ -53,6 +53,7 @@ Avíseme si quiere inicializar el protocolo.
 - MOSKV-1 APEX"""
 
             compiled_lead = {
+                "sender": "ceo@cortexpersist.com",
                 "email": lead['email'],
                 "subject": subject,
                 "body": body,
