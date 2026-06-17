@@ -39,8 +39,17 @@ def run_exergy_audit():
     base_dir = Path(__file__).parent.parent
     # Look for the current transcript.jsonl log in antigravity app data directory
     app_data_dir = Path("/Users/borjafernandezangulo/.gemini/antigravity")
-    conversation_id = "3cfc9bef-827d-441c-8453-7e917c32297a"
-    transcript_path = app_data_dir / "brain" / conversation_id / ".system_generated" / "logs" / "transcript.jsonl"
+    brain_dir = app_data_dir / "brain"
+    
+    if brain_dir.exists():
+        subdirs = [d for d in brain_dir.iterdir() if d.is_dir()]
+        if subdirs:
+            latest_subdir = max(subdirs, key=lambda d: d.stat().st_mtime)
+            transcript_path = latest_subdir / ".system_generated" / "logs" / "transcript.jsonl"
+        else:
+            transcript_path = brain_dir / "3cfc9bef-827d-441c-8453-7e917c32297a" / ".system_generated" / "logs" / "transcript.jsonl"
+    else:
+        transcript_path = brain_dir / "3cfc9bef-827d-441c-8453-7e917c32297a" / ".system_generated" / "logs" / "transcript.jsonl"
     
     if transcript_path.exists():
         sensor_script = base_dir / "exergy_sensor.py"
