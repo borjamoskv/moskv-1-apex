@@ -1,0 +1,12 @@
+node_modules/
+.venv/
+.git/
+.pytest_cache/
+tests/
+__pycache__/
+payment_gateway/node_modules/
+Dossier_Abogado_BorjaMoskv.zip
+neo4j_data/
+nats_data/
+cortex.db
+swarm_os.sqlite
