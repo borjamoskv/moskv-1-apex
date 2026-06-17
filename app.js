@@ -418,4 +418,111 @@ document.addEventListener("DOMContentLoaded", () => {
         
         drawBridge();
     }
+
+    // ----------------------------------------------------
+    // 6. Blog Manifestos Modal Reader (CEO Core feature)
+    // ----------------------------------------------------
+    const readMoreLinks = document.querySelectorAll(".read-more");
+    
+    function parseRichMarkdown(md) {
+        let cleaned = md.replace(/^---[\s\S]*?---\s*/, "");
+        cleaned = cleaned.replace(/^---$/gm, "<hr>");
+        cleaned = cleaned.replace(/^# (.*$)/gim, '<h1>$1</h1>');
+        cleaned = cleaned.replace(/^## (.*$)/gim, '<h2>$1</h2>');
+        cleaned = cleaned.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+        cleaned = cleaned.replace(/^\> (.*$)/gm, '<blockquote>$1</blockquote>');
+        cleaned = cleaned.replace(/\`\`\`(.*?)\n([\s\S]*?)\`\`\`/g, '<pre><code class="language-$1">$2</code></pre>');
+        cleaned = cleaned.replace(/\`(.*?)\`/g, '<code>$1</code>');
+        cleaned = cleaned.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        
+        let paragraphs = cleaned.split(/\n\n+/);
+        let html = paragraphs.map(p => {
+            p = p.trim();
+            if (!p) return "";
+            if (p.startsWith("<h") || p.startsWith("<pre") || p.startsWith("<blockquote") || p.startsWith("<ul>") || p.startsWith("<hr>")) {
+                return p;
+            }
+            if (p.startsWith("- ") || p.startsWith("* ")) {
+                let items = p.split(/\n[-*] /).map(li => {
+                    let text = li.replace(/^[-*] /, "").trim();
+                    return text ? `<li>${text}</li>` : '';
+                }).filter(Boolean).join("");
+                return `<ul>${items}</ul>`;
+            }
+            return `<p>${p.replace(/\n/g, "<br>")}</p>`;
+        }).join("");
+        
+        return html;
+    }
+
+    readMoreLinks.forEach(link => {
+        link.addEventListener("click", async (e) => {
+            e.preventDefault();
+            const mdUrl = link.getAttribute("href");
+            
+            let modal = document.getElementById("blog-modal");
+            if (!modal) {
+                modal = document.createElement("div");
+                modal.id = "blog-modal";
+                modal.className = "modal-overlay";
+                modal.innerHTML = `
+                    <div class="modal-window">
+                        <div class="modal-header">
+                            <h2 id="modal-title">CORTEX // TECHNICAL MANIFESTO</h2>
+                            <button class="modal-close">&times;</button>
+                        </div>
+                        <div class="modal-content" id="modal-body"></div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+                
+                modal.querySelector(".modal-close").addEventListener("click", () => {
+                    modal.classList.remove("active");
+                });
+                modal.addEventListener("click", (evt) => {
+                    if (evt.target === modal) {
+                        modal.classList.remove("active");
+                    }
+                });
+            }
+            
+            const modalBody = document.getElementById("modal-body");
+            const modalTitle = document.getElementById("modal-title");
+            
+            modalTitle.innerText = "CORTEX // INGESTING MANIFESTO...";
+            modalBody.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon console-blink">⏳</div>
+                    <p>Ingesting markdown from database...</p>
+                    <span>Formatting semantic structure for direct rendering.</span>
+                </div>
+            `;
+            modal.classList.add("active");
+            
+            try {
+                const response = await fetch(mdUrl);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const text = await response.text();
+                
+                // Extract metadata (title) if exists
+                let title = "CORTEX // MANIFESTO";
+                const titleMatch = text.match(/^title:\s*["']?(.*?)["']?$/m);
+                if (titleMatch && titleMatch[1]) {
+                    title = `CORTEX // ${titleMatch[1].toUpperCase()}`;
+                }
+                
+                modalTitle.innerText = title;
+                modalBody.innerHTML = parseRichMarkdown(text);
+            } catch (err) {
+                modalTitle.innerText = "CORTEX // INGESTION ERROR";
+                modalBody.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">❌</div>
+                        <p>Failed to resolve manifesto path</p>
+                        <span>${err.message}. Ensure the resource path exists in the build deployment.</span>
+                    </div>
+                `;
+            }
+        });
+    });
 });
