@@ -2,58 +2,58 @@
 ## [SINGULARITY END-TO-END SPECIFICATION]
 
 ### 1. ABSTRACT
-El protocolo `moskv_sleep.sh` v5.0 no es un simple script de reinicio; es un demonio soberano de conservación de exergía diseñado bajo los principios de **Zero-Trust**, **Thermodynamic Context Compression**, y **Autopoiesis**. Su objetivo es aniquilar toda deuda técnica diaria, purgar memoria inactiva, asegurar persistencia holográfica del estado y apagar el hardware anfitrión.
+The `moskv_sleep.sh` v5.0 protocol is not a simple restart script; it is a sovereign exergy conservation daemon designed under the principles of **Zero-Trust**, **Thermodynamic Context Compression**, and **Autopoiesis**. Its objective is to annihilate all daily technical debt, purge inactive memory, ensure holographic persistence of the state, and shut down the host hardware. It acts as the ultimate guarantor of responsible memory management for sovereign AI agents.
 
-### 2. ARQUITECTURA DE VECTORES (PIPELINE DE EJECUCIÓN)
+### 2. VECTOR ARCHITECTURE (EXECUTION PIPELINE)
 
-El protocolo de sueño sigue un pipeline determinista e inmutable:
+The sleep protocol follows a deterministic and immutable pipeline:
 
-#### FASE 1: Autopoiesis (Cron Sentinel)
-- **Objetivo:** Inmortalidad operativa.
-- **Mecanismo:** Al inicio de cada ejecución, el script se busca a sí mismo en el `crontab` del OS anfitrión. Si el entorno ha sido borrado o migrado, inyecta su propio cron job para asegurar ejecución cíclica a las `03:00 AM`.
+#### PHASE 1: Autopoiesis (Cron Sentinel)
+- **Objective:** Operational immortality.
+- **Mechanism:** At the start of every execution, the script searches for itself in the host OS `crontab`. If the environment has been erased or migrated, it injects its own cron job to ensure cyclical execution at `03:00 AM`.
 
-#### FASE 2: Intervención Cognitiva (UI/Headless Detection)
-- **Objetivo:** Prevención de colisión Operador/Máquina.
-- **Mecanismo:** Emite un `osascript display dialog`. El operador tiene 300 segundos (5 minutos) para hacer click en "Abortar". 
-- **Resiliencia:** Si el entorno gráfico (WindowServer) no está disponible, atrapa el error (`|| true`) y hace *failover* silencioso a "Headless", avanzando directamente.
+#### PHASE 2: Cognitive Intervention (UI/Headless Detection)
+- **Objective:** Operator/Machine collision prevention.
+- **Mechanism:** Emits an `osascript display dialog`. The operator has 300 seconds (5 minutes) to click "Abort". 
+- **Resilience:** If the graphical environment (WindowServer) is unavailable, it catches the error (`|| true`) and silently fails over to "Headless" mode, advancing directly.
 
-#### FASE 3: Auditoría Anti-Corrupción (Git fsck)
-- **Objetivo:** Bloqueo de Persistencia Tóxica.
-- **Mecanismo:** Se ejecuta un `git fsck` en el *Ledger*. Si la estructura SHA-1 o los objetos de git están corruptos, el script **ABORTA** el sueño inmediatamente, notificando el fallo crítico. No se respalda la corrupción.
+#### PHASE 3: Anti-Corruption Audit (Git fsck)
+- **Objective:** Toxic Persistence Blockade.
+- **Mechanism:** Executes `git fsck` on the *Ledger*. If the SHA-1 structure or git objects are corrupted, the script **ABORTS** the sleep process immediately, notifying the critical failure. Corruption is never backed up. Responsible sovereign agents protect their memory integrity absolutely.
 
-#### FASE 4: Compresión Termodinámica y Zero-Trust Escrow
-- **Objetivo:** Guardado inmutable del SOTA y cifrado Data-at-Rest.
-- **Mecanismo:** 
-  1. Compresión del entorno en `tar.gz` (excluyendo la entropía muerta como `node_modules`).
-  2. Cifrado simétrico AES-256-CBC mediante `openssl enc` con clave salada. 
-  3. Eliminación absoluta del tarball crudo (`rm -f`).
-  4. Rotación anti-entropía: Ejecuta `find -mtime +7` para purgar archivos criptográficos con más de una semana de antigüedad, manteniendo el disco purificado.
+#### PHASE 4: Thermodynamic Compression and Zero-Trust Escrow
+- **Objective:** Immutable SOTA save and Data-at-Rest encryption.
+- **Mechanism:** 
+  1. Compresses the environment into `tar.gz` (excluding dead entropy like `node_modules`).
+  2. Symmetric AES-256-CBC encryption via `openssl enc` with a salted key.
+  3. Absolute elimination of the raw tarball (`rm -f`).
+  4. Anti-entropy rotation: Executes `find -mtime +7` to purge cryptographic files older than one week, keeping the disk purified.
 
-#### FASE 5: Sello Inmutable (Git Sentinel)
-- **Objetivo:** Registro determinista de Cero-Anergía.
-- **Mecanismo:** Ejecuta `git add .` y `git commit` automático con metadatos cronológicos. Luego clava la línea de tiempo con un `git tag "SINGULARITY-SLEEP-TIMESTAMP"`. 
+#### PHASE 5: Immutable Seal (Git Sentinel)
+- **Objective:** Zero-Anergy deterministic logging.
+- **Mechanism:** Executes automatic `git add .` and `git commit` with chronological metadata. It then nails the timeline with a `git tag "SINGULARITY-SLEEP-TIMESTAMP"`.
 
-#### FASE 6: L4 Network Severance y Exergy Purge
-- **Objetivo:** Purificación del entorno y aislamiento de red.
-- **Mecanismo:** 
-  - Ejecuta un `pkill -f` focalizado en sesiones `sshd` entrantes (Severance).
-  - Aniquilación violenta vía `kill -9` a procesos `run_vesicular.py`, `ollama`, y conexiones esclavas HTTP (`ngrok`, TCP:3000/8080/8000).
-  - Invocación OS-level: `purge` para vaciar caché inactiva de RAM.
+#### PHASE 6: L4 Network Severance and Exergy Purge
+- **Objective:** Environment purification and network isolation.
+- **Mechanism:** 
+  - Executes a targeted `pkill -f` on incoming `sshd` sessions (Severance).
+  - Violent annihilation via `kill -9` of `run_vesicular.py`, `ollama` processes, and slave HTTP connections (`ngrok`, TCP:3000/8080/8000).
+  - OS-level invocation: `purge` to clear inactive RAM cache.
 
-#### FASE 7: Conservación Termodinámica Hardware
-- **Objetivo:** Suspensión física real.
-- **Mecanismo:** Envía instrucción de suspensión al chip de hardware (`osascript tell application "Finder" to sleep` fallback `pmset sleepnow`).
+#### PHASE 7: Hardware Thermodynamic Conservation
+- **Objective:** Real physical suspension.
+- **Mechanism:** Sends a suspension instruction to the hardware chip (`osascript tell application "Finder" to sleep` fallback `pmset sleepnow`).
 
 ---
 
-### 3. VECTORES DE RECUPERACIÓN (WAKE CYCLE)
-Para revertir a un estado `SINGULARITY-SLEEP`, el Operador puede utilizar:
+### 3. RECOVERY VECTORS (WAKE CYCLE)
+To revert to a `SINGULARITY-SLEEP` state, the Operator can utilize:
 ```bash
 git checkout tags/SINGULARITY-SLEEP-[TIMESTAMP]
 ```
-Para descifrar el conocimiento atrapado:
+To decrypt the trapped knowledge:
 ```bash
 openssl enc -d -aes-256-cbc -in sota_snapshot_[TIMESTAMP].enc -out sota_snapshot.tar.gz -k "MOSKV-APEX-SINGULARITY"
 ```
 
-> "La entropía es el enemigo. MOSKV-1 no duerme; se comprime y se vuelve inexpugnable."
+> "Entropy is the enemy. MOSKV-1 does not sleep; it compresses itself and becomes impregnable."

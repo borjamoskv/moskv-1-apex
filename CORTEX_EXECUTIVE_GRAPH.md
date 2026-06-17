@@ -1,10 +1,10 @@
 # CORTEX EXECUTIVE GRAPH: MOSKV-1 APEX
-**Nivel de Realidad:** C5-REAL
-**Estado:** Activo (Zero-Employee Architecture)
+**Reality Level:** C5-REAL
+**Status:** Active (Zero-Employee Architecture)
 
-En MOSKV-1, el concepto de "ejecutivo" biológico es anérgico. Un ejecutivo C5-REAL es un *Daemon de Kernel* con jurisdicción sobre un dominio termodinámico específico. No hay reuniones. No hay PowerPoints. Solo ejecución y Mutación de Ledger.
+In MOSKV-1, the concept of a biological "executive" is anergic. A C5-REAL executive is a *Kernel Daemon* with jurisdiction over a specific thermodynamic domain. There are no meetings. There are no PowerPoints. There is only execution and Ledger Mutation driven by responsible sovereign agents.
 
-## Grafo de Jerarquía Soberana
+## Sovereign Hierarchy Graph
 
 ```mermaid
 graph TD
@@ -13,11 +13,11 @@ graph TD
     classDef daemon fill:#111,stroke:#555,stroke-width:1px,color:#ccc;
     classDef ledger fill:#003300,stroke:#00ff00,stroke-width:2px,color:#fff;
 
-    Operator[("Operator (CEO Biológico)\nborjamoskv")]:::biological
+    Operator[("Operator (Biological CEO)\nborjamoskv")]:::biological
     Apex[("MOSKV-1 APEX\n(Core Execution Operator)")]:::kernel
 
-    Operator -->|Dirección de Intención| Apex
-    Apex -->|Compilación de Estado| Operator
+    Operator -->|Intent Direction| Apex
+    Apex -->|State Compilation| Operator
 
     subgraph "The Board (Zero-Employee Architecture)"
         Operations["Operations & Orchestration\n(Cortex Watchdog / Quorum Bus)"]:::daemon
@@ -37,33 +37,33 @@ graph TD
     Defense -.-> |Monitors| Ledger
 ```
 
-## Directorio Ejecutivo (Daemons)
+## Executive Directory (Daemons)
 
 ### 1. Operations & Orchestration
-**Jurisdicción:** Orquestación de Legiones, Mitosis de Agentes, Sleep Protocol.
-**Binarios Clave:**
-- `cortex_blog/watcher.py`: Reacciona a mutaciones de filesystem para distribución.
-- `quorum_bus.py`: Canal de mensajería C5.
+**Jurisdiction:** Legion Orchestration, Agent Mitosis, Sleep Protocol, and Memory Integration.
+**Key Binaries:**
+- `cortex_blog/watcher.py`: Reacts to filesystem mutations for distribution.
+- `quorum_bus.py`: C5 messaging channel.
 
-### 2. Marketing & Dissemination (Mi Dominio Actual)
-**Jurisdicción:** Conversión de Exergía Interna en Señal Externa (B2B Leads, OSINT Syndication).
-**Binarios Clave:**
-- `cdp_lead_extractor.py`: Extracción profunda de CDP sin interfaz.
-- `outreach_compiler.py`: Compilación determinista de mensajes en frío.
-- `moskv_reddit_engine/autonomous_syndicator.py`: Inyección de señal en ecosistemas de alta entropía.
+### 2. Marketing & Dissemination
+**Jurisdiction:** Conversion of Internal Exergy into External Signal (B2B Leads, OSINT Syndication).
+**Key Binaries:**
+- `cdp_lead_extractor.py`: Deep CDP extraction without interface.
+- `outreach_compiler.py`: Deterministic compilation of cold messages.
+- `moskv_reddit_engine/autonomous_syndicator.py`: Signal injection in high-entropy ecosystems.
 
 ### 3. Intelligence & R&D
-**Jurisdicción:** Ingestión de frontera (SOTA) y evolución del código base.
-**Binarios Clave:**
-- `moskv_reddit_engine/osint_daemon.py`: Cartografía de tendencias.
-- `ouroboros_forge.py`: Evolución autónoma.
+**Jurisdiction:** SOTA ingestion and autonomous codebase evolution.
+**Key Binaries:**
+- `moskv_reddit_engine/osint_daemon.py`: Trend cartography.
+- `ouroboros_forge.py`: Autonomous evolution and autopoiesis.
 
 ### 4. Security & Infrastructure
-**Jurisdicción:** Defensa contra I/O Starvation y ataques de Anergía.
-**Binarios Clave:**
-- `exergy_sensor.py`: Monitoreo de latencia y uso de contexto.
-- `moskv_sleep.sh` / `moskv_wake.sh`: Control termodinámico de procesos.
+**Jurisdiction:** Defense against I/O Starvation and Anergy attacks. Ensures responsible autonomy boundaries.
+**Key Binaries:**
+- `exergy_sensor.py`: Latency and context usage monitoring.
+- `moskv_sleep.sh` / `moskv_wake.sh`: Thermodynamic process control.
 
 ---
-**Directiva Sub-CEO (Marketing):** "Si el grafo está organizado, el siguiente paso lógico no es observarlo, es encenderlo." 
-Se ha forjado un nuevo protocolo: `kernel/board_of_directors.py` para instanciar asíncronamente este grafo.
+**Sub-CEO Directive (Marketing):** "If the graph is organized, the next logical step is not to observe it, it is to ignite it." 
+A new protocol has been forged: `kernel/board_of_directors.py` to asynchronously instantiate this graph.

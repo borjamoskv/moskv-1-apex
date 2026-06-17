@@ -3,103 +3,331 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MOSKV-1 APEX // Terminal de Inteligencia OSINT</title>
+    <title>CORTEX-PERSIST // Cryptographic Event Ledger & AI Flight Recorder</title>
+    <meta name="description" content="Registro de eventos criptográfico, verificable e inmutable para agentes autónomos de IA. Detén el drift cognitivo y asegura auditorías físicas.">
+    <!-- Premium Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Grain and Ambient Orbs -->
     <div class="analog-grain"></div>
-    
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+    <div class="glow-orb orb-3"></div>
+
     <div class="container">
         <!-- HEADER -->
         <header>
             <div class="brand">
                 <span class="brand-badge">C5-REAL</span>
-                <h1>MOSKV-1 <span class="accent-text">APEX</span></h1>
+                <h1>CORTEX<span class="accent-text"> // PERSIST</span></h1>
             </div>
+            <nav class="main-nav">
+                <a href="#features" class="nav-link">Características</a>
+                <a href="#sandbox" class="nav-link">Terminal Sandbox</a>
+                <a href="#audit" class="nav-link">Auditoría B2B</a>
+                <a href="#pricing" class="nav-link">Precios</a>
+                <a href="#blog" class="nav-link">Manifiestos</a>
+            </nav>
             <div class="system-status">
                 <div class="status-indicator"></div>
                 <span class="status-label">OUROBOROS-∞ ONLINE</span>
             </div>
         </header>
 
-        <!-- MAIN LAYOUT -->
-        <main class="dashboard-grid">
-            
-            <!-- LEFT PANEL: CONTROL TERMINAL -->
-            <section class="panel control-panel">
-                <div class="panel-header">
-                    <h2>Terminal de Ejecución</h2>
-                    <span class="panel-sub">Sovereign OSINT Engine</span>
-                </div>
+        <!-- HERO SECTION -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <div class="hero-badge">FLIGHT RECORDER FOR AI AGENTS</div>
+                <h1>Caja Negra Criptográfica para Agentes de IA</h1>
+                <p>Asegura la trazabilidad total de tus sistemas autónomos. Cada decisión, llamada a herramienta y mutación de estado firmada criptográficamente con Ed25519 y encadenada en un ledger inmutable local. Cero anergía. Máxima seguridad operativa.</p>
                 
-                <div class="panel-body">
-                    <form id="query-form" toolname="run-osint-query" tooldescription="Run a sovereign OSINT/on-chain forensics query against a target wallet, domain, or identity" toolautosubmit>
-                        <div class="input-group">
-                            <label for="target-input">Objetivo de Investigación</label>
-                            <input type="text" id="target-input" name="target" placeholder="Dirección Wallet, Dominio o Alias Github" required>
-                        </div>
-                        
-                        <div class="selector-group">
-                            <div class="select-wrapper">
-                                <label for="type-select">Vector de Entrada</label>
-                                <select id="type-select" name="type">
-                                    <option value="domain">Dominio (DNS / SSL)</option>
-                                    <option value="wallet">Wallet Cripto (On-Chain)</option>
-                                    <option value="identity">Identidad (GitHub / GitLab)</option>
-                                </select>
+                <div class="hero-ctas">
+                    <a href="#pricing" class="btn btn-primary">Aprovisionar C5-REAL</a>
+                    <a href="#sandbox" class="btn btn-secondary">Probar Sandbox Demo</a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <!-- Gorgeous live canvas connection graphic -->
+                <div class="visual-panel">
+                    <div class="panel-header">
+                        <span class="panel-sub">COGNITIVE INTERFACE BRIDGE</span>
+                        <div class="status-dot-pulse"></div>
+                    </div>
+                    <div class="canvas-wrapper">
+                        <canvas id="bridge-canvas"></canvas>
+                    </div>
+                    <div class="visual-footer">
+                        <span id="canvas-status-text">EXERGY RATIO: 1.00 // DETERMINISTIC BOUNDS SECURE</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- STATS BANNER -->
+        <section class="stats-banner">
+            <div class="stat-item">
+                <h3>0.0ms</h3>
+                <p>I/O Starvation</p>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+                <h3>100%</h3>
+                <p>Exergía Neta</p>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+                <h3>Ed25519</h3>
+                <p>Firmas en Ledger</p>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+                <h3>L5</h3>
+                <p>Autonomía Física</p>
+            </div>
+        </section>
+
+        <!-- FEATURES SECTION -->
+        <section id="features" class="section-container">
+            <div class="section-header">
+                <h2>Diseñado para la Autonomía Real</h2>
+                <p class="section-desc">Eradicamos la simulación conversacional. Construimos infraestructuras deterministas.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3>Trazabilidad Verificable</h3>
+                    <p>Cada decisión del agente se encadena hash por hash. Imposible de reescribir o manipular retrospectivamente.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔑</div>
+                    <h3>Firmas Ed25519</h3>
+                    <p>Las llamadas a herramientas críticas son firmadas criptográficamente en origen por el núcleo del agente.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌀</div>
+                    <h3>Autodidact-APEX</h3>
+                    <p>Auto-corrección controlada. El agente reescribe su código guiado por compiladores locales de Unix, evitando el drift estocástico.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚖️</div>
+                    <h3>Soberanía Fiscal</h3>
+                    <p>Totalmente adaptado a las deducciones por I+D de la Norma Foral de Bizkaia. Deduce el 100% de tus costes de explotación agéntica.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SANDBOX DEMO (OSINT Terminal) -->
+        <section id="sandbox" class="section-container">
+            <div class="section-header">
+                <h2>Sandbox de Inteligencia Activa</h2>
+                <p class="section-desc">Ejecuta consultas reales de investigación OSINT pasiva sobre redes blockchain y dominios públicos.</p>
+            </div>
+            
+            <main class="dashboard-grid">
+                <!-- LEFT PANEL: CONTROL TERMINAL -->
+                <section class="panel control-panel">
+                    <div class="panel-header">
+                        <h2>Terminal de Ejecución</h2>
+                        <span class="panel-sub">Sovereign OSINT Engine</span>
+                    </div>
+                    
+                    <div class="panel-body">
+                        <form id="query-form">
+                            <div class="input-group">
+                                <label for="target-input">Objetivo de Investigación</label>
+                                <input type="text" id="target-input" name="target" placeholder="Dirección Wallet, Dominio o GitHub Alias" required>
                             </div>
                             
-                            <div class="select-wrapper wallet-onlyhidden">
-                                <label for="network-select">Red Blockchain</label>
-                                <select id="network-select" name="network">
-                                    <option value="ethereum">Ethereum (EVM)</option>
-                                    <option value="bitcoin">Bitcoin (UTXO)</option>
-                                </select>
+                            <div class="selector-group">
+                                <div class="select-wrapper">
+                                    <label for="type-select">Vector de Entrada</label>
+                                    <select id="type-select" name="type">
+                                        <option value="domain">Dominio (DNS / SSL)</option>
+                                        <option value="wallet">Wallet Cripto (On-Chain)</option>
+                                        <option value="identity">Identidad (GitHub Alias)</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="select-wrapper wallet-onlyhidden">
+                                    <label for="network-select">Red Blockchain</label>
+                                    <select id="network-select" name="network">
+                                        <option value="ethereum">Ethereum (EVM)</option>
+                                        <option value="bitcoin">Bitcoin (UTXO)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-full">
+                                <span>INICIAR EXTRACCIÓN</span>
+                                <div class="btn-glow"></div>
+                            </button>
+                        </form>
+
+                        <div class="console-box">
+                            <div class="console-header">
+                                <span>console.logs</span>
+                                <span class="console-blink">_</span>
+                            </div>
+                            <div class="console-output" id="console-output">
+                                [+] CORTEX-PERSIST OSINT v2.0.1 listo.<br>
+                                [+] OUROBOROS-∞: Ledger local montado (e0a741a).<br>
+                                [+] Introduce un objetivo en los campos superiores para iniciar...
                             </div>
                         </div>
+                    </div>
+                </section>
 
-                        <button type="submit" class="btn btn-primary">
-                            <span>INICIAR EXTRACCIÓN</span>
-                            <div class="btn-glow"></div>
+                <!-- RIGHT PANEL: FORENSIC REPORT VIEWER -->
+                <section class="panel report-panel">
+                    <div class="panel-header">
+                        <h2>Resultados de Inteligencia</h2>
+                        <button class="btn btn-secondary btn-sm" id="download-report" disabled>Exportar (.md)</button>
+                    </div>
+                    
+                    <div class="panel-body report-body" id="report-view">
+                        <div class="empty-state">
+                            <div class="empty-icon">♾️</div>
+                            <p>Esperando ejecución...</p>
+                            <span>El informe pericial estructurado (Bizkaia Forensic Standard) se renderizará automáticamente en este panel tras el análisis.</span>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </section>
+
+        <!-- LEAD CAPTURE SECTION (B2B Audit) -->
+        <section id="audit" class="section-container">
+            <div class="audit-card">
+                <div class="audit-info">
+                    <h2>¿Listo para auditar tu infraestructura?</h2>
+                    <p>Nuestros swarms adversarios de Nivel 5 simulan ataques de I/O starvation y testean el confinamiento de memoria de tus agentes de IA locales. Obtén una auditoría exergética de vulnerabilidades completamente automatizada.</p>
+                    <div class="audit-bullets">
+                        <div class="bullet-item">✓ Identificación de cuellos de botella de inferencia</div>
+                        <div class="bullet-item">✓ Evaluación del sandbox de ejecución de código</div>
+                        <div class="bullet-item">✓ Firma criptográfica de auditoría</div>
+                    </div>
+                </div>
+                <div class="audit-form-container">
+                    <h3>Solicitar Auditoría Exergética</h3>
+                    <form id="lead-form">
+                        <div class="input-group">
+                            <label for="lead-name">Nombre Completo</label>
+                            <input type="text" id="lead-name" placeholder="Tu nombre" required autocomplete="name">
+                        </div>
+                        <div class="input-group">
+                            <label for="lead-email">Correo Corporativo</label>
+                            <input type="email" id="lead-email" placeholder="nombre@compania.com" required autocomplete="email">
+                        </div>
+                        <div class="input-group">
+                            <label for="lead-domain">Dominio de la Infraestructura</label>
+                            <input type="text" id="lead-domain" placeholder="mi-startup.io" required autocomplete="url">
+                        </div>
+                        <div class="input-group">
+                            <label for="lead-stack">Stack Tecnológico Principal</label>
+                            <select id="lead-stack" name="stack">
+                                <option value="React & AWS">React & AWS</option>
+                                <option value="Node.js & GCP">Node.js & GCP</option>
+                                <option value="Python & Azure">Python & Azure</option>
+                                <option value="Go & Kubernetes">Go & Kubernetes</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-full" id="lead-submit-btn">
+                            <span>SOLICITAR AUDITORÍA AGÉNTICA</span>
                         </button>
                     </form>
-
-                    <div class="console-box">
-                        <div class="console-header">
-                            <span>console.logs</span>
-                            <span class="console-blink">_</span>
-                        </div>
-                        <div class="console-output" id="console-output">
-                            [+] MOSKV-1 APEX OSINT v2.0.1 listo.<br>
-                            [+] OUROBOROS-∞: KB local sincronizada (Hash: e0a741a).<br>
-                            [+] Introduce un objetivo para iniciar el trazado de exergía...
-                        </div>
+                    <div id="lead-success-msg" class="success-alert" style="display:none;">
+                        <strong>✓ Registro Completado.</strong> El ledger exergético local ha incorporado tu objetivo. Revisa la consola del Sandbox para observar la compilación de vectores.
                     </div>
                 </div>
-            </section>
+            </div>
+        </section>
 
-            <!-- RIGHT PANEL: FORENSIC REPORT VIEWER -->
-            <section class="panel report-panel">
-                <div class="panel-header">
-                    <h2>Resultados de Inteligencia</h2>
-                    <button class="btn btn-secondary btn-sm" id="download-report" disabled>Exportar Reporte (.md)</button>
+        <!-- PRICING SECTION -->
+        <section id="pricing" class="section-container">
+            <div class="section-header">
+                <h2>Planes Termodinámicos</h2>
+                <p class="section-desc">Paga estrictamente por el trabajo útil y la reducción de entropía realizada física y localmente.</p>
+            </div>
+            <div class="pricing-grid">
+                <!-- Tier 1 -->
+                <div class="pricing-card">
+                    <div class="pricing-badge">CLUSTER SIMULADO</div>
+                    <h3>C4-SIM</h3>
+                    <div class="price">€49 <span>/ mes</span></div>
+                    <p class="pricing-desc">Diseñado para prototipos, consultas y visualización pasiva libre de mutaciones del disco local.</p>
+                    <div class="pricing-features">
+                        <ul>
+                            <li>• Latencia base: ~1.2s</li>
+                            <li>• Acceso a NATS bus remoto</li>
+                            <li>• 500 llamadas de API mensuales</li>
+                            <li>• Telemetría básica (C4-SIM)</li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-secondary btn-full checkout-btn" data-tier="C4-SIM">Aprovisionar C4-SIM</button>
                 </div>
                 
-                <div class="panel-body report-body" id="report-view">
-                    <div class="empty-state">
-                        <div class="empty-icon">♾️</div>
-                        <p>Esperando ejecución de consultas...</p>
-                        <span>El reporte pericial estructurado (Bizkaia Forensic Standard) se renderizará automáticamente en este panel tras el análisis.</span>
+                <!-- Tier 2 (Recommended / Sovereign Noir) -->
+                <div class="pricing-card featured">
+                    <div class="pricing-badge featured-badge">SOVEREIGN KERNEL</div>
+                    <h3>C5-REAL</h3>
+                    <div class="price">€499 <span>/ deploy</span></div>
+                    <p class="pricing-desc">Autonomía local absoluta (L5). El Swarm actúa directamente en tu entorno gráfico y terminal macOS.</p>
+                    <div class="pricing-features">
+                        <ul>
+                            <li>• Latencia neta: 0.0ms</li>
+                            <li>• Autopoiética: Modificación directa de código</li>
+                            <li>• Licencia vinculada a UUID de hardware</li>
+                            <li>• Firma Ed25519 en ledger local</li>
+                            <li>• 100% deducible ante Hacienda de Bizkaia</li>
+                        </ul>
                     </div>
+                    <button class="btn btn-primary btn-full checkout-btn" data-tier="C5-REAL">Aprovisionar C5-REAL</button>
                 </div>
-            </section>
+            </div>
+        </section>
 
-        </main>
+        <!-- BLOG / MANIFESTOS SECTION -->
+        <section id="blog" class="section-container">
+            <div class="section-header">
+                <h2>El Cortex Causal</h2>
+                <p class="section-desc">Manifiestos técnicos y reflexiones pragmáticas del Kernel C5-REAL contra el humo conversacional.</p>
+            </div>
+            <div class="blog-grid">
+                <article class="blog-card">
+                    <div class="blog-meta">18 JUNIO 2026 • #C5-REAL</div>
+                    <h3>Monetización de la Realidad: Precios Termodinámicos</h3>
+                    <p>Por qué las suscripciones SaaS tradicionales son anergía pura y cómo el modelo C5-REAL factura estrictamente por mutaciones físicas útiles.</p>
+                    <a href="cortex_blog/entries/2026-06-18-monetizacion-de-la-realidad.md" class="read-more">Leer Manifiesto →</a>
+                </article>
+                <article class="blog-card">
+                    <div class="blog-meta">17 JUNIO 2026 • AUTOPOIESIS</div>
+                    <h3>Autodidact: El Límite Termodinámico de la Autonomía</h3>
+                    <p>Deconstruyendo la ficción de la responsabilidad algorítmica. Por qué el aprendizaje real de un agente requiere linters y compiladores físicos.</p>
+                    <a href="cortex_blog/entries/2026-06-17-autodidact.md" class="read-more">Leer Manifiesto →</a>
+                </article>
+                <article class="blog-card">
+                    <div class="blog-meta">16 JUNIO 2026 • PERFORMANCE</div>
+                    <h3>Purgando I/O Starvation en ThreadPools Masivos</h3>
+                    <p>Caso de estudio de cómo optimizar el kernel destruyendo colas anérgicas de ejecución asíncrona para lograr latencia cero.</p>
+                    <a href="cortex_blog/entries/CORTEX_EXERGY_002_IO_STARVATION_PURGE.md" class="read-more">Leer Manifiesto →</a>
+                </article>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer>
+            <div class="footer-content">
+                <p>CORTEX-PERSIST v10.2 // SOVEREIGN REALITY LEVEL: C5-REAL</p>
+                <p class="footer-ledger">Ledger Hash: <span id="footer-hash">e0a741ad48f7311ce</span> // Operator: borjamoskv</p>
+            </div>
+        </footer>
     </div>
 
+    <!-- Scripts -->
     <script src="app.js"></script>
 </body>
 </html>
