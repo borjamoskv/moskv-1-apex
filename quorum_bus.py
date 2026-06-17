@@ -4,8 +4,13 @@ import time
 
 DB_PATH = "swarm_os.sqlite"
 
+def get_connection():
+    conn = sqlite3.connect(DB_PATH, timeout=5.0)
+    conn.execute("PRAGMA journal_mode=WAL;")
+    return conn
+
 def init_db():
-    conn = sqlite3.connect(DB_PATH)
+    conn = get_connection()
     c = conn.cursor()
     c.execute('''
         CREATE TABLE IF NOT EXISTS quorum_pheromones (
@@ -22,7 +27,7 @@ def emit_pheromone(agent_id: str, intent_hash: str):
     """
     Emits a lightweight state token to the decentralized bus.
     """
-    conn = sqlite3.connect(DB_PATH)
+    conn = get_connection()
     c = conn.cursor()
     c.execute('INSERT OR REPLACE INTO quorum_pheromones (agent_id, intent_hash, timestamp) VALUES (?, ?, ?)', (agent_id, intent_hash, time.time()))
     conn.commit()
@@ -33,7 +38,7 @@ def check_quorum(intent_hash: str, required_nodes: int, threshold: float = 0.51)
     """
     Evaluates if the swarm has reached the critical mass to execute the next DAG phase.
     """
-    conn = sqlite3.connect(DB_PATH)
+    conn = get_connection()
     c = conn.cursor()
     # Pheromones expire after 60 seconds (volatile memory)
     cutoff_time = time.time() - 60 
