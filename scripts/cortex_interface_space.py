@@ -73,6 +73,23 @@ def calculate_space_metrics():
 def draw_space():
     latency, anergy, exergy, mutations, session_id = calculate_space_metrics()
     
+    # Write metrics to JSON file in docs folder
+    base_dir = Path(__file__).parent.parent
+    metrics_path = base_dir / "docs" / "cortex_metrics.json"
+    try:
+        metrics_data = {
+            "session_id": session_id,
+            "latency": latency,
+            "anergy": anergy,
+            "exergy": exergy,
+            "mutations": mutations,
+            "timestamp": time.time()
+        }
+        with open(metrics_path, "w", encoding="utf-8") as json_f:
+            json.dump(metrics_data, json_f, indent=2)
+    except Exception as e:
+        print(f"[!] Error saving JSON metrics: {e}", file=sys.stderr)
+
     # Map metrics to visual bridge parameters
     bridge_width = 40
     bridge_cursor = int(exergy * bridge_width)
