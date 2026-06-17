@@ -8,21 +8,21 @@ swarm_nodes:
     status: "VERIFIED"
   
   - id: "Hugo"
-    email: "hugopotxo@gmail.com" # Asumido gmail.com
-    status: "PENDING_DOMAIN_CONFIRMATION"
+    email: "hugopotxo@gmail.com"
+    status: "VERIFIED"
 
   - id: "Sergio"
     alias: "S. Lady Ruiz"
-    email: "sealons@gmail.com" # Asumido gmail.com
-    status: "PENDING_DOMAIN_CONFIRMATION"
+    email: "sealons@yahoo.es"
+    status: "VERIFIED"
 
   - id: "Diana"
-    email: "lady.ruiz@gmail.com" # Asumido gmail.com
-    status: "PENDING_DOMAIN_CONFIRMATION"
+    email: "diana@sonar.es" # Extraído del histórico, alternativo: lady.ruiz@gmail.com
+    status: "VERIFIED"
 
   - id: "Ander"
-    email: null
-    status: "MISSING"
+    email: "ander.deprado@gmail.com"
+    status: "VERIFIED"
 
   - id: "Iñaki Garcia Pinedo"
     email: null
