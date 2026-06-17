@@ -179,7 +179,7 @@ class OuroborosInfinity:
             vectors = [
                 SwarmVector(
                     role="Thermodynamic Context Compressor",
-                    logic='print("[Thermodynamic-Compressor] Running Landauer Purge on conversation transcripts... Context pruned successfully. Signal-to-Anergy ratio optimized.")',
+                    logic='import subprocess; import sys; res = subprocess.run([sys.executable, "src/moskv_1/crystallize_context.py"], capture_output=True, text=True); print(res.stdout); print(res.stderr); print("[Thermodynamic-Compressor] Context pruned successfully. Signal-to-Anergy ratio optimized.") if res.returncode == 0 else print("[Thermodynamic-Compressor] Crystallization failed.")',
                     target_module="context_compressor"
                 )
             ]

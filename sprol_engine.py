@@ -2,7 +2,7 @@ import os
 import json
 import logging
 import hashlib
-from datetime import datetime
+from datetime import datetime, timezone
 
 # C5-REAL SPROL ENGINE (Sovereign Pull Request Outreach Loop)
 # Replaces passive cold email marketing with active proof-of-work audits.
@@ -38,7 +38,7 @@ class SPROLEngine:
         
         # Simulate repository structural audit
         entropy_score = 3.42 # Baseline mock
-        scan_time = datetime.utcnow().isoformat()
+        scan_time = datetime.now(timezone.utc).isoformat()
         
         # Cryptographic fingerprinting representing CortexPersist verification
         payload = f"{domain}-{entropy_score}-{scan_time}"

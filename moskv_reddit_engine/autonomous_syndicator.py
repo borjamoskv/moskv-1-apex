@@ -1,6 +1,6 @@
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 
 # MOSKV-1 APEX: Autonomous Syndicator
 # Nivel de Realidad: C5-REAL
@@ -33,7 +33,7 @@ def generate_exergy_payload(trend):
     return payload
 
 def syndicate_trends():
-    print(f"[{datetime.utcnow().isoformat()}] Iniciando Motor de Sindicación Asimétrica...")
+    print(f"[{datetime.now(timezone.utc).isoformat()}] Iniciando Motor de Sindicación Asimétrica...")
     
     if not os.path.exists(LEDGER_FILE):
         print("[C4-ERROR] OSINT Ledger no encontrado. Ejecuta osint_daemon.py primero.")
@@ -44,7 +44,7 @@ def syndicate_trends():
 
     with open(OUTBOX_FILE, 'w') as outbox:
         outbox.write(f"# MOSKV-1 APEX: Syndication Outbox\n")
-        outbox.write(f"Generado: {datetime.utcnow().isoformat()}\n")
+        outbox.write(f"Generado: {datetime.now(timezone.utc).isoformat()}\n")
         outbox.write(f"Nivel: C5-REAL\n\n")
         
         trends = ledger.get("trends", {})

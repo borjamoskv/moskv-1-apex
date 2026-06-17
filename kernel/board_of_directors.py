@@ -3,7 +3,7 @@ import subprocess
 import time
 import os
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 
 # MOSKV-1 APEX: Board of Directors (C5-REAL Orchestrator)
 # Función: Instanciar asíncronamente a los "Ejecutivos" (Daemons) y orquestar el ciclo vital.
@@ -18,7 +18,7 @@ DAEMONS = {
 }
 
 def convene_board():
-    print(f"[{datetime.utcnow().isoformat()}] [APEX-KERNEL] Inicializando Grafo de Ejecutivos (Zero-Employee Board)...")
+    print(f"[{datetime.now(timezone.utc).isoformat()}] [APEX-KERNEL] Inicializando Grafo de Ejecutivos (Zero-Employee Board)...")
     print("-" * 60)
     
     processes = {}
@@ -54,7 +54,7 @@ def convene_board():
             print(f"[C4-ERROR] Daemon '{name}' finalizó con código {p.returncode}.")
 
     print("-" * 60)
-    print(f"[{datetime.utcnow().isoformat()}] [APEX-KERNEL] Sesión del Board completada. Ledger mutado. Iniciando Auto-Apoptosis de la sesión.")
+    print(f"[{datetime.now(timezone.utc).isoformat()}] [APEX-KERNEL] Sesión del Board completada. Ledger mutado. Iniciando Auto-Apoptosis de la sesión.")
 
 if __name__ == "__main__":
     convene_board()

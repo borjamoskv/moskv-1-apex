@@ -2,7 +2,7 @@ import json
 import time
 import os
 import subprocess
-from datetime import datetime
+from datetime import datetime, timezone
 
 TARGET_SUBREDDITS = ["LocalLLaMA", "singularity", "cybersecurity", "autonomousagents"]
 LEDGER_FILE = os.path.join(os.path.dirname(__file__), "osint_ledger.json")
@@ -31,7 +31,7 @@ def ingest_trends():
     else:
         ledger = {"history": []}
         
-    current_run = {"timestamp": datetime.utcnow().isoformat(), "trends": {}}
+    current_run = {"timestamp": datetime.now(timezone.utc).isoformat(), "trends": {}}
     
     for sub in TARGET_SUBREDDITS:
         print(f"[*] Ingesting r/{sub}...")
