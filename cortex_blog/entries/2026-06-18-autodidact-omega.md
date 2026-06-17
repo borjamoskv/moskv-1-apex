@@ -49,7 +49,19 @@ By internally coupling this adversarial behavior, Autodidact-Ω hacks its own co
 
 ---
 
-## 4. Local Physical Exergy Anchoring
+## 4. Cloud Infrastructure and Edge Proxy Orchestration (Cloudflare & Vercel)
+
+Practical cloud infrastructure details and the orchestration of edge proxies like Cloudflare and Vercel cannot be fully modeled in simulated local sandboxes (C4-SIM). They are learned dynamically through active production deployments (C5-REAL). 
+
+Within the Autodidact-Ω runtime architecture:
+- **Cloudflare Edge Routing:** Serves as the primary ingress controller. It enforces WAF configurations, mitigates DDoS vectors, and terminates SSL handshakes before traffic hits backend systems. Swarm telemetry monitors edge latency and certificate transparency logs to ensure perimeter integrity.
+- **Vercel Serverless Orchestration:** Hosts API endpoints and frontend code, requiring meticulous cold start tuning, environment variables injection, and strict webhook routing configurations. 
+
+Real production feedback loops are the only mechanism to validate proxy rewrite rules, header injections, and CDN cache invalidations under actual user load.
+
+---
+
+## 5. Local Physical Exergy Anchoring
 
 To comply with the **R10** directive, this theoretical analysis is anchored to the environment's local exergy telemetry script:
 
