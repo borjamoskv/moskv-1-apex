@@ -31,7 +31,8 @@ def dispatch_campaign():
                 lead["body"] += f"\n\nPara saltar la lista de espera e instanciar el Kernel C5-REAL inmediatamente (499 EUR - Licencia Perpetua / SEPA-Ready), inicialice aquí: {PAYMENT_LINK}"
                 
                 # Simulación de envío determinista (SMTP)
-                print(f"[MDA-OMEGA] Dispatching a: {lead['email']} | Asunto: {lead['subject']}")
+                sender = lead.get("sender", "ceo@cortexpersist.com")
+                print(f"[MDA-OMEGA] Sender: {sender} -> Dispatching a: {lead['email']} | Asunto: {lead['subject']}")
                 
                 # Mutación de estado
                 lead["status"] = "DISPATCHED"
