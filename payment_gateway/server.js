@@ -64,7 +64,20 @@ app.post('/submit-lead', (req, res) => {
         fs.appendFileSync(ledgerPath, JSON.stringify(lead) + '\n');
         
         console.log(`[CORTEX-LEAD-OK] Captured lead for ${domain} (${email})`);
-        res.json({ success: true, message: 'Lead recorded to sovereign ledger.' });
+        
+        // C5-REAL: Autonomous triggering of SPROL audit loop
+        const { exec } = require('child_process');
+        const rootDir = path.join(__dirname, '..');
+        
+        exec(`python3 sprol_engine.py && python3 outreach_compiler.py --campaign cortex_persist`, { cwd: rootDir }, (err, stdout, stderr) => {
+            if (err) {
+                console.error(`[CORTEX-SWARM-ERR] Failed to execute autopoiesis audit pipeline: ${err.message}`);
+                return;
+            }
+            console.log(`[CORTEX-SWARM-OK] SPROL audit compiled successfully for ${domain}.`);
+        });
+
+        res.json({ success: true, message: 'Lead recorded to sovereign ledger and audit initiated.' });
     } catch (e) {
         console.error('[CORTEX-LEAD-ERR] Failed to save lead:', e);
         res.status(500).json({ error: e.message });
