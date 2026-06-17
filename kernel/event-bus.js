@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 const { EventEmitter } = require('events');
+const { isMainThread, parentPort } = require('worker_threads');
 
 /**
  * C5-REAL NATIVE EVENT BUS (Zero Dependency)
@@ -28,6 +29,10 @@ class EventBus {
     }
 
     async emit(subject, payload) {
+        if (!isMainThread && parentPort) {
+            parentPort.postMessage({ type: 'EVENT_BUS_FORWARD', subject, payload });
+        }
+
         const currentHash = this._hash(payload, this.lastHash);
         const event = {
             timestamp: Date.now(),
