@@ -211,6 +211,19 @@ input[type="text"]:focus, select:focus {
     box-shadow: 0 0 15px rgba(43, 59, 229, 0.1);
 }
 
+/* WebMCP Visual Feedback */
+form:tool-form-active {
+    outline: 2px dashed var(--yinmn-blue);
+    background: rgba(43, 59, 229, 0.03);
+    border-radius: var(--radius-md);
+    box-shadow: 0 0 25px rgba(43, 59, 229, 0.15);
+}
+
+button:tool-submit-active {
+    outline: 2px dashed var(--sovereign-amber);
+    animation: blink 1.5s step-end infinite;
+}
+
 .selector-group {
     display: grid;
     grid-template-columns: 1fr 1fr;

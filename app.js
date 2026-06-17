@@ -18,52 +18,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    form.addEventListener("submit", (e) => {
-        e.preventDefault();
-        
-        const target = targetInput.value.trim();
-        const type = typeSelect.value;
-        const network = document.getElementById("network-select").value;
-
-        // Clear output and print starting logs
-        consoleOutput.innerHTML = `[+] Iniciando análisis para vector [${type.toUpperCase()}] sobre target: ${target}...<br>`;
-        reportView.innerHTML = `
-            <div class="empty-state">
-                <div class="empty-icon console-blink">⏳</div>
-                <p>Analizando e ingiriendo datos...</p>
-                <span>El motor de autopoiesis está trazando la ruta de exergía.</span>
-            </div>
-        `;
-        downloadBtn.disabled = true;
-
-        // Sequence of logs simulating execution
-        const logSteps = [
-            `[+] Metacognición: Evaluando <entropy_check>...`,
-            `[+] Consultando base de conocimientos local CORTEX_OSINT_KB.json...`,
-            `[+] Resolviendo firma e infraestructura del objetivo...`,
-            `[+] Extrayendo telemetría SOTA...`,
-            `[+] Generando reporte pericial certificado...`
-        ];
-
-        let currentStep = 0;
-        const interval = setInterval(() => {
-            if (currentStep < logSteps.length) {
-                consoleOutput.innerHTML += `${logSteps[currentStep]}<br>`;
-                consoleOutput.scrollTop = consoleOutput.scrollHeight;
-                currentStep++;
-            } else {
-                clearInterval(interval);
-                renderReport(target, type, network);
-            }
-        }, 800);
-    });
-
-    function renderReport(target, type, network) {
+    function buildReportMarkdown(target, type, network) {
         const timestamp = new Date().toISOString();
-        let markdown = "";
-
         if (type === "domain") {
-            markdown = `
+            return `
 # INFORME DE INTELIGENCIA OSINT & ANÁLISIS FORENSE CRIPTO
 **Fecha de Emisión:** ${timestamp} UTC
 
@@ -99,9 +57,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 ## 5. Nivel de confianza
 - **Nivel:** C5-REAL (Datos estructurados de red pasiva y firmas SSL oficiales).
-            `;
+            `.trim();
         } else if (type === "wallet") {
-            markdown = `
+            return `
 # INFORME DE INTELIGENCIA OSINT & ANÁLISIS FORENSE CRIPTO
 **Fecha de Emisión:** ${timestamp} UTC
 
@@ -138,9 +96,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 ## 5. Nivel de confianza
 - **Nivel:** C5-REAL (Datos extraídos directamente del explorador de bloques principal).
-            `;
+            `.trim();
         } else {
-            markdown = `
+            return `
 # INFORME DE INTELIGENCIA OSINT & ANÁLISIS FORENSE CRIPTO
 **Fecha de Emisión:** ${timestamp} UTC
 
@@ -176,10 +134,65 @@ document.addEventListener("DOMContentLoaded", () => {
 
 ## 5. Nivel de confianza
 - **Nivel:** C5-REAL (Perfil verificado por firma y consistencia de alias).
-            `;
+            `.trim();
+        }
+    }
+
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        
+        const target = targetInput.value.trim();
+        const type = typeSelect.value;
+        const network = document.getElementById("network-select").value;
+
+        // Support WebMCP declarative submission
+        if (e.agentInvoked) {
+            currentReportContent = buildReportMarkdown(target, type, network);
+            const htmlContent = parseSimpleMarkdown(currentReportContent);
+            reportView.innerHTML = `<div class="report-content">${htmlContent}</div>`;
+            downloadBtn.disabled = false;
+            consoleOutput.innerHTML += `[+] WebMCP Tool [run-osint-query] invocado por agente autónomo.<br>`;
+            consoleOutput.innerHTML += `[+] Target: ${target} | Vector: ${type.toUpperCase()}<br>`;
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+            e.respondWith(Promise.resolve(currentReportContent));
+            return;
         }
 
-        currentReportContent = markdown.trim();
+        // Clear output and print starting logs
+        consoleOutput.innerHTML = `[+] Iniciando análisis para vector [${type.toUpperCase()}] sobre target: ${target}...<br>`;
+        reportView.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon console-blink">⏳</div>
+                <p>Analizando e ingiriendo datos...</p>
+                <span>El motor de autopoiesis está trazando la ruta de exergía.</span>
+            </div>
+        `;
+        downloadBtn.disabled = true;
+
+        // Sequence of logs simulating execution
+        const logSteps = [
+            `[+] Metacognición: Evaluando <entropy_check>...`,
+            `[+] Consultando base de conocimientos local CORTEX_OSINT_KB.json...`,
+            `[+] Resolviendo firma e infraestructura del objetivo...`,
+            `[+] Extrayendo telemetría SOTA...`,
+            `[+] Generando reporte pericial certificado...`
+        ];
+
+        let currentStep = 0;
+        const interval = setInterval(() => {
+            if (currentStep < logSteps.length) {
+                consoleOutput.innerHTML += `${logSteps[currentStep]}<br>`;
+                consoleOutput.scrollTop = consoleOutput.scrollHeight;
+                currentStep++;
+            } else {
+                clearInterval(interval);
+                renderReport(target, type, network);
+            }
+        }, 800);
+    });
+
+    function renderReport(target, type, network) {
+        currentReportContent = buildReportMarkdown(target, type, network);
         consoleOutput.innerHTML += `[+] Reporte generado en el visualizador.<br>`;
         consoleOutput.scrollTop = consoleOutput.scrollHeight;
 

@@ -36,16 +36,16 @@
                 </div>
                 
                 <div class="panel-body">
-                    <form id="query-form">
+                    <form id="query-form" toolname="run-osint-query" tooldescription="Run a sovereign OSINT/on-chain forensics query against a target wallet, domain, or identity" toolautosubmit>
                         <div class="input-group">
                             <label for="target-input">Objetivo de Investigación</label>
-                            <input type="text" id="target-input" placeholder="Dirección Wallet, Dominio o Alias Github" required>
+                            <input type="text" id="target-input" name="target" placeholder="Dirección Wallet, Dominio o Alias Github" required>
                         </div>
                         
                         <div class="selector-group">
                             <div class="select-wrapper">
                                 <label for="type-select">Vector de Entrada</label>
-                                <select id="type-select">
+                                <select id="type-select" name="type">
                                     <option value="domain">Dominio (DNS / SSL)</option>
                                     <option value="wallet">Wallet Cripto (On-Chain)</option>
                                     <option value="identity">Identidad (GitHub / GitLab)</option>
@@ -54,7 +54,7 @@
                             
                             <div class="select-wrapper wallet-onlyhidden">
                                 <label for="network-select">Red Blockchain</label>
-                                <select id="network-select">
+                                <select id="network-select" name="network">
                                     <option value="ethereum">Ethereum (EVM)</option>
                                     <option value="bitcoin">Bitcoin (UTXO)</option>
                                 </select>
