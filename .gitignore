@@ -5,3 +5,6 @@ node_modules/
 src/skills/worker_*
 src/skills/*.so
 src/skills/native_exergy.c
+__pycache__/
+*.pyc
+**/__pycache__/
