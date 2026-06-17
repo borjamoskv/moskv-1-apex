@@ -4,6 +4,7 @@ import time
 import logging
 import argparse
 import socket
+import ssl
 import urllib.request
 from datetime import datetime
 
@@ -16,20 +17,40 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - [C5-REAL OSINT] - 
 class WalletAnalyzer:
     """
     On-chain forensics analyzer.
-    Queries Blockcypher public APIs for basic address telemetry
-    and checks for Tornado Cash / privacy protocol routing.
+    Checks target EVM/BTC addresses against known privacy pools, bridge interfaces, and exchange routing.
     """
+    KNOWN_ENTITIES = {
+        # Ethereum Tornado Cash Contracts
+        "0xd121550c225a28917973ece10139e8e286657c91": "Tornado.Cash: Router",
+        "0x47ce0c6ed5b0eb3d7975443a3e7968b2025f8b50": "Tornado.Cash: 0.1 ETH",
+        "0x910cbd523d972eb0a6f4cae4618a921a2c8a13fb": "Tornado.Cash: 1 ETH",
+        "0xa160cdab466af1d17b0d2b45025a41031b27f31d": "Tornado.Cash: 10 ETH",
+        "0x722175077d82e1277a0bd7a8277a64d84f509e7f": "Tornado.Cash: 100 ETH",
+        # Arbitrum / Optimism / Polygon Bridges
+        "0x4dbd4ddbe73ac022ab7e77d912888f6856c17255": "Arbitrum One: L1 Gateway Router",
+        "0x99c9fc46f92e8a1c0dec1b1747d010903e884be1": "Optimism: L1 Standard Bridge",
+        "0xa0c68c638235ee32657e8f720a23cec1bfc77c77": "Polygon: PoS Bridge",
+        # Major Exchanges (Hot/Cold Wallets)
+        "0x28c6c06298d514db089934071355e5743bf21d60": "Binance 14",
+        "0x3f5ce5fbfe3e9af3971dd033d864528e5f41091f": "Binance 1",
+        "0x50382897693b3cf88d52473a21a620019a0fda63": "Kraken 4"
+    }
+
     def __init__(self, address: str, network: str = "ethereum"):
-        self.address = address
-        self.network = network
+        self.address = address.lower()
+        self.network = network.lower()
 
     def analyze(self) -> dict:
         logging.info(f"Querying on-chain data for {self.address} ({self.network})...")
+        
+        # Check against known entities database
+        matched_entity = self.KNOWN_ENTITIES.get(self.address, "Unknown Entity / Individual Wallet")
+        
         net_map = {
             "ethereum": "eth/main",
             "bitcoin": "btc/main"
         }
-        api_net = net_map.get(self.network.lower(), "eth/main")
+        api_net = net_map.get(self.network, "eth/main")
         url = f"https://api.blockcypher.com/v1/{api_net}/addrs/{self.address}/balance"
         
         balance_data = {}
@@ -41,14 +62,19 @@ class WalletAnalyzer:
             logging.warning(f"Public API fetch failed or address invalid: {e}")
             balance_data = {"error": str(e)}
 
+        is_privacy_protocol = "Tornado.Cash" in matched_entity
+        is_bridge = "Bridge" in matched_entity or "Gateway" in matched_entity
+        is_exchange = "Binance" in matched_entity or "Kraken" in matched_entity
+
         return {
             "target": self.address,
             "network": self.network,
+            "entity_resolution": matched_entity,
             "telemetry": balance_data,
             "heuristics": {
-                "tornado_cash_interaction": self.address.lower() in [
-                    "0x722175077d82e1277a0bd7a8277a64d84f509e7f", # simulated TC routers
-                ],
+                "privacy_pool_routing": is_privacy_protocol,
+                "cross_chain_bridge": is_bridge,
+                "exchange_deposit_fiat": is_exchange,
                 "active_balance": balance_data.get("balance", 0),
                 "total_transactions": balance_data.get("n_tx", 0)
             },
@@ -58,7 +84,7 @@ class WalletAnalyzer:
 class DomainAnalyzer:
     """
     Passive & active DNS/Web infrastructure scanner.
-    Performs port scanning for standard services.
+    Performs port scanning and retrieves SSL Certificate metadata.
     """
     def __init__(self, domain: str):
         self.domain = domain
@@ -71,6 +97,28 @@ class DomainAnalyzer:
         except Exception as e:
             logging.error(f"Could not resolve domain: {e}")
             return {"error": f"Resolution failed: {e}"}
+
+        # Retrieve SSL Cert details (Port 443)
+        ssl_details = {}
+        logging.info(f"Retrieving SSL Certificate for {self.domain}...")
+        try:
+            context = ssl.create_default_context()
+            with socket.create_connection((self.domain, 443), timeout=3) as sock:
+                with context.wrap_socket(sock, server_hostname=self.domain) as ssock:
+                    cert = ssock.getpeercert()
+                    if cert:
+                        # Extract issuer and subject
+                        issuer = dict(x[0] for x in cert.get('issuer', []))
+                        subject = dict(x[0] for x in cert.get('subject', []))
+                        ssl_details = {
+                            "issuer": issuer.get("organizationName", "Unknown Issuer"),
+                            "subject_common_name": subject.get("commonName", "Unknown CN"),
+                            "valid_from": cert.get("notBefore"),
+                            "valid_until": cert.get("notAfter")
+                        }
+        except Exception as e:
+            logging.warning(f"Failed to fetch SSL Metadata: {e}")
+            ssl_details = {"error": str(e)}
 
         # Port scanning standard services
         ports_to_scan = [80, 443, 22, 8080, 8443]
@@ -90,6 +138,7 @@ class DomainAnalyzer:
         return {
             "target": self.domain,
             "resolved_ip": ip_address,
+            "ssl_metadata": ssl_details,
             "infrastructure": {
                 "cloudflare_detected": "cloudflare" in ip_address,
                 "open_ports": open_ports
@@ -99,7 +148,7 @@ class DomainAnalyzer:
 
 class IdentityAnalyzer:
     """
-    GitHub footprint analyzer and digital identity profiler.
+    GitHub footprint analyzer and digital identity cross-platform profiler.
     """
     def __init__(self, identifier: str):
         self.identifier = identifier
@@ -116,6 +165,16 @@ class IdentityAnalyzer:
             logging.warning(f"GitHub profile not found or API limited: {e}")
             profile = {"error": str(e)}
 
+        # Check other typical alias platforms (GitLab/Keybase)
+        platforms_availability = {}
+        for platform, url_pattern in [("gitlab", "https://gitlab.com/{}/"), ("keybase", "https://keybase.io/{}")]:
+            try:
+                req = urllib.request.Request(url_pattern.format(self.identifier), method='HEAD', headers={'User-Agent': 'Mozilla/5.0'})
+                with urllib.request.urlopen(req, timeout=3) as resp:
+                    platforms_availability[platform] = "Active/Exists"
+            except Exception:
+                platforms_availability[platform] = "Not Found / Inactive"
+
         return {
             "target": self.identifier,
             "profile_data": {
@@ -126,6 +185,7 @@ class IdentityAnalyzer:
                 "public_repos": profile.get("public_repos"),
                 "followers": profile.get("followers")
             },
+            "external_profiles": platforms_availability,
             "leak_vector_detected": "email" in profile and profile["email"] is not None,
             "timestamp": datetime.utcnow().isoformat()
         }
@@ -148,11 +208,10 @@ class ReportGenerator:
         content.append(f"**Fecha de Emisión:** {datetime.utcnow().isoformat()} UTC\n")
         content.append("## 1. Hallazgo principal")
         
-        # Determine main findings
         targets = []
         if "wallet" in run_results:
             w = run_results["wallet"]
-            targets.append(f"Wallet EVM {w['target']} ({w['network']})")
+            targets.append(f"Wallet EVM {w['target']} ({w['network']}) -> Resolved entity: {w.get('entity_resolution')}")
         if "domain" in run_results:
             d = run_results["domain"]
             targets.append(f"Dominio {d['target']} ({d.get('resolved_ip', 'Unknown IP')})")
@@ -169,11 +228,15 @@ class ReportGenerator:
 
         content.append("\n## 3. Interpretación técnica")
         if "wallet" in run_results:
-            content.append("- **On-Chain:** Telemetría de balance y rastreo de transacciones estructurado.")
+            w = run_results["wallet"]
+            content.append(f"- **On-Chain Forensics:** Entidad identificada como '{w.get('entity_resolution')}'. Heurísticas de Tornado Cash: {w['heuristics']['privacy_pool_routing']}.")
         if "domain" in run_results:
-            content.append("- **Infraestructura:** Mapeo activo de puertos y resolución de DNS.")
+            d = run_results["domain"]
+            ssl_m = d.get("ssl_metadata", {})
+            content.append(f"- **Infraestructura:** SSL Issuer: {ssl_m.get('issuer', 'Unknown')}. Puertos detectados: {d['infrastructure']['open_ports']}.")
         if "identity" in run_results:
-            content.append("- **Digital Footprint:** Datos expuestos en perfil público de GitHub.")
+            i = run_results["identity"]
+            content.append(f"- **Digital Footprint:** Mapeo de aliases externo completado. GitLab/Keybase check: {i.get('external_profiles')}.")
 
         content.append("\n## 4. Riesgo fiscal o forense")
         content.append("- **Clasificación Foral:** Evaluación preliminar conforme a la Norma Foral General Tributaria del Territorio Histórico de Bizkaia. Pendiente de contrastación con el Modelo 721 o IRPF si se verifican variaciones patrimoniales.")
@@ -216,7 +279,9 @@ class OSINTEvolutionEngine:
             "Blockcypher_Forensics": "Decoupled blockchain balance tracking.",
             "GitHub_Footprinting": "GitHub metadata exposure scanner.",
             "Active_Port_Mapping": "Socket-based active service mapping.",
-            "Standard_Forensic_Reporter": "Automated Bizkaia-compliant Markdown reporting."
+            "Standard_Forensic_Reporter": "Automated Bizkaia-compliant Markdown reporting.",
+            "SSL_Certificate_Scanner": "Active SSL metadata parser for tracking code infrastructure.",
+            "Known_Entities_Database": "L1/L2 Bridge and Privacy Pool static DB routing."
         }
         
         mutations_applied = 0
