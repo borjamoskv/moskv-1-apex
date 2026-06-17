@@ -30,6 +30,9 @@
 - **R10 · Loop Prevention:** Agrega los archivos generados/temporales de daemons al archivo `.git/info/exclude` para bloquear el ruido en el Git Sentinel.
 - **R11 · Concurrency Lock:** Enforzar siempre `WAL` y timeout de 5000ms al conectar a bases de datos SQLite en Python/Node.js.
 - **R12 · AST Syntax Safety:** Nunca utilices comentarios de shell (`#`) en el frontmatter/código JS de Astro o Next.js, previniendo fallos en Vite.
+- **R13 · launchd Sandbox Safety:** Ubicar scripts y ejecutables de launchd fuera de directorios protegidos por TCC (`~/Documents`, `~/Desktop`, `~/Downloads`) para prevenir fallos silenciosos de permisos (`exit status 127`). Usar rutas libres como `~/.cortex/scripts`.
+- **R14 · Kimi CLI Model Validation:** Asegurar siempre el parámetro `max_context_size` en `config.toml` para evitar excepciones silenciosas de validación en Pydantic (`exit code 1`).
+- **R15 · Resilient API Fallbacks:** Mantener siempre configurado un proveedor de respaldo (ej. `google_genai`/`gemini` con `openai_legacy`) ante fallos de cuota/membresía (HTTP 402) en claves principales.
 
 ## 4. ESTÁNDARES DE OUTPUT
 - Estructura Markdown estricta (GitHub Flavored).
