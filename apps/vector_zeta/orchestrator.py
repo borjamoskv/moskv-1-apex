@@ -1,14 +1,20 @@
+import os
 import yaml
 from vector_zeta.cdp_publisher import CDPPublisher
 from vector_zeta.linkedin_scraper import LinkedInScraper
 from vector_zeta.outreach_injector import OutreachInjector
 
 class ZetaOrchestrator:
-    def __init__(self, campaign_file="./vector_zeta/campaign_001.yaml"):
+    def __init__(self, campaign_file=None):
         """
         Orquestador C5-REAL de nivel superior. Lee el contrato YAML y dispara 
         secuencialmente la termodinámica de extracción, inyección y publicación.
         """
+        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+        if campaign_file is None:
+            campaign_file = os.path.join(BASE_DIR, "campaign_001.yaml")
+            
+        print(f"[*] Cargando contrato de campaña: {campaign_file}")
         with open(campaign_file, 'r') as f:
             self.config = yaml.safe_load(f)
 

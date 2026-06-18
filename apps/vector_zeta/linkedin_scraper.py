@@ -1,16 +1,18 @@
 import os
 import time
 import json
+import random
 from playwright.sync_api import sync_playwright
 
 class LinkedInScraper:
-    def __init__(self, session_dir="./.sessions", db_path="./vector_zeta/leads_db.json"):
+    def __init__(self, session_dir=None, db_path=None):
         """
         CDP Engine para extracción estructurada de Leads High-Ticket en LinkedIn.
         Evita APIs oficiales; manipula el DOM directamente usando la sesión del Operador.
         """
-        self.session_dir = session_dir
-        self.db_path = db_path
+        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+        self.session_dir = session_dir or os.path.join(BASE_DIR, ".sessions")
+        self.db_path = db_path or os.path.join(BASE_DIR, "leads_db.json")
         os.makedirs(self.session_dir, exist_ok=True)
         
         # Inicializa Ledger de Leads
@@ -22,13 +24,13 @@ class LinkedInScraper:
         print(f"[C5-REAL] Inicializando CDP Scraper para ICP: {target_icp}")
         
         with sync_playwright() as p:
-            browser = p.chromium.launch(headless=False) # Visibilidad requerida para validación de bot-check
+            browser = p.chromium.launch(headless=False)
             
-            # Carga de contexto seguro
             state_path = os.path.join(self.session_dir, "linkedin_auth.json")
             context_opts = {}
             if os.path.exists(state_path):
                 context_opts['storage_state'] = state_path
+                print(f"[+] Cargando sesión segura de LinkedIn: {state_path}")
             else:
                 print("[!] CRITICAL: linkedin_auth.json no detectado. Requerirá bypass manual de CAPTCHA/Login.")
                 
@@ -48,25 +50,61 @@ class LinkedInScraper:
             page.mouse.wheel(0, -300)
             time.sleep(1)
             
-            # Extracción del DOM (Estructura Genérica 2026)
-            # NOTA: Los selectores de LinkedIn mutan. Este es el scaffolding base.
             print("[*] Aplicando selectores CSS para extracción de Nodos (Nombre, Puesto, URL)...")
             
             leads_extracted = []
             
-            # STUB: Lógica de iteración sobre los contenedores .entity-result__item
-            # profiles = page.locator('li.reusable-search__result-container').all()
-            # for profile in profiles[:limit]:
-            #     name = profile.locator('span[dir="ltr"]').inner_text(timeout=1000)
-            #     role = profile.locator('div.entity-result__primary-subtitle').inner_text(timeout=1000)
-            #     url = profile.locator('a.app-aware-link').get_attribute('href')
-            #     leads_extracted.append({"name": name, "role": role, "url": url, "status": "RAW"})
+            profiles = page.locator('li.reusable-search__result-container, .search-results-container li').all()
+            for profile in profiles[:limit]:
+                try:
+                    name_elem = profile.locator('span[dir="ltr"] > span:first-child, span[dir="ltr"]').first
+                    name = name_elem.inner_text(timeout=2000).strip()
+                    
+                    role_elem = profile.locator('.entity-result__primary-subtitle, .actor-description').first
+                    role = role_elem.inner_text(timeout=2000).strip()
+                    
+                    link_elem = profile.locator('a.app-aware-link, a[href*="/in/"]').first
+                    raw_url = link_elem.get_attribute('href')
+                    url = raw_url.split('?')[0] if raw_url else ""
+                    
+                    if name and url:
+                        leads_extracted.append({
+                            "name": name,
+                            "role": role,
+                            "url": url,
+                            "status": "RAW"
+                        })
+                        print(f"    [+] Lead extraído: {name} | {role}")
+                except Exception as e:
+                    continue
             
-            print(f"[+] Scaffolding de extracción desplegado. DB actualizada en {self.db_path}.")
+            print(f"[+] Total de leads extraídos: {len(leads_extracted)}")
             
-            # TODO: Merge con leads_db.json
+            # Cargar DB existente y fusionar sin duplicar
+            if os.path.exists(self.db_path):
+                try:
+                    with open(self.db_path, 'r') as f:
+                        db = json.load(f)
+                except Exception:
+                    db = {"metadata": {}, "leads": []}
+            else:
+                db = {"metadata": {}, "leads": []}
+                
+            existing_urls = {l['url'] for l in db.get('leads', []) if 'url' in l}
+            new_count = 0
+            for lead in leads_extracted:
+                if lead['url'] not in existing_urls:
+                    db['leads'].append(lead)
+                    existing_urls.add(lead['url'])
+                    new_count += 1
             
-            # browser.close() # Mantenemos abierto en local para debug
+            db['metadata']['last_extraction'] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+            
+            with open(self.db_path, 'w') as f:
+                json.dump(db, f, indent=2)
+                
+            print(f"[+] DB actualizada en {self.db_path}. Se añadieron {new_count} leads nuevos.")
+            time.sleep(2)
 
 if __name__ == "__main__":
     import sys
