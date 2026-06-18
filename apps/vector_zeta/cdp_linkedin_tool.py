@@ -36,9 +36,12 @@ class CDPLinkedInTool:
                 formatted_query = target_icp.replace(' ', '%20').replace('"', '%22')
                 search_url = f"https://www.linkedin.com/search/results/people/?keywords={formatted_query}"
                 
-                print(f"[*] Navigating to search URL: {search_url}")
-                page.goto(search_url, wait_until="networkidle")
-                time.sleep(3.0)
+                page.goto(search_url, wait_until="domcontentloaded")
+                try:
+                    page.locator('li.reusable-search__result-container, .search-results-container li').first.wait_for(state="visible", timeout=12000)
+                except Exception as te:
+                    print(f"[*] Warning: Profiles locator timeout: {te}. Proceeding anyway...")
+                time.sleep(2.0)
 
                 # Simulated human scrolls
                 page.mouse.wheel(0, 700)
