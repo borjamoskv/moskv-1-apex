@@ -16,7 +16,7 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="SiliconTaiwan"
         component={SiliconTaiwanVideo}
-        durationInFrames={300} /* 10 seconds */
+        durationInFrames={1800} /* 60 seconds (Videoclip) */
         fps={30}
         width={1920} /* Full HD standard */
         height={1080}
