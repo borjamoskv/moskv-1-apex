@@ -56,6 +56,9 @@ Nodes:
 - id: kernel/autopoiesis.js
   era: LEGACY_ARCHIVE
   type: js_module
+- id: kernel/cortex-db.js
+  era: LEGACY_ARCHIVE
+  type: js_module
 - id: kernel/legion.js
   era: LEGACY_ARCHIVE
   type: js_module
@@ -71,13 +74,13 @@ Nodes:
 - id: kernel/index.js
   era: LEGACY_ARCHIVE
   type: js_module
-- id: kernel/event-bus.js
-  era: LEGACY_ARCHIVE
-  type: js_module
 - id: kernel/board_of_directors.py
   era: LEGACY_ARCHIVE
   type: python_module
 - id: kernel/cortex_watchdog.py
+  era: LEGACY_ARCHIVE
+  type: python_module
+- id: kernel/event_bus.py
   era: LEGACY_ARCHIVE
   type: python_module
 - id: kernel/stress-test.js
@@ -174,9 +177,6 @@ Nodes:
   era: RUNTIME_ACTIVE
   type: python_module
 - id: src/moskv_1/__init__.py
-  era: RUNTIME_ACTIVE
-  type: python_module
-- id: src/moskv_1/event_bus.py
   era: RUNTIME_ACTIVE
   type: python_module
 - id: src/moskv_1/api.py
@@ -390,6 +390,9 @@ Edges:
 - source: kernel/crypto-escrow.js
   target: fs
   relation: REQUIRES
+- source: kernel/crypto-escrow.js
+  target: ./cortex-db.js
+  relation: REQUIRES
 - source: kernel/centuria-worker.js
   target: worker_threads
   relation: REQUIRES
@@ -432,6 +435,12 @@ Edges:
 - source: kernel/autopoiesis.js
   target: ./brain-region
   relation: REQUIRES
+- source: kernel/cortex-db.js
+  target: better-sqlite3
+  relation: REQUIRES
+- source: kernel/cortex-db.js
+  target: path
+  relation: REQUIRES
 - source: kernel/legion.js
   target: worker_threads
   relation: REQUIRES
@@ -459,6 +468,9 @@ Edges:
 - source: kernel/auto-compiler.js
   target: ./event-bus.js
   relation: REQUIRES
+- source: kernel/auto-compiler.js
+  target: ./cortex-db.js
+  relation: REQUIRES
 - source: kernel/exergy-monitor.js
   target: ./event-bus.js
   relation: REQUIRES
@@ -470,6 +482,9 @@ Edges:
   relation: REQUIRES
 - source: kernel/exergy-monitor.js
   target: fs
+  relation: REQUIRES
+- source: kernel/exergy-monitor.js
+  target: ./cortex-db.js
   relation: REQUIRES
 - source: kernel/memory_store.py
   target: os
@@ -488,15 +503,6 @@ Edges:
   relation: REQUIRES
 - source: kernel/index.js
   target: ./metacognition
-  relation: REQUIRES
-- source: kernel/event-bus.js
-  target: crypto
-  relation: REQUIRES
-- source: kernel/event-bus.js
-  target: events
-  relation: REQUIRES
-- source: kernel/event-bus.js
-  target: worker_threads
   relation: REQUIRES
 - source: kernel/board_of_directors.py
   target: subprocess
@@ -533,6 +539,27 @@ Edges:
   relation: IMPORTS
 - source: kernel/cortex_watchdog.py
   target: json
+  relation: IMPORTS
+- source: kernel/event_bus.py
+  target: time
+  relation: IMPORTS
+- source: kernel/event_bus.py
+  target: json
+  relation: IMPORTS
+- source: kernel/event_bus.py
+  target: hashlib
+  relation: IMPORTS
+- source: kernel/event_bus.py
+  target: asyncio
+  relation: IMPORTS
+- source: kernel/event_bus.py
+  target: typing
+  relation: IMPORTS
+- source: kernel/event_bus.py
+  target: dataclasses
+  relation: IMPORTS
+- source: kernel/event_bus.py
+  target: moskv_1.exergy
   relation: IMPORTS
 - source: kernel/stress-test.js
   target: worker_threads
@@ -784,7 +811,7 @@ Edges:
   target: typing
   relation: IMPORTS
 - source: src/moskv_1/memory.py
-  target: moskv_1.event_bus
+  target: kernel.event_bus
   relation: IMPORTS
 - source: src/moskv_1/memory.py
   target: moskv_1.immunity
@@ -817,7 +844,7 @@ Edges:
   target: typing
   relation: IMPORTS
 - source: src/moskv_1/__init__.py
-  target: moskv_1.event_bus
+  target: kernel.event_bus
   relation: IMPORTS
 - source: src/moskv_1/__init__.py
   target: moskv_1.brain
@@ -830,27 +857,6 @@ Edges:
   relation: IMPORTS
 - source: src/moskv_1/__init__.py
   target: moskv_1.super_agents
-  relation: IMPORTS
-- source: src/moskv_1/event_bus.py
-  target: time
-  relation: IMPORTS
-- source: src/moskv_1/event_bus.py
-  target: json
-  relation: IMPORTS
-- source: src/moskv_1/event_bus.py
-  target: hashlib
-  relation: IMPORTS
-- source: src/moskv_1/event_bus.py
-  target: asyncio
-  relation: IMPORTS
-- source: src/moskv_1/event_bus.py
-  target: typing
-  relation: IMPORTS
-- source: src/moskv_1/event_bus.py
-  target: dataclasses
-  relation: IMPORTS
-- source: src/moskv_1/event_bus.py
-  target: moskv_1.exergy
   relation: IMPORTS
 - source: src/moskv_1/api.py
   target: asyncio
@@ -865,7 +871,7 @@ Edges:
   target: sse_starlette.sse
   relation: IMPORTS
 - source: src/moskv_1/api.py
-  target: moskv_1.event_bus
+  target: kernel.event_bus
   relation: IMPORTS
 - source: src/moskv_1/brain.py
   target: typing
@@ -877,7 +883,7 @@ Edges:
   target: aiohttp
   relation: IMPORTS
 - source: src/moskv_1/brain.py
-  target: moskv_1.event_bus
+  target: kernel.event_bus
   relation: IMPORTS
 - source: src/moskv_1/brain.py
   target: time
@@ -925,7 +931,7 @@ Edges:
   target: typing
   relation: IMPORTS
 - source: src/moskv_1/auditor.py
-  target: moskv_1.event_bus
+  target: kernel.event_bus
   relation: IMPORTS
 - source: src/moskv_1/exergy.py
   target: json
@@ -937,7 +943,7 @@ Edges:
   target: typing
   relation: IMPORTS
 - source: src/moskv_1/exergy.py
-  target: moskv_1.event_bus
+  target: kernel.event_bus
   relation: IMPORTS
 - source: src/moskv_1/crystallize_context.py
   target: os
@@ -964,34 +970,35 @@ Edges:
   target: moskv_1.brain
   relation: IMPORTS
 - source: src/moskv_1/super_agents.py
-  target: moskv_1.event_bus
+  target: kernel.event_bus
   relation: IMPORTS
 Anomalies:
-- type: CROSS_ERA_DEPENDENCY
-  source: kernel/board_of_directors.py
-  target: Python Runtime (Legacy calling Runtime)
-- type: CROSS_ERA_DEPENDENCY
-  source: kernel/cortex_watchdog.py
-  target: Python Runtime (Legacy calling Runtime)
-- type: CROSS_ERA_DEPENDENCY
-  source: kernel/cronos_scheduler.py
-  target: Python Runtime (Legacy calling Runtime)
-- type: CROSS_ERA_DEPENDENCY
-  source: kernel/evolution/test_gate.js
-  target: Python Runtime (Legacy calling Runtime)
-- type: CROSS_ERA_DEPENDENCY
-  source: src/moskv_1/graph_scanner.py
-  target: JavaScript Kernel (Runtime calling Legacy)
-- type: CROSS_ERA_DEPENDENCY
-  source: src/moskv_1/brain.py
-  target: JavaScript Kernel (Runtime calling Legacy)
-- type: DUPLICATE_HOTSPOT
-  concept: event_bus
-  locations:
-  - kernel/event-bus.js
-  - src/moskv_1/event_bus.py
 - type: DUPLICATE_HOTSPOT
   concept: super_agents
   locations:
   - kernel/super-agents.js
   - src/moskv_1/super_agents.py
+- type: CROSS_ERA_DEPENDENCY
+  source: kernel/event_bus.py
+  target: moskv_1.exergy (RUNTIME_ACTIVE)
+- type: CROSS_ERA_DEPENDENCY
+  source: src/moskv_1/memory.py
+  target: kernel.event_bus (LEGACY_ARCHIVE)
+- type: CROSS_ERA_DEPENDENCY
+  source: src/moskv_1/__init__.py
+  target: kernel.event_bus (LEGACY_ARCHIVE)
+- type: CROSS_ERA_DEPENDENCY
+  source: src/moskv_1/api.py
+  target: kernel.event_bus (LEGACY_ARCHIVE)
+- type: CROSS_ERA_DEPENDENCY
+  source: src/moskv_1/brain.py
+  target: kernel.event_bus (LEGACY_ARCHIVE)
+- type: CROSS_ERA_DEPENDENCY
+  source: src/moskv_1/auditor.py
+  target: kernel.event_bus (LEGACY_ARCHIVE)
+- type: CROSS_ERA_DEPENDENCY
+  source: src/moskv_1/exergy.py
+  target: kernel.event_bus (LEGACY_ARCHIVE)
+- type: CROSS_ERA_DEPENDENCY
+  source: src/moskv_1/super_agents.py
+  target: kernel.event_bus (LEGACY_ARCHIVE)

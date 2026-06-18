@@ -1,5 +1,5 @@
 from moskv_1.brain import BrainRegion
-from moskv_1.event_bus import CortexEvent
+from kernel.event_bus import CortexEvent
 
 class IntelligenceAgent(BrainRegion):
     """

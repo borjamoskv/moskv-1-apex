@@ -57,19 +57,20 @@ class GraphScanner:
             pass
         return imports
 
-    def detect_cross_era_execution(self, file_path: Path, content: str, era: str) -> None:
-        rel_path = str(file_path.relative_to(self.root_dir))
-        if era == "RUNTIME_ACTIVE" and ".js" in content and "node" in content:
+    def detect_cross_era_execution(self, source_node, target_node, target_name: str) -> None:
+        era_source = source_node["era"]
+        era_target = target_node["era"]
+        if era_source == "RUNTIME_ACTIVE" and era_target == "LEGACY_ARCHIVE":
             self.anomalies.append({
                 "type": "CROSS_ERA_DEPENDENCY",
-                "source": rel_path,
-                "target": "JavaScript Kernel (Runtime calling Legacy)"
+                "source": source_node["id"],
+                "target": f"{target_name} ({era_target})"
             })
-        elif era == "LEGACY_ARCHIVE" and ".py" in content and ("python" in content or "spawn" in content):
+        elif era_source == "LEGACY_ARCHIVE" and era_target == "RUNTIME_ACTIVE":
             self.anomalies.append({
                 "type": "CROSS_ERA_DEPENDENCY",
-                "source": rel_path,
-                "target": "Python Runtime (Legacy calling Runtime)"
+                "source": source_node["id"],
+                "target": f"{target_name} ({era_target})"
             })
 
     def scan(self):
@@ -102,13 +103,6 @@ class GraphScanner:
                         file_map[norm_name] = []
                     file_map[norm_name].append((rel_path, era))
                     
-                    try:
-                        with open(file_path, 'r', encoding='utf-8') as f:
-                            content = f.read()
-                        self.detect_cross_era_execution(file_path, content, era)
-                    except Exception:
-                        pass
-                    
                     if file.endswith('.py'):
                         imports = self.parse_python_imports(file_path)
                         for imp in imports:
@@ -135,6 +129,24 @@ class GraphScanner:
                         "concept": norm_name,
                         "locations": [loc[0] for loc in locations]
                     })
+                    
+        # Check edges for cross-era
+        node_lookup = {n["id"]: n for n in self.nodes}
+        # Also create a lookup by normalized name
+        norm_lookup = {}
+        for n in self.nodes:
+            norm_name = self.normalize_name(os.path.basename(n["id"]))
+            norm_lookup[norm_name] = n
+            
+        for edge in self.edges:
+            src_node = node_lookup.get(edge["source"])
+            target_name = edge["target"]
+            # Convert python module (moskv_1.brain) or JS path (./router.js) to normalized name
+            tgt_norm = self.normalize_name(os.path.basename(target_name.replace('.', '/')))
+            tgt_node = norm_lookup.get(tgt_norm)
+            
+            if src_node and tgt_node:
+                self.detect_cross_era_execution(src_node, tgt_node, target_name)
 
     def export(self, out_file: str):
         graph = {

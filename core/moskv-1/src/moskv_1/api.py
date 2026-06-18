@@ -2,7 +2,7 @@ import asyncio
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from sse_starlette.sse import EventSourceResponse
-from moskv_1.event_bus import EventBus
+from kernel.event_bus import EventBus
 app = FastAPI(title="MOSKV-1 APEX Telemetry Bridge", version="C5-REAL")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 event_bus = EventBus()

@@ -2,7 +2,7 @@
 import pytest
 from moskv_1.immunity import ImmunityLayer, ImmuneState
 from moskv_1.memory import MemoryStore
-from moskv_1.event_bus import CortexEvent
+from kernel.event_bus import CortexEvent
 
 def test_shannon_entropy_calculation():
     # Empty string should yield 0

@@ -4,7 +4,7 @@ import asyncio
 import os
 from enum import Enum
 from typing import Optional, Dict, Any, List
-from moskv_1.event_bus import CortexEvent
+from kernel.event_bus import CortexEvent
 from moskv_1.immunity import ImmunityLayer, ImmuneState
 from moskv_1.auditor import RealityAuditor
 

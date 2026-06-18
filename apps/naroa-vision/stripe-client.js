@@ -2,7 +2,7 @@
 
 // Initialize Stripe dynamically from backend configuration
 let stripe;
-fetch('/config').then(r => r.json()).then(data => {
+fetch('/api/config').then(r => r.json()).then(data => {
     stripe = Stripe(data.publishableKey);
 });
 
@@ -22,7 +22,8 @@ async function initiateCheckout(tier) {
         document.getElementById('btn-c4').disabled = true;
         document.getElementById('btn-c5').disabled = true;
 
-        const response = await fetch('http://localhost:4242/create-checkout-session', {
+        // 3. Obtener la sesión de Checkout del servidor real
+        const response = await fetch('/api/create-checkout-session', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -32,7 +33,7 @@ async function initiateCheckout(tier) {
 
         if (!response.ok) {
             const errData = await response.json();
-            throw new Error(errData.error || 'Network response was not ok');
+            throw new Error(`Error en el servidor: ${errData.error || response.statusText}`);
         }
 
         const session = await response.json();

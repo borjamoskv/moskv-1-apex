@@ -2,7 +2,7 @@ import pytest
 import asyncio
 import json
 from unittest.mock import AsyncMock, MagicMock, patch
-from moskv_1.event_bus import EventBus, CortexEvent
+from kernel.event_bus import EventBus, CortexEvent
 from moskv_1.memory import MemoryStore
 
 # =====================================================================

@@ -1,6 +1,6 @@
 import pytest
 import asyncio
-from moskv_1.event_bus import CortexEvent, EventBus
+from kernel.event_bus import CortexEvent, EventBus
 from moskv_1.memory import MemoryGovernor, MemoryRoutingDecision, ImmuneState, ImmunityLayer
 from moskv_1.brain import BrainRegion
 

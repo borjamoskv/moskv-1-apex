@@ -1,7 +1,7 @@
 # [C5-REAL] Exergy-Maximized
 import asyncio
 import time
-from moskv_1.event_bus import EventBus, CortexEvent
+from kernel.event_bus import EventBus, CortexEvent
 from moskv_1.memory import MemoryStore
 from moskv_1.immunity import ImmuneState
 

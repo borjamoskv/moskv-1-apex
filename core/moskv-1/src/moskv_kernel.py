@@ -10,7 +10,7 @@ from dataclasses import dataclass
 from enum import Enum
 
 # Import the foundational Python core components
-from moskv_1.event_bus import EventBus, CortexEvent
+from kernel.event_bus import EventBus, CortexEvent
 from moskv_1.memory import MemoryStore
 from moskv_1.brain import BrainRegion
 from sortu_apex_forge import SortuApexMitosis, SwarmVector

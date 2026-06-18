@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import AsyncMock, MagicMock
 from moskv_1.brain import BrainRegion
-from moskv_1.event_bus import CortexEvent
+from kernel.event_bus import CortexEvent
 
 @pytest.mark.asyncio
 async def test_brain_region_emit_enrichment():

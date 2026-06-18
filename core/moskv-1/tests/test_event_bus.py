@@ -1,7 +1,7 @@
 import pytest
 import asyncio
 from unittest.mock import AsyncMock, MagicMock, patch
-from moskv_1.event_bus import EventBus, CortexEvent
+from kernel.event_bus import EventBus, CortexEvent
 
 def test_cortex_event_serialization():
     event = CortexEvent(

@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
 from moskv_1.memory import MemoryStore
-from moskv_1.event_bus import CortexEvent
+from kernel.event_bus import CortexEvent
 
 @pytest.mark.asyncio
 async def test_memory_store_connect_mocked():

@@ -3,7 +3,7 @@ import time
 from typing import Any, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from moskv_1.event_bus import CortexEvent
+    from kernel.event_bus import CortexEvent
 
 class ExergyMeter:
     def __init__(self, token_cost_weight: float = 0.001, starvation_decay_factor: float = 0.05):

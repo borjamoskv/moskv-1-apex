@@ -1,7 +1,7 @@
 import yaml
 from dataclasses import dataclass
 from typing import Optional
-from moskv_1.event_bus import CortexEvent, EventBus
+from kernel.event_bus import CortexEvent, EventBus
 
 @dataclass
 class AuditResult:
