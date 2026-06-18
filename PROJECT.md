@@ -31,3 +31,6 @@
 | 2 | M2. Scaffolding & Env | Local venv setup and project files scaffolding | M1 | DONE |
 | 3 | M3. Implementation | Core Python logic (EventBus, BrainRegion, MemoryStore) | M2 | DONE |
 | 4 | M4. Verification | Pytest execution, review, challenge, forensic audit | M3 | DONE |
+| 5 | M5. Rebranding & UI | Rebrand landing page to AGENTS.ARCHI under Industrial Noir 2026 guidelines | M4 | DONE |
+| 6 | M6. Vercel-Cloudflare | CDN caching rules, security bypasses, and redirect loop resolution | M5 | DONE |
+| 7 | M7. Dynamic Sandbox | Hashing-based deterministic OSINT mockup telemetry engine | M6 | DONE |
