@@ -37,7 +37,7 @@ Nuestra pasarela de pagos integrada en [naroa-vision/pricing.html](file:///Users
 Claim: MOSKV-1 C5-REAL pricing is structurally anchored to physical compute-to-mutation utility.
 Proof:
   Billing_Gateway: "payment_gateway/server.js"
-  Mock_Processor: "stripe-client.js"
+  Environment_Loader: "dotenv relative-path resolution active"
   Sovereignty_Metric: "1 deploy = absolute machine autonomy"
   Confidence: C5-REAL
 ```
