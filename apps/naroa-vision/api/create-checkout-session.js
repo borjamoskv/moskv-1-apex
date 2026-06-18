@@ -31,7 +31,12 @@ export default async function handler(req, res) {
             payment_method_types: ['card', 'sepa_debit'],
             line_items: [{ price_data: priceData, quantity: 1 }],
             mode: 'payment',
-            metadata: { tier: tier, justification: "Rendimientos de Actividades Económicas (Bizkaia)" },
+            billing_address_collection: 'required',
+            tax_id_collection: { enabled: true },
+            metadata: { 
+                tier: tier, 
+                justification: "Rendimientos de Actividades Económicas (Bizkaia)" 
+            },
             success_url: `${hostOrigin}/success.html?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${hostOrigin}/pricing.html`,
         });

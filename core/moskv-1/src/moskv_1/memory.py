@@ -7,6 +7,7 @@ from typing import Optional, Dict, Any, List
 from kernel.event_bus import CortexEvent
 from moskv_1.immunity import ImmunityLayer, ImmuneState
 from moskv_1.auditor import RealityAuditor
+from moskv_1.procedural import ProceduralStore
 
 try:
     from neo4j import AsyncGraphDatabase
@@ -119,6 +120,7 @@ class MemoryStore:
         self.governor = MemoryGovernor(self.immunity)
         self.event_bus = event_bus
         self.auditor = RealityAuditor(self.event_bus) if self.event_bus else None
+        self.procedural_store = ProceduralStore()
         self._pruning_in_progress = False
         self.lancedb_db = None
         self.l1_table = None
@@ -159,6 +161,7 @@ class MemoryStore:
             try:
                 self.lancedb_db = lancedb.connect(os.path.join(self.data_dir, "lancedb"))
                 print("[MemoryStore] LanceDB (L1_Episodic) initialized.")
+                self.procedural_store = ProceduralStore(self.lancedb_db, self.driver)
             except Exception as e:
                 print(f"[MemoryStore] Failed to connect to LanceDB: {e}")
 
@@ -210,6 +213,13 @@ class MemoryStore:
                 print(f"[MemoryStore] Failed to write to Ledger: {e}")
             return []
 
+        if routing_decision == MemoryRoutingDecision.PROCEDURAL and self.procedural_store:
+            # L3 Procedural Execution
+            skill_name = payload.get("skill_name", f"skill_{node_id}")
+            intent = payload.get("intent", content_str)
+            self.procedural_store.crystallize_skill(skill_name, content_str, intent, node_id)
+            return []
+
         if routing_decision == MemoryRoutingDecision.EPISODIC and self.lancedb_db is not None:
             try:
                 data = [{"id": node_id, "vector": [0.0]*128, "content": content_str, "entropy": float(entropy)}]
@@ -237,7 +247,7 @@ class MemoryStore:
                 
                 asyncio.create_task(run_prune_task())
 
-        if self.driver and routing_decision in (MemoryRoutingDecision.SEMANTIC, MemoryRoutingDecision.WORKING, MemoryRoutingDecision.PROCEDURAL):
+        if self.driver and routing_decision in (MemoryRoutingDecision.SEMANTIC, MemoryRoutingDecision.WORKING):
             cypher = """
                 MERGE (r:BrainRegion {name: $sourceRegion})
                 MERGE (n:MemoryNode {id: $id}) 

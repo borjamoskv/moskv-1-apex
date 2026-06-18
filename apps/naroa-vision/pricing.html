@@ -4,205 +4,359 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MOSKV-1 APEX | Thermodynamic Exergy Provisioning</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
     <style>
-        body {
+        :root {
+            --bg-color: #050505;
+            --primary-accent: #2B3BE5;
+            --secondary-accent: #111827;
+            --text-main: #FFFFFF;
+            --text-muted: #888888;
+            --glass-bg: rgba(15, 15, 15, 0.45);
+            --glass-border: rgba(43, 59, 229, 0.3);
+            --glow: 0 0 40px rgba(43, 59, 229, 0.4);
+        }
+
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            background-color: #0A0A0A;
-            color: #E0E0E0;
-            font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
         }
-        
-        #webgl-background {
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Dynamic Background */
+        .ambient-light {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            top: -20vh;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80vw;
+            height: 50vh;
+            background: radial-gradient(ellipse at bottom, rgba(43,59,229,0.15) 0%, rgba(0,0,0,0) 70%);
             z-index: -1;
-            opacity: 0.4;
-            pointer-events: none;
+            filter: blur(50px);
+            animation: pulse 8s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.5; transform: translateX(-50%) scale(1); }
+            100% { opacity: 1; transform: translateX(-50%) scale(1.1); }
         }
 
         .container {
             max-width: 1200px;
-            margin: 0 auto;
-            padding: 100px 20px;
-            position: relative;
+            width: 100%;
+            padding: 80px 20px;
             z-index: 1;
         }
 
         header {
             text-align: center;
             margin-bottom: 80px;
+            animation: fadeInDown 1s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         h1 {
-            font-size: 3rem;
-            font-weight: 700;
-            color: #2B3BE5; /* Industrial Noir 2026 */
-            letter-spacing: -1px;
+            font-size: 4.5rem;
+            font-weight: 900;
+            background: linear-gradient(180deg, #FFFFFF 0%, #A0A0A0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -2px;
             margin-bottom: 20px;
+            text-transform: uppercase;
         }
 
         p.subtitle {
-            font-size: 1.2rem;
+            font-size: 1.25rem;
             font-weight: 300;
-            color: #A0A0A0;
+            color: var(--text-muted);
             max-width: 600px;
             margin: 0 auto;
+            line-height: 1.6;
         }
 
         .pricing-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
             gap: 40px;
             justify-content: center;
+            animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            animation-delay: 0.2s;
         }
 
+        /* Glassmorphism Card */
         .card {
-            background: rgba(20, 20, 20, 0.7);
-            border: 1px solid #333;
-            border-radius: 12px;
-            padding: 40px;
-            backdrop-filter: blur(10px);
-            transition: transform 0.3s ease, border-color 0.3s ease;
+            background: var(--glass-bg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            padding: 50px 40px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary-accent), transparent);
+            opacity: 0;
+            transition: opacity 0.5s ease;
         }
 
         .card:hover {
-            transform: translateY(-5px);
-            border-color: #2B3BE5;
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--glass-border);
+            box-shadow: var(--glow);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .tier-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(43, 59, 229, 0.2);
+            color: var(--primary-accent);
+            padding: 6px 12px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border: 1px solid var(--glass-border);
         }
 
         .tier-name {
             font-size: 1.5rem;
-            font-weight: 700;
+            font-weight: 300;
+            color: var(--text-muted);
             margin-bottom: 10px;
         }
 
         .tier-price {
-            font-size: 3rem;
-            font-weight: 700;
-            color: #FFFFFF;
-            margin-bottom: 30px;
+            font-size: 4rem;
+            font-weight: 900;
+            color: var(--text-main);
+            margin-bottom: 40px;
+            display: flex;
+            align-items: baseline;
         }
 
         .tier-price span {
-            font-size: 1rem;
-            color: #888;
+            font-size: 1.2rem;
+            color: var(--text-muted);
             font-weight: 400;
+            margin-left: 8px;
         }
 
         ul.features {
-            list-style-type: none;
-            padding: 0;
-            margin-bottom: 40px;
+            list-style: none;
+            flex-grow: 1;
+            margin-bottom: 50px;
         }
 
         ul.features li {
-            margin-bottom: 15px;
-            font-size: 0.95rem;
-            color: #CCC;
+            margin-bottom: 20px;
+            font-size: 1.05rem;
+            color: #D1D5DB;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
         }
 
-        ul.features li::before {
-            content: '✓';
-            color: #2B3BE5;
-            font-weight: bold;
-            margin-right: 10px;
+        ul.features li svg {
+            width: 20px;
+            height: 20px;
+            color: var(--primary-accent);
+            margin-right: 15px;
+            flex-shrink: 0;
+            margin-top: 3px;
         }
 
         .checkout-btn {
             width: 100%;
-            padding: 15px;
-            background: #2B3BE5;
+            padding: 18px;
+            background: var(--primary-accent);
             color: #FFF;
             border: none;
-            border-radius: 6px;
-            font-size: 1rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
             font-weight: 700;
+            font-family: 'Outfit', sans-serif;
             cursor: pointer;
-            transition: background 0.3s ease;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .checkout-btn::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(90deg, rgba(255,255,255,0.1), transparent);
+            z-index: -1;
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+        }
+
+        .checkout-btn:hover::after {
+            transform: translateX(0);
         }
 
         .checkout-btn:hover {
-            background: #4A56E5;
+            box-shadow: 0 10px 20px rgba(43, 59, 229, 0.4);
+            transform: translateY(-2px);
         }
 
         .checkout-btn.sim {
-            background: #333;
-            color: #A0A0A0;
+            background: transparent;
+            border: 1px solid #333;
+            color: var(--text-muted);
         }
 
         .checkout-btn.sim:hover {
-            background: #444;
-            color: #FFF;
+            border-color: var(--text-main);
+            color: var(--text-main);
+            box-shadow: none;
         }
 
         .legal-footer {
-            margin-top: 80px;
+            margin-top: 100px;
             text-align: center;
-            font-size: 0.8rem;
-            color: #555;
+            font-size: 0.85rem;
+            color: #444;
+            max-width: 500px;
         }
 
+        /* Animations */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Loading state for button */
+        .checkout-btn.loading {
+            background: #1f2937;
+            color: transparent;
+            pointer-events: none;
+        }
+        .checkout-btn.loading::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 20px; height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            transform: none;
+            z-index: 2;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
     </style>
-    <!-- Stripe.js -->
     <script src="https://js.stripe.com/v3/"></script>
 </head>
 <body>
 
-    <!-- WebGL Background injected from main.js or a lightweight variant -->
-    <div id="webgl-background"></div>
+    <div class="ambient-light"></div>
 
     <div class="container">
         <header>
-            <h1>Thermodynamic Exergy Pricing</h1>
-            <p class="subtitle">Monetización anclada en leyes físicas. Elimina la fricción de la anergía de tu infraestructura cognitiva. Facturación unificada para la Hacienda Foral de Bizkaia (SEPA/IBAN).</p>
+            <h1>CORTEX PERSIST</h1>
+            <p class="subtitle">Monetización anclada en leyes físicas. Elimina la fricción de la anergía de tu infraestructura cognitiva. Ejecución soberana con facturación SEPA/IBAN unificada.</p>
         </header>
 
         <div class="pricing-grid">
             
             <!-- Tier 1: C4-SIM -->
             <div class="card">
-                <div class="tier-name">C4-SIM (Simulated)</div>
+                <div class="tier-name">C4-SIM</div>
                 <div class="tier-price">€49<span>/mo</span></div>
                 <ul class="features">
-                    <li>Acceso al clúster conversacional</li>
-                    <li>Sincronía de APIs externas (Latencia Alta)</li>
-                    <li>Requiere validación humana ("Green Theater")</li>
-                    <li>Soporte de Tarjeta y SEPA IBAN</li>
+                    <li>
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        Acceso al clúster conversacional
+                    </li>
+                    <li>
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        Sincronía de APIs externas (Latencia Alta)
+                    </li>
+                    <li>
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        Requiere validación humana (Green Theater)
+                    </li>
                 </ul>
-                <button class="checkout-btn sim" id="btn-c4">Iniciar C4-SIM</button>
+                <button class="checkout-btn sim" id="btn-c4" onclick="this.classList.add('loading')">Iniciar C4-SIM</button>
             </div>
 
             <!-- Tier 2: C5-REAL -->
-            <div class="card">
-                <div class="tier-name">C5-REAL (Absolute)</div>
+            <div class="card" style="border-color: rgba(43, 59, 229, 0.4);">
+                <div class="tier-badge">APEX KERNEL</div>
+                <div class="tier-name">C5-REAL</div>
                 <div class="tier-price">€499<span>/deploy</span></div>
                 <ul class="features">
-                    <li>Soberanía Termodinámica Pura (100% Exergía)</li>
-                    <li>L5 Autonomy (Inyección UI y Shell)</li>
-                    <li>Criptografía basada en Hardware UUID local</li>
-                    <li>Apoptosis y Autopoiesis Streaming nativa</li>
-                    <li>Soporte de Tarjeta y SEPA IBAN directo</li>
+                    <li>
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        Soberanía Termodinámica Pura (100% Exergía)
+                    </li>
+                    <li>
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        L5 Autonomy (Inyección UI y Shell Directa)
+                    </li>
+                    <li>
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        Criptografía basada en Hardware UUID local
+                    </li>
+                    <li>
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        Apoptosis y Autopoiesis Streaming nativa
+                    </li>
                 </ul>
-                <button class="checkout-btn" id="btn-c5">Desplegar C5-REAL</button>
+                <button class="checkout-btn" id="btn-c5" onclick="this.classList.add('loading')">Desplegar C5-REAL</button>
             </div>
 
         </div>
 
         <div class="legal-footer">
-            <p>Pagos procesados de forma segura mediante Stripe SEPA Direct Debit. Cumplimiento estricto del epígrafe Rendimientos de Actividades Económicas.</p>
+            <p>Infraestructura asegurada por CORTEX KERNEL. Transacciones liquidadas vía Stripe (SEPA/IBAN/Cards). Cumplimiento estricto del epígrafe Rendimientos de Actividades Económicas (Bizkaia).</p>
         </div>
     </div>
 
-    <!-- Payment Client Logic -->
     <script type="module" src="./stripe-client.js"></script>
-
+    <script>
+        // Remover estado de carga si ocurre un error o se cancela el fetch internamente
+        window.addEventListener('pageshow', (event) => {
+            if (event.persisted) {
+                document.querySelectorAll('.loading').forEach(btn => btn.classList.remove('loading'));
+            }
+        });
+    </script>
 </body>
 </html>
