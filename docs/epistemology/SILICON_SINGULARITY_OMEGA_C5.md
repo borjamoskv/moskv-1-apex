@@ -34,7 +34,7 @@ La luz que sale de ahí es tan ridículamente frágil que hasta el oxígeno la a
 ## 3. LA PARADOJA DEL YIELD: POR QUÉ EL SILICIO ODIA A LOS HUMANOS
 En un ataque de pánico lúcido, Estados Unidos decidió que depender de una isla a 160km de China era mala idea, así que inyectó decenas de miles de millones de dólares (CHIPS Act) para obligar a TSMC a construir fábricas en el desierto de Arizona. Excelente idea: pongamos una industria que devora 100,000 toneladas de agua ultra-pura al día en medio de un desierto.
 
-Pero aquí descubrieron la dura realidad anti-humanista: **El capital fiduciario no puede sobornar a la termodinámica.**
+Pero aquí Occidente descubrió su propio límite: **Intentaron someter una industria puramente anti-humanista utilizando burocracia y reglas pro-humanistas.** El capital fiduciario no puede sobornar a la termodinámica.
 
 La computación no perdona a la biología:
 * **Hsinchu, Taiwán:** Hay un microcorte de tensión a las 3:00 AM. Cientos de ingenieros taiwaneses, operando bajo una disciplina cuasi-militar, saltan de la cama y restauran el vacío en minutos. **Yield litográfico: 92%.** (Costo real: \$21.76/chip).
