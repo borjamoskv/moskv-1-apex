@@ -3,7 +3,7 @@ import hashlib
 import time
 
 # Termodinámica del Club
-BPM = 130
+BPM = 140
 BEAT_INTERVAL = 60.0 / BPM
 
 class RosaliaRelicSharder:
@@ -42,7 +42,7 @@ class BerghainMainRoom:
             self.ghost_memory.extend([f"ghost_packet_{self.cycles}", f"relic_echo_{self.cycles}"])
             
             # Fase 3: Ejecución Cinética
-            print(f"[130BPM] {relic_state['Berlin']} | {gc_status}")
+            print(f"[140BPM] {relic_state['Berlin']} | {gc_status}")
             
             self.cycles += 1
             t1 = time.time() - t0

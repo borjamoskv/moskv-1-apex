@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { useCurrentFrame, useVideoConfig, spring, interpolate, AbsoluteFill, Sequence, random } from 'remotion';
+import { useCurrentFrame, useVideoConfig, spring, interpolate, AbsoluteFill, Sequence, random, Audio, staticFile } from 'remotion';
 import { ThreeCanvas } from '@remotion/three';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
@@ -9,7 +9,7 @@ const RelicCross: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  const BPM = 130;
+  const BPM = 140;
   const framesPerBeat = fps / (BPM / 60);
   const currentBeat = Math.floor(frame / framesPerBeat);
   
@@ -48,7 +48,7 @@ export const BRTVideo3D: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   
-  const BPM = 130;
+  const BPM = 140;
   const framesPerBeat = fps / (BPM / 60);
   const currentBeat = Math.floor(frame / framesPerBeat);
   const isKick = frame % framesPerBeat < 3;
@@ -61,8 +61,9 @@ export const BRTVideo3D: React.FC = () => {
 
   return (
     <AbsoluteFill style={{ backgroundColor: isKick ? '#111' : '#000', overflow: 'hidden' }}>
+      <Audio src={staticFile('kick_140.m4a')} />
       
-      <ThreeCanvas width={1080} height={1920} camera={{ position: [0, 0, 8], fov: 80 }}>
+      <ThreeCanvas width={1920} height={1080} camera={{ position: [0, 0, 8], fov: 80 }}>
         <ambientLight intensity={0.2} />
         <pointLight position={[10, 10, 10]} intensity={isKick ? 5 : 0.5} color="#e52b2b" />
         <pointLight position={[-10, -10, -10]} intensity={2} color="#ffffff" />
@@ -97,7 +98,7 @@ export const BRTVideo3D: React.FC = () => {
           letterSpacing: '0.4em',
           opacity: isKick ? 1 : 0.3
         }}>
-          BERGHAIN [130]
+          BERGHAIN [140]
         </div>
       </AbsoluteFill>
       

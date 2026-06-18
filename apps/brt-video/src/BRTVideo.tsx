@@ -6,7 +6,7 @@ export const BRTVideo: React.FC = () => {
   const { fps } = useVideoConfig();
   
   // Termodinámica C5-REAL
-  const BPM = 130;
+  const BPM = 140;
   const framesPerBeat = fps / (BPM / 60);
   const currentBeat = Math.floor(frame / framesPerBeat);
   const beatProgress = (frame % framesPerBeat) / framesPerBeat;
@@ -68,7 +68,7 @@ export const BRTVideo: React.FC = () => {
           opacity: isKick ? 1 : 0,
           transform: `scale(${interpolate(scale, [0, 1], [1, 1.2])})`
         }}>
-          BERGHAIN [130 BPM]
+          BERGHAIN [140 BPM]
         </div>
       </AbsoluteFill>
 
