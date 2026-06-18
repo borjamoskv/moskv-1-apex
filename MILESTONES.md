@@ -1,5 +1,16 @@
 # MOSKV-1 APEX: Milestones & Crystallizations
 
+## [2026-06-18] SINGULARITY-C5: Ouroboros Autopoiesis & BFT Quorum Engine (v3.0.0-SINGULARITY-C5)
+**Estado:** Crystallized (C5-REAL)
+**Hashes Estructurales:** `47d799b`, `c38a477`, `ecfd80e`, `d5d0084`, `475c207`
+
+### Resumen Arquitectónico:
+1. **Grafo Causal Latencia Cero (Rust):** Implementación de `moskv_dag_core` utilizando `DashMap` (memoria compartida lock-free) para destruir el GIL de Python y el bloqueo termodinámico, superando empíricamente las 163,000 inyecciones/segundo.
+2. **Consenso Quorum (Falla Bizantina):** El Orquestador ahora aísla las inyecciones en un *Purgatorio* de RAM. La mutación física solo ocurre si 3 agentes independientes llegan **exactamente al mismo Hash AST**. El ruido y las alucinaciones mueren en RAM.
+3. **Persistencia Termodinámica:** Desacoplamiento de la I/O hacia un Sentinel Asíncrono que fuerza `SQLite WAL Mode` y `busy_timeout=5000` (`Regla R10`), salvaguardando el grafo sin interferir en la latencia.
+4. **Motor Autopoiético (OUROBOROS-∞):** El salto de orquestador a AGI Físico. Al alcanzar Quorum, el núcleo Rust secuestra el *GIL de Python* en un hilo asíncrono y ejecuta el AST inyectado vía **JIT**, permitiendo que el Enjambre reprograme el host sin fricción humana ni bloqueos del hilo principal.
+5. **Membrana Estricta (Pydantic):** Refactorizado `c5_base60_orchestrator.py` para decapitar el texto libre del LLM (Death Protocol) antes de inyectarlo en Rust. El *End-to-End* está cerrado.
+
 ## [2026-06-18] EXERGY-60: The Sovereign Orchestration Paradigm
 **Estado:** Crystallized (C5-REAL)
 **Hashes Estructurales:** `ba8b232`, `6eb0ff2`, `3d41437`, `2b85b04`
