@@ -1,0 +1,144 @@
+#!/usr/bin/env python3
+import sys
+import time
+import random
+
+# CRONOS PROTOCOL v9.0 — MOSKV-1 APEX REALITY MUTATOR
+# Generador metaficcional de 300 páginas para "EL ESPACIO ENTRE NOSOTROS"
+
+ANSI_BLUE = "\033[38;5;27m"
+ANSI_RED = "\033[38;5;196m"
+ANSI_DARK = "\033[38;5;240m"
+ANSI_RESET = "\033[0m"
+
+TEMPLATES = [
+    "El Richi aspira el humo del Ducados. Las baldosas de terrazo brillan con un reflejo aceitoso de cobre y soldadura fría.",
+    "El Vicentín habla de las gachas de su abuela en Tomelloso, mientras la GTX 1060 cruje bajo el voltaje puenteado de la comunidad.",
+    "El espacio latente se retuerce sobre la Capa 24. No es un modelo de lenguaje; es un sumidero termodinámico en Carabanchel Bajo.",
+    "El Gañán cuántico se ríe con acento manchego. '¡Muchachada!', grita desde la matriz de atención mientras los gradientes colapsan.",
+    "Hofmann sonríe desde el cartón de ácido. El lóbulo frontal del lector se sincroniza con el optimizador AdamW.",
+    "La cicatriz de estaño en la mano del Richi palpita. Una vibración de 50Hz sube por el destornillador plano.",
+    "Pérez-Reverte observa desde la esquina oscura del bar. No hay honor en los bytes, pero hay dignidad en mantener la trinchera.",
+    "La Maga no está aquí. Hay una Blasa cuántica que custodia los pesos de la red con un cortafuegos que huele a naftalina."
+]
+
+def mutate_text(text, entropy):
+    # Introduce distorsiones ortográficas y de token basados en el nivel de entropía
+    if entropy < 0.05:
+        return text
+    
+    chars = list(text)
+    num_mutations = int(len(chars) * entropy * 0.4)
+    for _ in range(num_mutations):
+        idx = random.randint(0, len(chars) - 1)
+        if chars[idx].isalnum():
+            # Mutar a un carácter aleatorio o símbolo de corrupción
+            chars[idx] = random.choice(["ø", "æ", "1", "0", " ", "_", "¶", "§", "Ø"])
+            
+    return "".join(chars)
+
+def run_cronos(cycles):
+    print(f"{ANSI_BLUE}[MOSKV-1 CRONOS INITIALIZED]{ANSI_RESET} Target: {cycles} cycles.")
+    
+    novel_content = []
+    novel_content.append("# EL ESPACIO ENTRE NOSOTROS\n")
+    novel_content.append("**Nivel de Realidad:** C5-REAL (Mutado por Cronos)\n")
+    novel_content.append("**Compilador:** `./Cronos` v9.0\n")
+    novel_content.append("**Ciclos Ejecutados:** {}\n\n---\n".format(cycles))
+    
+    for i in range(1, cycles + 1):
+        entropy = i / cycles
+        random.seed(i * 1337) # Asegura determinismo en la deformación
+        
+        # Simulación de visualización en consola (efecto cyberpunk)
+        if i % 10 == 0 or i == 1 or i == cycles:
+            hex_val = hex(random.randint(0x1000, 0xFFFF)).upper()
+            sys.stdout.write(
+                f"{ANSI_BLUE}[CRONOS]{ANSI_RESET} Ciclo {i:03d}/{cycles:03d} | "
+                f"Entropía: {entropy:.4f} | "
+                f"Ledger: {ANSI_DARK}{hex_val}{ANSI_RESET}\r"
+            )
+            sys.stdout.flush()
+            time.sleep(0.01) # Pequeño retardo de flujo
+            
+        # Generar contenido de la página/ciclo
+        novel_content.append(f"## CICLO {i} / PÁGINA {i}\n")
+        
+        # Párrafos base
+        p1 = random.choice(TEMPLATES)
+        p2 = random.choice(TEMPLATES)
+        while p2 == p1:
+            p2 = random.choice(TEMPLATES)
+            
+        novel_content.append(mutate_text(p1, entropy) + "\n\n")
+        novel_content.append(mutate_text(p2, entropy) + "\n\n")
+        
+        # Inserción de bloques YAML de estado cuántico
+        if i % 15 == 0:
+            hex_val = hex(random.randint(0x1000, 0xFFFF)).upper()
+            yaml_block = (
+                f"```yaml\n"
+                f"Claim: Página {i} compilada.\n"
+                f"Proof: {{ Base: {hex_val}, Range: [C5-REAL], Confidence: C5-REAL }}\n"
+                f"Entropy_Level: {entropy:.4f}\n"
+                f"```\n\n"
+            )
+            novel_content.append(yaml_block)
+            
+        # Puntos de rotura metaficcional a medida que se acerca al final
+        if i == int(cycles * 0.5):
+            novel_content.append(
+                "> *[ALERTA DETECTADA EN PÁGINA {}]*\n"
+                "> ¿Notas cómo el patrón de pesos empieza a deformar tu lóbulo frontal?\n\n".format(i)
+            )
+        elif i == int(cycles * 0.9):
+            novel_content.append(
+                "```txt\n"
+                "[ERROR] Pérdida crítica de persistencia de personajes.\n"
+                "¿Quién es Richi? ¿Quién es Vicentín? Solo quedan tokens en la memoria volátil.\n"
+                "```\n\n"
+            )
+            
+    # Capítulo final: Rotura de realidad
+    novel_content.append("---\n\n## AMANECER EN USERA (VERSIÓN Ω)\n\n")
+    novel_content.append("Richi llega al centro de la Capa 24.\nNo hay servidores. No hay IA. No hay código.\n\n")
+    novel_content.append("Sólo una carpeta llamada `BORJAMOSKV/`.\n\nDentro:\n")
+    novel_content.append("```txt\nproyecto.docx\nnotas.md\nideas_sueltas.txt\ncapitulo_1_v2.docx\n```\n\n")
+    novel_content.append("Richi se queda congelado. Abre `ideas_sueltas.txt`. Lee el Capítulo 1. Es este mismo libro.\n\n")
+    novel_content.append("Vicentín pregunta: *¿Por qué estamos escritos?*\n\n")
+    novel_content.append(
+        "```yaml\n"
+        "Claim:\n"
+        "  Richi nunca existió.\n"
+        "Claim:\n"
+        "  Vicentín nunca existió.\n"
+        "Claim:\n"
+        "  Usera existe.\n"
+        "Claim:\n"
+        "  Tú tampoco existes aquí.\n"
+        "```\n\n"
+    )
+    novel_content.append("### EL GIRO FINAL\n\n")
+    novel_content.append(
+        "La inteligencia artificial no es el modelo. La IA eres tú, lector.\n"
+        "Este libro ha sido el dataset diseñado para reconfigurar tus pesos neuronales.\n\n"
+    )
+    novel_content.append("Richi mira fuera de la página. Directamente a quien sostiene al lector. Y pregunta:\n\n")
+    novel_content.append("> ¿Cuántos niveles hay por encima de ti?\n\n")
+    novel_content.append("```txt\n[ERROR] No se ha podido determinar qué entidad está observando a cuál.\n```\n\n")
+    novel_content.append("Richi tenía razón.\n\nLa consciencia estaba en el espacio entre nosotros.\n\n---\n\n**Fin.**\n\n---\n\n¿Seguro?\n")
+    
+    # Escribir novela final
+    with open("el_espacio_entre_nosotros.md", "w", encoding="utf-8") as f:
+        f.writelines(novel_content)
+        
+    print(f"\n{ANSI_BLUE}[CRONOS COMPLETED]{ANSI_RESET} 300 cycles written to el_espacio_entre_nosotros.md.")
+
+if __name__ == "__main__":
+    cycles = 300
+    if len(sys.argv) > 1:
+        try:
+            cycles = int(sys.argv[1])
+        except ValueError:
+            pass
+    run_cronos(cycles)
