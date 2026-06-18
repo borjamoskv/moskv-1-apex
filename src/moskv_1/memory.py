@@ -6,6 +6,7 @@ from enum import Enum
 from typing import Optional, Dict, Any, List
 from moskv_1.event_bus import CortexEvent
 from moskv_1.immunity import ImmunityLayer, ImmuneState
+from moskv_1.auditor import RealityAuditor
 
 try:
     from neo4j import AsyncGraphDatabase
@@ -105,7 +106,7 @@ class MemoryStore:
     Sovereign Graph Database interface. Simulates the Neo4j API in-memory
     when no real driver is connected, but uses the Neo4j transaction context properly when driver is set.
     """
-    def __init__(self, uri: str = "bolt://localhost:7687", user: str = "neo4j", password: str = "password", data_dir: str = ".moskv_data"):
+    def __init__(self, uri: str = "bolt://localhost:7687", user: str = "neo4j", password: str = "password", data_dir: str = ".moskv_data", event_bus: Any = None):
         self.uri = uri
         self.user = user
         self.password = password
@@ -116,6 +117,8 @@ class MemoryStore:
         self._relationships: List[tuple] = []
         self.immunity = ImmunityLayer()
         self.governor = MemoryGovernor(self.immunity)
+        self.event_bus = event_bus
+        self.auditor = RealityAuditor(self.event_bus) if self.event_bus else None
         self._pruning_in_progress = False
         self.lancedb_db = None
         self.l1_table = None
@@ -189,6 +192,13 @@ class MemoryStore:
 
         routing_decision = self.governor.evaluate(event, entropy, immune_state_obj)
         
+        # Reality Auditor Gateway for L2 and L3
+        if routing_decision in (MemoryRoutingDecision.SEMANTIC, MemoryRoutingDecision.PROCEDURAL) and self.auditor is not None:
+            audit = await self.auditor.audit(event)
+            if not audit.passed:
+                print(f"[RealityAuditor] Downgrade Cognitivo: {audit.reason}")
+                routing_decision = MemoryRoutingDecision.EPISODIC
+
         if routing_decision == MemoryRoutingDecision.DISCARD:
             return []
             

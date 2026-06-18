@@ -35,7 +35,6 @@ async def test_exergy_scheduler_priority():
     async def low_priority_task(event, msg):
         execution_order.append("low")
 
-    bus._scheduler_task.cancel()
     await bus.task_queue.put((-1, 1, low_priority_task, None, None))
     await bus.task_queue.put((-10000, 2, high_priority_task, None, None))
     while not bus.task_queue.empty():

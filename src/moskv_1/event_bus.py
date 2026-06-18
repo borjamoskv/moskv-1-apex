@@ -77,7 +77,9 @@ class EventBus:
         self.nc: Any = None
         self.js: Any = None
         self.task_queue = asyncio.PriorityQueue()
-        self._scheduler_task = asyncio.create_task(self._exergy_scheduler_worker())
+        self._scheduler_task = None
+        self._ledger_hashes = set()
+        self._ledger_hashes.add("GENESIS")
 
     async def _exergy_scheduler_worker(self):
         while True:
@@ -96,7 +98,16 @@ class EventBus:
         """
         Simulates connection and ensures compatibility.
         """
+        if self._scheduler_task is None:
+            self._scheduler_task = asyncio.create_task(self._exergy_scheduler_worker())
         print("[EventBus] In-memory standard library EventBus Connected. C5-REAL active.")
+
+    async def verify_hash_exists(self, target_hash: str) -> bool:
+        """
+        O(1) verification that a hash exists in the L0 Event Ledger.
+        Used by RealityAuditor to anchor claims to true historical events.
+        """
+        return target_hash in self._ledger_hashes
 
     def _hash(self, payload: dict, prev_hash: str) -> str:
         """
@@ -130,6 +141,7 @@ class EventBus:
 
             # Update last hash only after successful dispatch
             self.last_hash = current_hash
+            self._ledger_hashes.add(current_hash)
             return event
 
     async def _dispatch(self, topic: str, event: CortexEvent):
