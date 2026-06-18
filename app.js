@@ -742,6 +742,49 @@ document.addEventListener("DOMContentLoaded", () => {
                 
                 modalTitle.innerText = title;
                 modalBody.innerHTML = parseMarkdown(text);
+
+                // Add copy buttons to code blocks inside the loaded manifesto
+                modalBody.querySelectorAll("pre").forEach(pre => {
+                    pre.style.position = "relative";
+                    
+                    const btn = document.createElement("button");
+                    btn.className = "code-copy-btn";
+                    btn.innerText = "Copy";
+                    btn.style.position = "absolute";
+                    btn.style.top = "10px";
+                    btn.style.right = "10px";
+                    btn.style.background = "rgba(243, 244, 246, 0.04)";
+                    btn.style.border = "1px solid rgba(243, 244, 246, 0.08)";
+                    btn.style.borderRadius = "4px";
+                    btn.style.color = "var(--text-muted)";
+                    btn.style.fontSize = "0.75rem";
+                    btn.style.padding = "4px 8px";
+                    btn.style.cursor = "pointer";
+                    btn.style.transition = "var(--transition-smooth)";
+                    btn.style.fontFamily = "var(--font-primary)";
+
+                    btn.addEventListener("mouseenter", () => {
+                        btn.style.background = "rgba(82, 98, 255, 0.1)";
+                        btn.style.borderColor = "var(--yinmn-light)";
+                        btn.style.color = "var(--parchment-white)";
+                    });
+                    btn.addEventListener("mouseleave", () => {
+                        btn.style.background = "rgba(243, 244, 246, 0.04)";
+                        btn.style.borderColor = "rgba(243, 244, 246, 0.08)";
+                        btn.style.color = "var(--text-muted)";
+                    });
+
+                    btn.addEventListener("click", async () => {
+                        const codeElement = pre.querySelector("code");
+                        const code = codeElement ? codeElement.innerText : pre.innerText;
+                        await navigator.clipboard.writeText(code);
+                        btn.innerText = "Copied!";
+                        setTimeout(() => {
+                            btn.innerText = "Copy";
+                        }, 2000);
+                    });
+                    pre.appendChild(btn);
+                });
             } catch (err) {
                 modalTitle.innerText = "AGENTS.ARCHI // INGESTION ERROR";
                 modalBody.innerHTML = `
