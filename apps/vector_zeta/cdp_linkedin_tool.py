@@ -159,10 +159,11 @@ class CDPLinkedInTool:
             try:
                 browser = p.chromium.connect_over_cdp(f"http://127.0.0.1:{self.port}")
                 context = browser.contexts[0]
-                page = context.new_page()
 
                 for lead in raw_leads:
+                    page = None
                     try:
+                        page = context.new_page()
                         name = lead['name']
                         url = lead['url']
                         print(f"\n[>] Navigating to target: {name} | {url}")
@@ -243,8 +244,13 @@ class CDPLinkedInTool:
                         lead['status'] = 'ERROR'
                         self.save_leads(db)
                         time.sleep(5.0)
+                    finally:
+                        if page:
+                            try:
+                                page.close()
+                            except Exception:
+                                pass
 
-                page.close()
                 print("\n[+] Outreach campaign sequence complete.")
 
             except Exception as e:
