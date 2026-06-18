@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BRT_PROTOCOL // C5-REAL</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-color: #040404;
+      color: #ffffff;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+    h1 {
+      font-size: 2rem;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      color: #e52b2b;
+      mix-blend-mode: exclusion;
+      z-index: 10;
+    }
+    .video-container {
+      position: relative;
+      width: 100vw;
+      max-width: 500px;
+      aspect-ratio: 9/16;
+      border: 1px solid #333;
+      box-shadow: 0 0 50px rgba(229, 43, 43, 0.2);
+    }
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: contrast(1.2) saturate(0) sepia(1) hue-rotate(315deg) saturate(3);
+    }
+    .status {
+      position: absolute;
+      bottom: -40px;
+      font-family: monospace;
+      font-size: 0.8rem;
+      color: #888;
+      letter-spacing: 0.1em;
+    }
+    .blink {
+      animation: blink 0.461s infinite; /* 130 BPM */
+    }
+    @keyframes blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <h1>BRT_C5_REAL</h1>
+  <div class="video-container">
+    <video src="video.mp4" autoplay loop muted playsinline></video>
+    <div class="status">NODE_STATUS: <span class="blink">MAX_DENSITY</span> // 130 BPM</div>
+  </div>
+</body>
+</html>
