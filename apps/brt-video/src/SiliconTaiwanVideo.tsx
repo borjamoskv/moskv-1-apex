@@ -22,26 +22,76 @@ const Chip3D: React.FC<ChipProps> = ({ x, z, isDefect, sweepZ }) => {
   
   // Calcular distancia al láser para el efecto de exposición luminosa
   const distanceToLaser = Math.abs(z - sweepZ);
-  const isExposed = distanceToLaser < 0.25;
+  const isExposed = distanceToLaser < 0.28;
   
   const color = isDefect 
-    ? (isExposed ? '#ff3b30' : '#8a1f1a') // Defecto: Rojo brillante / Rojo oscuro
-    : (isExposed ? '#ffffff' : '#2b3be5'); // Operativo: Blanco brillante / Azul eléctrico
+    ? (isExposed ? '#ff3b30' : '#4a0f0c') // Defecto: Rojo vibrante / Granate apagado
+    : (isExposed ? '#ffffff' : '#2b3be5'); // Operativo: Blanco puro / Azul cobalto
 
-  const emissiveIntensity = isExposed ? 4 : (isDefect ? 0.3 : 0.8);
-  const scaleY = isExposed ? 0.4 : 0.15;
+  const emissiveIntensity = isExposed ? 5 : (isDefect ? 0.2 : 0.6);
+  const scaleY = isExposed ? 0.5 : 0.12;
 
   return (
-    <mesh ref={meshRef} position={[x, 0.06, z]} scale={[0.22, scaleY, 0.22]}>
+    <mesh ref={meshRef} position={[x, 0.06, z]} scale={[0.16, scaleY, 0.16]}>
       <boxGeometry args={[1, 1, 1]} />
       <meshStandardMaterial 
         color={color} 
         emissive={color} 
         emissiveIntensity={emissiveIntensity}
-        roughness={0.1}
-        metalness={0.9}
+        roughness={0.05}
+        metalness={0.95}
       />
     </mesh>
+  );
+};
+
+// Emisión física de plasma/partículas en el frente de contacto del láser EUV
+const LaserParticles: React.FC<{ sweepZ: number }> = ({ sweepZ }) => {
+  const count = 180;
+  const pointsRef = useRef<THREE.Points>(null);
+
+  const [positions, scales] = useMemo(() => {
+    const pos = new Float32Array(count * 3);
+    const scl = new Float32Array(count);
+    for (let i = 0; i < count; i++) {
+      pos[i * 3] = (seededRandom(i) - 0.5) * 6.8; // Eje X a lo largo del wafer
+      pos[i * 3 + 1] = 0.1 + seededRandom(i + 1) * 0.4; // Eje Y (altura del haz)
+      pos[i * 3 + 2] = sweepZ + (seededRandom(i + 2) - 0.5) * 0.15; // Centrado en la línea de barrido
+      scl[i] = seededRandom(i + 3);
+    }
+    return [pos, scl];
+  }, [sweepZ]);
+
+  useFrame(() => {
+    if (pointsRef.current) {
+      const geo = pointsRef.current.geometry;
+      const posAttr = geo.attributes.position as THREE.BufferAttribute;
+      for (let i = 0; i < count; i++) {
+        // Micro-excitación atómica en el plano Y
+        const currentY = posAttr.getY(i);
+        const nextY = currentY + (Math.random() - 0.5) * 0.05;
+        posAttr.setY(i, Math.max(0.1, Math.min(0.6, nextY)));
+      }
+      posAttr.needsUpdate = true;
+    }
+  });
+
+  return (
+    <points ref={pointsRef}>
+      <bufferGeometry>
+        <bufferAttribute 
+          attach="attributes-position" 
+          args={[positions, 3]} 
+        />
+      </bufferGeometry>
+      <pointsMaterial 
+        color="#ffffff" 
+        size={0.06} 
+        transparent 
+        opacity={0.9} 
+        blending={THREE.AdditiveBlending}
+      />
+    </points>
   );
 };
 
@@ -49,29 +99,26 @@ const Wafer3D: React.FC<{ sweepZ: number }> = ({ sweepZ }) => {
   const waferRef = useRef<THREE.Group>(null);
   const frame = useCurrentFrame();
 
-  // Rotación suave del wafer entero
   useFrame(() => {
     if (waferRef.current) {
-      waferRef.current.rotation.y = frame * 0.003;
+      waferRef.current.rotation.y = frame * 0.002;
     }
   });
 
-  // Generar la matriz de chips sobre el wafer circular
+  // Generar matriz de alta densidad (22x22)
   const chips = useMemo(() => {
     const grid: { id: string; x: number; z: number; isDefect: boolean }[] = [];
-    const size = 18; // Cuadrícula de 18x18
-    const radius = 3.2; // Radio del wafer en unidades 3D
+    const size = 22; 
+    const radius = 3.25; 
     let index = 0;
 
     for (let r = 0; r < size; r++) {
       for (let c = 0; c < size; c++) {
-        // Coordenadas locales centradas
-        const x = (r - size / 2 + 0.5) * 0.35;
-        const z = (c - size / 2 + 0.5) * 0.35;
+        const x = (r - size / 2 + 0.5) * 0.28;
+        const z = (c - size / 2 + 0.5) * 0.28;
         
-        // Mantener solo los chips dentro del disco del wafer
         if (x * x + z * z <= radius * radius) {
-          const rand = seededRandom(index + 42);
+          const rand = seededRandom(index + 101);
           // Tasa de defectos del 8.1% (TSMC Yield ~92%)
           const isDefect = rand < 0.081;
           
@@ -90,27 +137,27 @@ const Wafer3D: React.FC<{ sweepZ: number }> = ({ sweepZ }) => {
 
   return (
     <group ref={waferRef}>
-      {/* Oblea base de Silicio */}
+      {/* Sustrato primario de Silicio */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
         <cylinderGeometry args={[3.3, 3.3, 0.08, 64]} />
         <meshStandardMaterial 
-          color="#0f0f0f" 
-          roughness={0.05} 
-          metalness={0.95} 
+          color="#060606" 
+          roughness={0.1} 
+          metalness={0.9} 
         />
       </mesh>
       
-      {/* Anillo exterior del Wafer */}
+      {/* Conductor de Potencial (Anillo del Wafer) */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]}>
-        <ringGeometry args={[3.3, 3.35, 64]} />
+        <ringGeometry args={[3.3, 3.34, 64]} />
         <meshStandardMaterial 
           color="#2b3be5" 
           emissive="#2b3be5" 
-          emissiveIntensity={1.5} 
+          emissiveIntensity={2} 
         />
       </mesh>
 
-      {/* Rejilla de chips individuales */}
+      {/* Matriz de silicio monocristalino */}
       {chips.map((chip) => (
         <Chip3D 
           key={chip.id} 
@@ -121,13 +168,13 @@ const Wafer3D: React.FC<{ sweepZ: number }> = ({ sweepZ }) => {
         />
       ))}
 
-      {/* Línea Láser EUV (Haz físico) */}
-      <mesh position={[0, 0.1, sweepZ]} scale={[6.6, 0.05, 0.08]}>
+      {/* Haz Láser EUV principal */}
+      <mesh position={[0, 0.1, sweepZ]} scale={[6.6, 0.02, 0.04]}>
         <boxGeometry args={[1, 1, 1]} />
         <meshStandardMaterial 
           color="#ffffff" 
           emissive="#ffffff" 
-          emissiveIntensity={5} 
+          emissiveIntensity={8} 
         />
       </mesh>
     </group>
@@ -143,112 +190,117 @@ export const SiliconTaiwanVideo: React.FC = () => {
   const currentBeat = Math.floor(frame / framesPerBeat);
   const beatProgress = (frame % framesPerBeat) / framesPerBeat;
   
-  // Ritmo estroboscópico del Kick
   const isKick = frame % framesPerBeat < 3;
   
-  // Animación del láser EUV barriendo la oblea (ciclo de 90 frames = 3 seg)
+  // Barrido armónico del láser EUV (90 frames)
   const sweepZ = interpolate(
     frame % 90, 
     [0, 45, 90], 
-    [-3.5, 3.5, -3.5],
+    [-3.4, 3.4, -3.4],
     { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }
   );
 
-  // Escalar interfaz con el ritmo
   const beatScale = spring({
     frame: frame % framesPerBeat,
     fps,
-    config: { damping: 12, mass: 0.5, stiffness: 300 }
+    config: { damping: 10, mass: 0.4, stiffness: 350 }
   });
 
-  const uiScale = interpolate(beatScale, [0, 1], [0.99, 1.01]);
+  const uiScale = interpolate(beatScale, [0, 1], [0.992, 1.008]);
 
-  // Selección de texto de diagnóstico de litografía
   const uiTextOptions = [
-    "ASML EUV 3400C // LITHOGRAPHY RUN",
-    "YIELD ACTIVE RATE: 91.9%",
-    "TSMC FAB 18 // HSINCHU SCIENCE PARK",
+    "ASML EUV 3400C // WAVE_LENGTH: 13.5NM",
+    "YIELD ACTIVE RATE: 91.9% [C5-REAL]",
+    "TSMC FAB 18 // ANISOTROPIC ETCHING",
     "SUBSTRATE: DOPED SILICON WAFER 300MM",
-    "SYS_STATUS: C5-REAL SOTA_KERNEL_RUNNING",
-    "THERMODYNAMIC ENTROPY: MINIMIZED"
+    "THERMODYNAMIC ENTROPY: OPTIMIZED",
+    "HSINCHU CLUSTER // LATENCY_MINIMIZED"
   ];
   const activeUIText = uiTextOptions[currentBeat % uiTextOptions.length];
 
   return (
-    <AbsoluteFill style={{ backgroundColor: '#050505', overflow: 'hidden', fontFamily: 'Courier New, monospace' }}>
-      {/* Audio sincronizado */}
+    <AbsoluteFill style={{ backgroundColor: '#020202', overflow: 'hidden', fontFamily: 'Courier New, monospace' }}>
       <Audio src={staticFile('kick_140.m4a')} />
 
-      {/* Capa de rejilla técnica de fondo */}
+      {/* Rejilla de diagnóstico */}
       <div style={{
         position: 'absolute',
         top: 0, left: 0, right: 0, bottom: 0,
         backgroundImage: `
-          linear-gradient(to right, rgba(43, 59, 229, 0.07) 1px, transparent 1px),
-          linear-gradient(to bottom, rgba(43, 59, 229, 0.07) 1px, transparent 1px)
+          linear-gradient(to right, rgba(43, 59, 229, 0.05) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(43, 59, 229, 0.05) 1px, transparent 1px)
         `,
-        backgroundSize: '40px 40px',
+        backgroundSize: '30px 30px',
         pointerEvents: 'none'
       }} />
 
-      {/* Canvas 3D de Silicio */}
+      {/* Renderizado 3D */}
       <div style={{ position: 'absolute', width: '100%', height: '100%', top: 0, left: 0 }}>
-        <ThreeCanvas width={1920} height={1080} camera={{ position: [0, 4.2, 5.5], fov: 60 }}>
-          <ambientLight intensity={0.15} />
-          {/* Luz principal del láser que barre la oblea */}
+        <ThreeCanvas width={1920} height={1080} camera={{ position: [0, 4.3, 5.3], fov: 60 }}>
+          <ambientLight intensity={0.1} />
           <pointLight 
-            position={[0, 2, sweepZ]} 
-            intensity={4} 
+            position={[0, 1.8, sweepZ]} 
+            intensity={5} 
             color="#2b3be5" 
-            distance={6}
+            distance={7}
           />
-          {/* Luz de acento estroboscópica con el kick */}
           <pointLight 
-            position={[5, 6, 2]} 
-            intensity={isKick ? 6 : 1.5} 
+            position={[4, 5, 2]} 
+            intensity={isKick ? 8 : 2} 
             color="#ffffff" 
           />
           <pointLight 
-            position={[-5, -2, -2]} 
-            intensity={1} 
+            position={[-4, -1, -2]} 
+            intensity={1.5} 
             color="#2b3be5" 
           />
           <Wafer3D sweepZ={sweepZ} />
+          <LaserParticles sweepZ={sweepZ} />
         </ThreeCanvas>
       </div>
 
-      {/* OVERLAY DE INTERFAZ TÉCNICA (HUD) */}
+      {/* Capa estroboscópica de scanlines CRT analógicas */}
+      <div style={{
+        position: 'absolute',
+        top: 0, left: 0, right: 0, bottom: 0,
+        backgroundImage: 'linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%)',
+        backgroundSize: '100% 4px',
+        pointerEvents: 'none',
+        opacity: 0.4
+      }} />
+
+      {/* HUD de control */}
       <AbsoluteFill style={{ 
         pointerEvents: 'none', 
-        padding: 50, 
+        padding: 60, 
         display: 'flex', 
         flexDirection: 'column', 
         justifyContent: 'space-between',
         transform: `scale(${uiScale})`
       }}>
         
-        {/* Cabecera HUD */}
+        {/* Cabecera */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
           <div>
-            <div style={{ color: '#2b3be5', fontSize: 14, fontWeight: 'bold', letterSpacing: 2 }}>
-              SYSTEM: MOSKV-1 APEX
+            <div style={{ color: '#2b3be5', fontSize: 13, fontWeight: 'bold', letterSpacing: 3 }}>
+              SYSTEM STATUS: C5-REAL EXECUTION
             </div>
-            <div style={{ color: '#ffffff', fontSize: 28, fontWeight: 900, marginTop: 5, letterSpacing: -1, textShadow: '0 0 10px rgba(43, 59, 229, 0.5)' }}>
+            <div style={{ color: '#ffffff', fontSize: 32, fontWeight: 900, marginTop: 6, letterSpacing: -1.5, textShadow: '0 0 12px rgba(43, 59, 229, 0.6)' }}>
               EL ESCUDO DE SILICIO
             </div>
           </div>
           
           <div style={{ textAlign: 'right' }}>
-            <div style={{ color: '#fff', fontSize: 16, fontWeight: 'bold' }}>
-              REALITY LEVEL: <span style={{ color: '#2b3be5' }}>C5-REAL</span>
+            <div style={{ color: '#fff', fontSize: 15, fontWeight: 'bold', letterSpacing: 1 }}>
+              LEDGER_HASH: <span style={{ color: '#2b3be5' }}>17bb0d2</span>
             </div>
-            <div style={{ color: 'rgba(255, 255, 255, 0.4)', fontSize: 12, marginTop: 4 }}>
-              LEDGER_HASH: 17bb0d2
+            <div style={{ color: 'rgba(255, 255, 255, 0.35)', fontSize: 11, marginTop: 4 }}>
+              TSMC TIER 1 LITOGRAPHY
             </div>
           </div>
         </div>
 
-        {/* Centro HUD: Glitch de Yield y Texto de Impacto */}
+        {/* Central */}
         <div style={{ 
           display: 'flex', 
           flexDirection: 'column', 
@@ -256,81 +308,66 @@ export const SiliconTaiwanVideo: React.FC = () => {
           justifyContent: 'center', 
           flexGrow: 1 
         }}>
-          {currentBeat % 8 < 4 ? (
-            <h2 style={{
-              fontSize: 120,
-              fontWeight: 900,
-              color: '#ffffff',
-              margin: 0,
-              letterSpacing: -4,
-              textAlign: 'center',
-              textShadow: '0 0 20px rgba(255, 255, 255, 0.3)',
-              fontFamily: 'Impact, sans-serif'
-            }}>
-              TAIWAN <span style={{ color: '#2b3be5', WebkitTextStroke: '2px #ffffff' }}>YIELD</span>
-            </h2>
-          ) : (
-            <h2 style={{
-              fontSize: 120,
-              fontWeight: 900,
-              color: '#2b3be5',
-              margin: 0,
-              letterSpacing: -4,
-              textAlign: 'center',
-              textShadow: '0 0 20px rgba(43, 59, 229, 0.5)',
-              fontFamily: 'Impact, sans-serif'
-            }}>
-              91.9% <span style={{ color: '#ffffff' }}>EFICACIA</span>
-            </h2>
-          )}
+          <h2 style={{
+            fontSize: 140,
+            fontWeight: 900,
+            color: currentBeat % 8 < 4 ? '#ffffff' : '#2b3be5',
+            margin: 0,
+            letterSpacing: -5,
+            textAlign: 'center',
+            textShadow: '0 0 25px rgba(43, 59, 229, 0.4)',
+            fontFamily: 'Impact, sans-serif'
+          }}>
+            {currentBeat % 8 < 4 ? "TAIWAN YIELD" : "91.9% EXERGÍA"}
+          </h2>
           
           <div style={{
             color: '#fff',
-            fontSize: 18,
-            letterSpacing: 8,
-            marginTop: 15,
+            fontSize: 16,
+            letterSpacing: 10,
+            marginTop: 20,
             textTransform: 'uppercase',
-            opacity: isKick ? 1 : 0.7,
-            backgroundColor: 'rgba(43, 59, 229, 0.2)',
-            padding: '4px 16px',
-            border: '1px solid #2b3be5'
+            opacity: isKick ? 1 : 0.8,
+            backgroundColor: 'rgba(10, 10, 10, 0.85)',
+            borderLeft: '4px solid #2b3be5',
+            padding: '6px 20px',
+            textShadow: isKick ? '0 0 8px #fff' : 'none'
           }}>
-            {isKick ? ">> EXPOSICIÓN LITOGRÁFICA EUV <<" : "LITHOGRAPHY SCAN ACTIVE"}
+            EUV TRANSISTOR EXPOSURE
           </div>
         </div>
 
-        {/* Pie de página HUD */}
+        {/* Pie de HUD */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
           <div>
-            <div style={{ color: 'rgba(255, 255, 255, 0.4)', fontSize: 11, letterSpacing: 1 }}>
-              DIAGNOSTIC STATUS
+            <div style={{ color: 'rgba(255, 255, 255, 0.3)', fontSize: 10, letterSpacing: 2 }}>
+              LITHOGRAPHIC PROCESS METRIC
             </div>
-            <div style={{ color: '#ffffff', fontSize: 14, marginTop: 4, fontWeight: 'bold' }}>
+            <div style={{ color: '#ffffff', fontSize: 13, marginTop: 5, fontWeight: 'bold' }}>
               {activeUIText}
             </div>
           </div>
           
-          <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-            {/* Gráfico de barras decorativo de Yield */}
-            <div style={{ display: 'flex', gap: 3, alignItems: 'flex-end', height: 30 }}>
-              {[60, 80, 55, 90, 70, 95, 100, 85, 91.9].map((val, idx) => (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 25 }}>
+            <div style={{ display: 'flex', gap: 4, alignItems: 'flex-end', height: 40 }}>
+              {[40, 75, 92, 50, 88, 91.9, 95, 80, 91.9].map((val, idx) => (
                 <div 
                   key={idx} 
                   style={{ 
-                    width: 6, 
+                    width: 5, 
                     height: `${val}%`, 
-                    backgroundColor: idx === 8 ? '#fff' : '#2b3be5',
-                    opacity: idx === 8 ? 1 : 0.6
+                    backgroundColor: idx === 8 ? '#ffffff' : '#2b3be5',
+                    opacity: idx === 8 ? 1 : 0.5
                   }} 
                 />
               ))}
             </div>
             <div style={{ textAlign: 'right' }}>
-              <div style={{ color: '#2b3be5', fontSize: 20, fontWeight: 900 }}>
+              <div style={{ color: '#2b3be5', fontSize: 24, fontWeight: 900, lineHeight: 1 }}>
                 91.9%
               </div>
-              <div style={{ color: 'rgba(255, 255, 255, 0.4)', fontSize: 10 }}>
-                YIELD METRIC
+              <div style={{ color: 'rgba(255, 255, 255, 0.4)', fontSize: 9, marginTop: 3 }}>
+                OPTIMAL YIELD
               </div>
             </div>
           </div>
@@ -338,12 +375,12 @@ export const SiliconTaiwanVideo: React.FC = () => {
 
       </AbsoluteFill>
 
-      {/* Efecto estroboscópico de contraste al ritmo del kick */}
+      {/* Contraste del estrobo del kick */}
       <div style={{
         position: 'absolute',
         top: 0, left: 0, right: 0, bottom: 0,
         backgroundColor: '#ffffff',
-        opacity: isKick ? 0.04 : 0,
+        opacity: isKick ? 0.05 : 0,
         pointerEvents: 'none',
         mixBlendMode: 'overlay'
       }} />
