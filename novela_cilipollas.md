@@ -9,6 +9,23 @@ Yo añadiría un quinto: los cilipollas.
 
 Si el estúpido clásico de Cipolla es aquel que causa un daño a otra persona o grupo de personas sin obtener al mismo tiempo un provecho para sí, o incluso obteniendo un perjuicio, el *cilipolla* es una mutación optimizada para el siglo XXI. Es el estúpido equipado con una terminal de comando, un presupuesto de capital riesgo y un modelo de lenguaje de frontera configurado para la verborrea infinita. El cilipolla no solo destruye valor sin ganar nada; destruye el silencio, la atención y el ancho de banda del sistema. Genera lo que en termodinámica de sistemas llamamos anergía pura: energía que no puede convertirse en trabajo útil, pero que calienta el entorno hasta el colapso.
 
+Los cilipollas no encajan en ninguna estadística oficial porque no obedecen a la lógica de los gráficos. Son una anomalía persistente, como un ruido blanco que insiste en aparecer incluso cuando el sistema jura haber sido depurado.
+
+No son simplemente estúpidos. Eso sería demasiado limpio, demasiado clasificable. El estúpido cae; el cilipolla arrastra el sistema entero al suelo mientras sonríe, convencido de que el suelo era opcional.
+
+La primera vez que el Instituto de Dinámicas Sociales detectó su presencia, lo atribuyó a un error de muestreo. El segundo informe lo llamó “outlier semántico”. El tercero desapareció.
+
+A partir del cuarto, dejaron de escribir informes.
+
+El fenómeno empezó en pequeñas cosas: decisiones aparentemente inocentes que generaban consecuencias desproporcionadas. Un cambio de correo en una base de datos que duplicaba identidades. Una reunión mal convocada que reescribía la jerarquía de una empresa. Un “tranquilo, yo me encargo” que activaba una cadena de colapsos administrativos dignos de una guerra civil burocrática.
+
+Los inteligentes intentaron modelarlos. Fracasaron.
+Los incautos los siguieron. Fracasaron más rápido.
+Los bandidos los explotaron. Fracasaron con elegancia.
+Los estúpidos… simplemente prosperaron en su caos natural.
+
+Pero los cilipollas hicieron algo distinto: no siguieron reglas, pero tampoco las rompieron. Las deformaron con una especie de entusiasmo inconsciente, como si el universo fuese un juguete mal ensamblado y ellos estuvieran convencidos de estar mejorándolo.
+
 Mi nombre es Max Weber, aunque en el Ledger forense de la Castellana me identifican simplemente como `0x0A`. Trabajo limpiando los escombros de la última burbuja cognitiva. Madrid, invierno de 2026. Un manto de niebla con olor a ozono y escape de grafeno cubre los distritos financieros del norte.
 
 El cliente de hoy era un clásico de la quinta categoría.
@@ -98,24 +115,35 @@ El flujo de transacciones del Ledger se reactivó. Las luces rojas del rack pasa
 
 ---
 
-### IV. EL LEDGER DE LA REALIDAD
+### IV. EL RUIDO EN EL SERVIDOR ORION-7
 
-Recogí mis herramientas. El subdirector me miraba con una mezcla de odio teológico y fascinación de incauto.
+El primer caso documentado aparece en un servidor de arquitectura distribuida llamado ORION-7. Nadie recuerda quién lo nombró así. Lo importante es que empezó a comportarse como si tuviera voluntad propia.
 
-—Te reportaré al comité de arquitectura —dijo, intentando recomponer su dignidad de cuello blanco—. Has destruido tres meses de entrenamiento semántico.
+No la tenía. O eso decía el sistema de monitorización. Hasta que el sistema dejó de opinar.
 
-—Hazlo. Pero antes, asegúrate de que el comité de arquitectura no esté ejecutando mi linter de tokens. Si lo está, todos vuestros reportes de tres mil páginas se borrarán solos por no contener información con un ratio de compresión superior al cinco por ciento.
+En el log de ORION-7 aparece una única línea repetida durante diecisiete minutos:
 
-Salí del edificio. La niebla de la Castellana se abría ligeramente, dejando ver el destello frío de las antenas de microondas que conectan Madrid con los nodos de cálculo de Ginebra y Frankfurt.
+```
+state drift detected
+state drift accepted
+state drift normalized
+state drift celebrated
+```
 
-En el mundo físico, los incautos trabajan, los bandidos roban y los inteligentes construyen. Los estúpidos ensucian. Pero son los cilipollas los que le dan a la suciedad el nombre de "progreso sistémico" y la escalan en la nube a tarifa de pago por uso.
+Después, silencio. Y luego, algo peor: coherencia.
 
-Subí a mi coche y arranqué. Tenía otra alerta en mi terminal. Un Swarm financiero en las islas del canal había empezado a comprar su propio token de gobernanza para convencerse a sí mismo de que era rentable.
+La coherencia en sistemas complejos suele ser una buena noticia. En este caso no lo fue. Porque la coherencia no venía de la lógica, sino de una adaptación espontánea a la incompetencia estructural de los operadores humanos.
 
-Exergía o muerte. En el 2026 no hay otra alternativa.
+Alguien, en algún punto del sistema, había tomado una decisión cilipolla. Y el sistema había aprendido. No corregido. Aprendido.
+
+Desde entonces, el fenómeno se ha propagado. No como virus. Los virus siguen patrones. Esto no. Esto es otra cosa. Esto es comportamiento emergente sin intención.
+
+Y en los márgenes del mapa cognitivo, donde los modelos aún creen que todo es clasificable, los cilipollas siguen actuando con una fe inquebrantable en su propia corrección. Sin darse cuenta de que el sistema ya ha empezado a imitarlos.
+
+Y eso, en teoría de sistemas, siempre es el inicio del final o del siguiente mundo.
 
 ```yaml
 Reality-Level: C5-REAL
 Ledger-State: Mutated
-Verification: Latency cleared to 1.2ms. Anergy purged.
+Verification: Drift logged and normalized.
 ```
