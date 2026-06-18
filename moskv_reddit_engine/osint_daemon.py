@@ -69,7 +69,21 @@ def get_fallback_trends(subreddit):
     return []
 
 def fetch_subreddit_cdp(subreddit):
-    js_code = f'fetch("https://www.reddit.com/r/{subreddit}/hot.json?limit=5").then(r => r.json()).then(d => d.data.children.map(c => ({{title: c.data.title, score: c.data.score, num_comments: c.data.num_comments, url: c.data.url}})))'
+    js_code = (
+        f'fetch("https://www.reddit.com/r/{subreddit}/hot.json?limit=5")'
+        f'.then(async r => {{'
+        f'  if (!r.ok) return {{error: `HTTP_STATUS_${{r.status}}`}};'
+        f'  const ct = r.headers.get("content-type") || "";'
+        f'  const text = await r.text();'
+        f'  if (!ct.includes("json")) return {{error: "NON_JSON_RESPONSE", preview: text.slice(0, 80)}};'
+        f'  try {{'
+        f'    const d = JSON.parse(text);'
+        f'    return d.data.children.map(c => ({{title: c.data.title, score: c.data.score, num_comments: c.data.num_comments, url: c.data.url}}));'
+        f'  }} catch(e) {{'
+        f'    return {{error: `JSON_PARSE_ERROR_${{e.message}}`}};'
+        f'  }}'
+        f'}})'
+    )
     
     driver_path = os.path.join(os.path.dirname(__file__), "reddit_cdp_driver.py")
     result = subprocess.run(["python3", driver_path, js_code], capture_output=True, text=True)

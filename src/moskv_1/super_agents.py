@@ -1,5 +1,3 @@
-import asyncio
-from typing import Optional
 from moskv_1.brain import BrainRegion
 from moskv_1.event_bus import CortexEvent
 

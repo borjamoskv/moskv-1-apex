@@ -6,7 +6,17 @@ from moskv_1.event_bus import CortexEvent
 @pytest.mark.asyncio
 async def test_memory_store_connect_mocked():
     store = MemoryStore()
+    
+    mock_session = AsyncMock()
+    mock_session.__aenter__.return_value = mock_session
     mock_driver = AsyncMock()
+    mock_driver.session = MagicMock(return_value=mock_session)
+    
+    # Setup execute_write
+    mock_tx = AsyncMock()
+    async def fake_execute_write(callback):
+        return await callback(mock_tx)
+    mock_session.execute_write.side_effect = fake_execute_write
     
     with patch("moskv_1.memory.AsyncGraphDatabase") as mock_db_class:
         # If AsyncGraphDatabase is mocked, we simulate successful connect
@@ -16,7 +26,9 @@ async def test_memory_store_connect_mocked():
             "bolt://localhost:7687",
             auth=("neo4j", "password"),
             max_connection_pool_size=50,
-            connection_acquisition_timeout=20.0
+            connection_acquisition_timeout=20.0,
+            connection_timeout=5.0,
+            max_transaction_retry_time=5.0
         )
         mock_driver.verify_connectivity.assert_called_once()
         assert store.driver == mock_driver

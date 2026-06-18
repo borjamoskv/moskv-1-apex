@@ -1,6 +1,7 @@
 import json
 import time
-from typing import Optional, Union, Dict, Any, List
+import asyncio
+from typing import Optional, Dict, Any, List
 from moskv_1.event_bus import CortexEvent
 from moskv_1.immunity import ImmunityLayer, ImmuneState
 
@@ -69,6 +70,7 @@ class MemoryStore:
         self._regions: Dict[str, Dict[str, Any]] = {}
         self._relationships: List[tuple] = []
         self.immunity = ImmunityLayer()
+        self._pruning_in_progress = False
 
     async def connect(self):
         """
@@ -80,10 +82,17 @@ class MemoryStore:
                     self.uri,
                     auth=(self.user, self.password),
                     max_connection_pool_size=50,
-                    connection_acquisition_timeout=20.0
+                    connection_acquisition_timeout=20.0,
+                    connection_timeout=5.0,
+                    max_transaction_retry_time=5.0
                 )
                 await self.driver.verify_connectivity()
-                print("[MemoryStore] Neo4j Driver connected. Graph mutation active.")
+                # Create unique constraint on MemoryNode(id) to optimize MERGE queries
+                async def init_schema(tx):
+                    await tx.run("CREATE CONSTRAINT memory_node_id IF NOT EXISTS FOR (n:MemoryNode) REQUIRE n.id IS UNIQUE")
+                async with self.driver.session() as session:
+                    await session.execute_write(init_schema)
+                print("[MemoryStore] Neo4j Driver connected. Graph mutation active and constraint initialized.")
                 return
             except Exception as e:
                 print(f"[MemoryStore] Failed to connect to Neo4j: {e}")
@@ -120,10 +129,17 @@ class MemoryStore:
 
         # Event-driven Apoptosis: If the incoming entropy is extreme, trigger a full graph prune asynchronously.
         if entropy > self.immunity.high_threshold * 1.5:
-            print("[MemoryStore] Event-Driven Apoptosis Triggered due to high entropy spike.")
-            # We schedule it asynchronously to avoid blocking the current transaction
-            import asyncio
-            asyncio.create_task(self.prune(self.immunity.high_threshold))
+            if not self._pruning_in_progress:
+                self._pruning_in_progress = True
+                print("[MemoryStore] Event-Driven Apoptosis Triggered due to high entropy spike.")
+                
+                async def run_prune_task():
+                    try:
+                        await self.prune(self.immunity.high_threshold)
+                    finally:
+                        self._pruning_in_progress = False
+                
+                asyncio.create_task(run_prune_task())
 
         if self.driver:
             cypher = """
