@@ -43,9 +43,7 @@ async def test_memory_store_auto_quarantine():
         payload={"sourceRegion": "Reasoning", "content": "aaaaa"}
     )
     records_low = await store.crystallize(low_entropy_event)
-    node_low = records_low[0]["n"]
-    assert node_low.get("is_quarantined") is True
-    assert node_low.get("immune_state") == ImmuneState.NECROTIC.value
+    assert len(records_low) == 0  # Necrotic events are discarded by the Governor
 
     # Create high-entropy event (should pass to promotable)
     high_entropy_event = CortexEvent(
