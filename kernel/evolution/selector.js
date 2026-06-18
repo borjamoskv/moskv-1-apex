@@ -1,5 +1,6 @@
 const { fitness } = require("./fitness.js");
 const { execSync } = require("child_process");
+const { evaluateBranch } = require("../canary/fitness_buffer.js");
 
 function selectMutation(before, after, branch) {
     const score = fitness(before, after);
@@ -17,4 +18,16 @@ function selectMutation(before, after, branch) {
     return score;
 }
 
-module.exports = { selectMutation };
+function selectMutationDelayed(branch) {
+  const score = evaluateBranch(branch);
+
+  if (score > 1000) {
+    console.log("[CANARY] branch survives:", branch);
+    return "survive";
+  }
+
+  console.log("[CANARY] branch dies:", branch);
+  return "die";
+}
+
+module.exports = { selectMutation, selectMutationDelayed };

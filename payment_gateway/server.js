@@ -9,6 +9,8 @@ const { proposeMutation } = require('../kernel/evolution/mutator.js');
 const { createPR } = require('../kernel/evolution/pr.js');
 const { runTests } = require('../kernel/evolution/test_gate.js');
 const { selectMutation } = require('../kernel/evolution/selector.js');
+const { deployCanary } = require('../kernel/canary/deployer.js');
+const { recordEvent } = require('../kernel/canary/fitness_buffer.js');
 
 const app = express();
 app.use(cors());
@@ -52,9 +54,11 @@ app.post('/stripe-webhook', express.raw({ type: 'application/json' }), (req, res
                     console.log("[EVOLUTION] mutation failed tests");
                     return;
                 }
-                const before = { revenue: 0, latency: 100 };
-                const after = { revenue: payload.amount, latency: 80 };
-                selectMutation(before, after, branch);
+                const canary = deployCanary(branch, 10);
+                recordEvent(branch, {
+                    amount: payload.amount,
+                    url: canary.url
+                });
             });
         } catch (e) {
             console.error(`[CORTEX-EDGE-ERR] Claw mutation dispatch failed: ${e.message}`);
