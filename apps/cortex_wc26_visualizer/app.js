@@ -39,7 +39,8 @@ class TeamNode {
     this.name = name;
     this.baseExergy = BASE_EXERGY[name] || 0.75;
     this.liveExergy = this.baseExergy;
-    this.entropy = 0.0;
+    this.momentum = 0.0;
+    this.volatility = 0.0;
     this.points = 0;
     this.gf = 0;
     this.ga = 0;
@@ -63,9 +64,18 @@ class TeamNode {
     return this.gf - this.ga;
   }
 
+  get entropy() {
+    return this.volatility;
+  }
+
+  set entropy(val) {
+    this.volatility = val;
+  }
+
   reset() {
     this.liveExergy = this.baseExergy;
-    this.entropy = 0.0;
+    this.momentum = 0.0;
+    this.volatility = 0.0;
     this.points = 0;
     this.gf = 0;
     this.ga = 0;
@@ -81,25 +91,23 @@ class TeamNode {
   applyThermalDecay(roundDepth) {
     // High base exergy teams decay slower under physical load (fatiga)
     const decayFactor = 0.04 * (1.0 - this.baseExergy) * roundDepth;
-    this.liveExergy = Math.max(0.1, this.baseExergy * (1.0 - decayFactor));
+    this.liveExergy = Math.max(0.2, this.baseExergy * (1.0 - decayFactor));
   }
 
-  learnFromMatch(gd, wasUpset, lr, upsetPressure) {
-    if (gd > 0) {
-      // Winning increases exergy and dampens entropy
-      const momentum = lr * gd * (1.0 - this.liveExergy);
-      this.liveExergy = Math.min(1.0, this.liveExergy + momentum);
-      this.entropy = Math.max(0.0, this.entropy - 0.03);
+  learnFromMatch(won) {
+    if (won) {
+      this.liveExergy += 0.015 * (1.0 - this.liveExergy);
+      this.momentum += 0.08;
     } else {
-      // Losing decreases exergy and spikes entropy
-      const trauma = lr * Math.abs(gd) * this.liveExergy;
-      this.liveExergy = Math.max(0.1, this.liveExergy - trauma);
-      this.entropy += 0.04;
+      this.liveExergy -= 0.02 * this.liveExergy;
+      this.volatility += 0.05;
     }
 
-    if (wasUpset) {
-      this.entropy += upsetPressure;
-    }
+    this.momentum *= 0.92;
+    this.volatility *= 0.95;
+
+    // clamp
+    this.liveExergy = Math.max(0.2, Math.min(0.99, this.liveExergy));
   }
 }
 
@@ -255,24 +263,31 @@ class TournamentSimulator {
     t1.applyThermalDecay(roundDepth);
     t2.applyThermalDecay(roundDepth);
     
-    const eff1 = Math.max(0.01, t1.liveExergy - t1.entropy);
-    const eff2 = Math.max(0.01, t2.liveExergy - t2.entropy);
+    const ea = t1.liveExergy + t1.momentum * 0.2;
+    const eb = t2.liveExergy + t2.momentum * 0.2;
+
+    const va = t1.volatility;
+    const vb = t2.volatility;
+
+    const chaos = (va - vb) * 0.15;
+
+    const p = 1 / (1 + Math.exp(-(ea - eb) * 10));
+    const finalProb = Math.max(0.05, Math.min(0.95, p + chaos));
     
-    const prob1 = eff1 / (eff1 + eff2);
     const roll = Math.random();
-    
-    const isUpset = (roll < prob1 && eff1 < eff2) || (roll >= prob1 && eff2 < eff1);
-    const winner = roll < prob1 ? t1 : t2;
+    const winner = roll < finalProb ? t1 : t2;
     const loser = winner === t1 ? t2 : t1;
     
-    const gd = Math.max(1, Math.round(Math.abs(prob1 - roll) * 8));
-    const g1 = winner === t1 ? gd : 0;
-    const g2 = winner === t2 ? gd : 0;
+    const isUpset = (winner === t1 && t1.baseExergy < t2.baseExergy) || (winner === t2 && t2.baseExergy < t1.baseExergy);
     
-    winner.learnFromMatch(gd, isUpset, this.lr, this.upsetPressure);
-    loser.learnFromMatch(-gd, isUpset, this.lr, this.upsetPressure);
+    winner.learnFromMatch(true);
+    loser.learnFromMatch(false);
     
     loser.status = "ELIMINATED";
+    
+    const gd = Math.max(1, Math.round(Math.abs(finalProb - roll) * 8));
+    const g1 = winner === t1 ? gd : 0;
+    const g2 = winner === t2 ? gd : 0;
     
     return { winner, loser, g1, g2, isUpset };
   }
@@ -416,12 +431,21 @@ class TournamentSimulator {
     if (match.type === "GROUP") {
       const { g1, g2, outcome } = this.simulatePoisson(match.t1, match.t2);
       
-      // Group match state updates (mild learning rate since it is group stage)
       const gd = g1 - g2;
-      const isUpset = (gd > 0 && match.t1.liveExergy < match.t2.liveExergy) || (gd < 0 && match.t2.liveExergy < match.t1.liveExergy);
+      const isUpset = (gd > 0 && match.t1.baseExergy < match.t2.baseExergy) || (gd < 0 && match.t2.baseExergy < match.t1.baseExergy);
       
-      match.t1.learnFromMatch(gd, isUpset, this.lr * 0.5, this.upsetPressure * 0.5);
-      match.t2.learnFromMatch(-gd, isUpset, this.lr * 0.5, this.upsetPressure * 0.5);
+      if (outcome === 1) {
+        match.t1.learnFromMatch(true);
+        match.t2.learnFromMatch(false);
+      } else if (outcome === -1) {
+        match.t2.learnFromMatch(true);
+        match.t1.learnFromMatch(false);
+      } else {
+        match.t1.momentum *= 0.92;
+        match.t1.volatility *= 0.95;
+        match.t2.momentum *= 0.92;
+        match.t2.volatility *= 0.95;
+      }
       
       match.g1 = g1;
       match.g2 = g2;
