@@ -56,6 +56,18 @@
     {
       "src": "lasalve_tavern_1781746616458.png",
       "use": "@vercel/static"
+    },
+    {
+      "src": "patxi_hacker_bilbao.png",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "police_tactical_raid.png",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "usera_bunker_cyberpunk.png",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
