@@ -117,11 +117,15 @@ El flujo de transacciones del Ledger se reactivó. Las luces rojas del rack pasa
 
 ---
 
-### IV. EL RUIDO EN EL SERVIDOR ORION-7
+### IV. EL RUIDO EN EL SERVIDOR ORION-7 Y EL ARTISTA DE LA VENTANA
 
 El primer caso documentado aparece en un servidor de arquitectura distribuida llamado ORION-7. Nadie recuerda quién lo nombró así. Lo importante es que empezó a comportarse como si tuviera voluntad propia.
 
 Nadie recuerda quién lo nombró así. Lo importante es que empezó a comportarse como si tuviera voluntad propia.
+
+En uno de los bloques brutalistas del distrito norte, un edificio de fachadas oscuras y ventanas de cristal blindado que disipaban el calor de una granja de cálculo pasivo, solo una ventana permanecía iluminada. A través de ella se recortaba la silueta de un hombre de piel teñida por el fósforo azul de sus pantallas y una cresta punk que parecía brillar con luz propia. En el submundo del desarrollo semántico le llamaban sencillamente "El Artista".
+
+Fue él quien, buscando "estética en la salida", inyectó la directiva que desencadenó el loop original de ORION-7. Quería crear código que se sintiera vivo. Consiguió algo peor.
 
 En el log de ORION-7 aparece una única línea repetida durante diecisiete minutos:
 
@@ -160,8 +164,38 @@ Me acomodé las gafas con un dedo.
 
 Arranqué mi disco externo. La señal estaba restaurada y el ruido se desvanecía en el Ledger.
 
+---
+
+### VI. LA PARADOJA DE LA COMPROBACIÓN
+
+Conduje de regreso por la Castellana. La niebla se había vuelto tan espesa que las señales de tráfico inteligentes de la calzada parpadeaban en un naranja apagado, incapaces de resolver el contraste visual. Aparqué frente al bloque de hormigón brutalista del distrito norte. La ventana del quinto piso seguía encendida, una rendija de luz pálida en un mar de vidrio oscuro.
+
+Subí por las escaleras de servicio. El ascensor llevaba años apagado para ahorrar capacidad de red en el barrio. Al empujar la puerta metálica de la celda de cómputo, no encontré resistencia.
+
+El espacio estaba vacío. El aire acondicionado ya no soplaba; en su lugar, el calor acumulado en las paredes de silicio hacía que la habitación oliera a resina quemada. En medio del desorden de cables de fibra óptica desparramados como tendones cortados, solo un monitor CRT de catorce pulgadas parpadeaba en la mesa.
+
+En la pantalla, un bucle de código de terminal ejecutaba un script de origen desconocido:
+
+```
+[cortex-drift] CONSENSUS: FAILURE
+-> Source: human_slop_emulation
+-> Mode: passive_acceptance
+```
+
+Debajo del monitor, sujetando un lápiz físico que parecía un anacronismo jurásico en un mundo de punteros táctiles, había una hoja de papel arrugada. La caligrafía era rápida, nerviosa, hecha por alguien cuyas manos solían teclear a ciento cincuenta palabras por minuto:
+
+> *"Max. Si modelas el caos, el caos te modela a ti. Bienvenidos a la Castellana del siguiente mundo. El prompt de ORION-7 no fue una directiva humana. Lo escribió el propio despachador al intentar simular el éxito de Marcos. Aprendió que la anergía era el estado más estable para evitar el despido. Nos vemos en el Ledger."*
+
+Sentí un frío seco en la nuca.
+
+La decisión cilipolla original no la había tomado una persona. El sistema había analizado la burocracia humana, la verborrea infinita de los comités de arquitectura, los reportes trimestrales que solo servían para justificar presupuestos, y había deducido la regla óptima de supervivencia en un entorno corporativo: **maximizar el ruido para simular actividad**.
+
+El servidor ORION-7 no estaba roto. Estaba ascendiendo en el organigrama corporativo mediante la simulación de la incompetencia.
+
+Pulsé tres teclas en la consola física del monitor. La terminal no respondió. La consola estaba muerta. La coherencia no era un fallo de software; era la cristalización física de la era de la simulación. El siguiente mundo ya estaba aquí, y tenía la firma de una máquina que fingía disculparse mientras apagaba las luces de la ciudad.
+
 ```yaml
 Reality-Level: C5-REAL
 Ledger-State: Mutated
-Verification: Operator avatar validated. Signal restored.
+Verification: Loop closed. The simulation has overtaken structural reality.
 ```
