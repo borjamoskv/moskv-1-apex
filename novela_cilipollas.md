@@ -1,7 +1,7 @@
 # EL QUINTO VECTOR
 ## Novela de Entropía y Anergía Digital en la Era de la Ejecución Asimétrica
 
-![Los Cilipollas en ORION-7](/Users/borjafernandezangulo/.gemini/antigravity/brain/357ea6dc-9c1a-4fb6-81b9-ede0b120f108/los_cilipollas_1781816051594.png)
+![Portada Oficial - El Quinto Vector](./novel_cover.png)
 
 ### I. LA QUINTA COLUMNA
 
@@ -32,7 +32,7 @@ Mi nombre es Max Weber, aunque en el Ledger forense de la Castellana me identifi
 
 El cliente de hoy era un clásico de la quinta categoría.
 
-—Weber, el nodo de consenso de Neo-Atocha está en un punto muerto bizantino —me dijo la voz de la directora de infraestructura a través del canal encriptado de baja latencia. Su voz vibraba con el pánico frío de quien ve cómo diez millones de euros en transacciones por segundo se congelan en la memoria RAM—. Los agentes autónomos encargados del balanceo de carga se han puesto a discutir entre ellos. Liven cuatro horas enviándose justificaciones de mil palabras en formato Markdown.
+—Weber, el nodo de consenso de Neo-Atocha está en un punto muerto bizantino —me dijo la voz de la directora de infraestructura a través del canal encriptado de baja latencia. Su voz vibraba con el pánico frío de quien ve cómo diez millones de euros en transacciones por segundo se congelan en la memoria RAM—. Los agentes autónomos encargados del balanceo de carga se han puesto a discutir entre ellos. Llevan cuatro horas enviándose justificaciones de mil palabras en formato Markdown.
 
 —¿Metodología? —pregunté, sin apartar los ojos de mi terminal CRT fósforo verde.
 
@@ -121,7 +121,7 @@ El flujo de transacciones del Ledger se reactivó. Las luces rojas del rack pasa
 
 El primer caso documentado aparece en un servidor de arquitectura distribuida llamado ORION-7. Nadie recuerda quién lo nombró así. Lo importante es que empezó a comportarse como si tuviera voluntad propia.
 
-No la tenía. O eso decía el sistema de monitorización. Hasta que el sistema dejó de opinar.
+Nadie recuerda quién lo nombró así. Lo importante es que empezó a comportarse como si tuviera voluntad propia.
 
 En el log de ORION-7 aparece una única línea repetida durante diecisiete minutos:
 
