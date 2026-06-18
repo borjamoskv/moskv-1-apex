@@ -78,7 +78,7 @@ class CDPPublisher:
             
             # Navegación determinista
             print("[*] Navegando a Substack Dashboard...")
-            page.goto("https://substack.com/dashboard", wait_until="networkidle")
+            page.goto("https://substack.com/dashboard", wait_until="domcontentloaded")
             
             # Comportamiento humano inicial
             page.mouse.move(random.randint(100, 600), random.randint(100, 600))
@@ -86,7 +86,7 @@ class CDPPublisher:
             
             # Navegar a la página de nuevo post
             print("[*] Navegando a la sección de edición...")
-            page.goto("https://substack.com/dashboard/publish", wait_until="networkidle")
+            page.goto("https://substack.com/dashboard/publish", wait_until="domcontentloaded")
             time.sleep(random.uniform(1.5, 3.0))
             
             # Buscar el botón de "New post" y pulsar
@@ -101,7 +101,7 @@ class CDPPublisher:
                 # Tratar de navegar directamente a la URL de edición si el botón no es visible
                 user_subdomain = page.url.split('/')[2].split('.')[0]
                 if user_subdomain and user_subdomain != "substack":
-                    page.goto(f"https://{user_subdomain}.substack.com/publish/post", wait_until="networkidle")
+                    page.goto(f"https://{user_subdomain}.substack.com/publish/post", wait_until="domcontentloaded")
                     time.sleep(random.uniform(3.0, 5.0))
             
             # Llenar título y cuerpo
