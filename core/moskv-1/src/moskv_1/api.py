@@ -12,8 +12,14 @@ async def startup_event():
 @app.on_event("shutdown")
 async def shutdown_event():
     await event_bus.close()
-@app.get("/api/v1/stream")
+@app.get("/api/v1/stream", methods=["GET"])
 async def telemetry_stream(request: Request):
+    """
+    [C5-REAL SECURITY BOUNDARY]
+    Transport: append-only
+    Frontend Permissions: write_events = false
+    Backend Authority: emit_only = true
+    """
     queue = asyncio.Queue()
     async def callback(event, msg):
         await queue.put(event.to_json())

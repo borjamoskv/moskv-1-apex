@@ -24,50 +24,6 @@
     {
       "src": "aventura.html",
       "use": "@vercel/static"
-    },
-    {
-      "src": "el_espacio_entre_nosotros.pdf",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "el_espacio_entre_nosotros.epub",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "cover_bilbao_noir_1781746242043.png",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "stereorock_real_1781746258607.png",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "uribarri_coder_1781746280902.png",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "novel_cover_bilbao_1781746584168.png",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "artxanda_viewpoint_1781746601029.png",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "lasalve_tavern_1781746616458.png",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "patxi_hacker_bilbao.png",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "police_tactical_raid.png",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "usera_bunker_cyberpunk.png",
-      "use": "@vercel/static"
     }
   ],
   "routes": [
