@@ -730,6 +730,115 @@
             border-color: var(--accent-blue);
             background: rgba(43, 59, 229, 0.05);
         }
+
+        /* --- INTERACTIVIDAD C5-REAL (Terminal, Glitch, Emergencia) --- */
+        .terminal-input-container {
+            display: flex;
+            align-items: center;
+            border-top: 1px solid var(--border-color);
+            padding-top: 10px;
+            margin-top: auto;
+        }
+
+        .terminal-prompt {
+            color: #8EC07C;
+            font-weight: bold;
+            margin-right: 8px;
+            font-size: 11px;
+        }
+
+        .terminal-input {
+            background: transparent;
+            border: none;
+            color: var(--text-light);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            width: 100%;
+            outline: none;
+            caret-color: var(--accent-red);
+        }
+
+        .terminal-input::placeholder {
+            color: rgba(255, 255, 255, 0.1);
+        }
+
+        .glitch-word {
+            display: inline-block;
+            cursor: crosshair;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .glitch-word:hover {
+            color: var(--accent-red);
+            background: rgba(229, 43, 43, 0.1);
+            text-shadow: 2px 0 red, -2px 0 blue;
+            animation: text-glitch 0.1s infinite;
+        }
+
+        @keyframes text-glitch {
+            0% { transform: translate(1px, 1px); }
+            50% { transform: translate(-1px, -1px); }
+            100% { transform: translate(1px, -1px); }
+        }
+
+        .emergency-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(229, 43, 43, 0.15);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .emergency-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+            animation: overlay-pulse 1s infinite alternate;
+        }
+
+        @keyframes overlay-pulse {
+            from { background: rgba(229, 43, 43, 0.15); }
+            to { background: rgba(229, 43, 43, 0.3); }
+        }
+
+        .emergency-title {
+            color: var(--accent-red);
+            font-size: 40px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            text-shadow: var(--neon-red-glow);
+            animation: text-glitch 0.2s infinite;
+        }
+
+        .btn-emergency {
+            background: var(--accent-red);
+            color: #fff;
+            border: 2px solid #fff;
+            padding: 20px 40px;
+            font-size: 24px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 0 40px rgba(229, 43, 43, 0.8);
+            transition: all 0.2s ease;
+        }
+
+        .btn-emergency:hover {
+            background: #fff;
+            color: var(--accent-red);
+            transform: scale(1.05);
+        }
     </style>
 </head>
 <body>
@@ -821,6 +930,11 @@
                 <div class="sidebar-output" id="log-output">
                     <!-- Logs en vivo -->
                 </div>
+                <!-- NUEVO: Terminal de entrada -->
+                <div class="terminal-input-container">
+                    <span class="terminal-prompt">&gt;</span>
+                    <input type="text" id="terminal-input" class="terminal-input" placeholder="Comandos C5-REAL..." autocomplete="off" spellcheck="false" onkeydown="handleTerminalCommand(event)">
+                </div>
             </div>
         </div>
 
@@ -828,6 +942,13 @@
         <footer>
             <span>Soberanía cognitiva instanciada // <a href="index.html">Volver a AGENTS.ARCHI</a></span>
         </footer>
+    </div>
+
+    <!-- NUEVO: Overlay de Emergencia Termodinámica -->
+    <div id="emergency-overlay" class="emergency-overlay">
+        <div class="emergency-title">KERNEL PANIC INMINENTE</div>
+        <div style="color: white; font-family: 'JetBrains Mono', monospace; font-size: 14px; margin-bottom: 20px;">Entropía ha superado el 90%. El nodo está colapsando.</div>
+        <button class="btn-emergency" onclick="stabilizeNode()">ESTABILIZAR NODO</button>
     </div>
 
     <!-- JS DE CONTROL Y EFECTOS -->
@@ -1779,7 +1900,7 @@
 
                     card.innerHTML = `
                         ${titleHeader}
-                        <div class="content-area">${stage.text}</div>
+                        <div class="content-area">${injectGlitches(stage.text)}</div>
                         ${gridHtml}
                         ${consoleHtml}
                         <div class="choices-area" style="margin-top: 20px;">
@@ -1818,12 +1939,12 @@
                     const contentArea = card.querySelector('.content-area');
                     
                     if (stageKey === 'cover' || stageKey === 'final') {
-                        contentArea.innerHTML = stage.text;
+                        contentArea.innerHTML = injectGlitches(stage.text);
                         card.querySelector('.choices-area').style.opacity = 1;
                         card.querySelector('.skip-btn').style.display = 'none';
                     } else {
                         const speed = stageKey.startsWith('r_cap') ? 6 : 12;
-                        typeWriter(contentArea, stage.text, speed, () => {
+                        typeWriter(contentArea, injectGlitches(stage.text), speed, () => {
                             card.querySelector('.choices-area').style.opacity = 1;
                             card.querySelector('.skip-btn').style.display = 'none';
                             writeLog("RENDER", "Texto completo inyectado en pantalla.");
@@ -1840,6 +1961,102 @@
                 card.style.opacity = 0;
                 setTimeout(updateDOM, 150);
             }
+        }
+
+        // --- INTERACTIVIDAD C5-REAL ---
+        // 1. Efecto Glitch Textual
+        function injectGlitches(htmlText) {
+            const keywords = ['Usera', 'Uribarri', 'LSD', 'GPU', 'C5-REAL', 'anergía', 'exergía', 'Cortázar', 'Vicentín', 'silicio', 'entropía', 'latencia', 'hardware'];
+            let result = htmlText;
+            keywords.forEach(kw => {
+                const regex = new RegExp(`\\b${kw}\\b`, 'gi');
+                result = result.replace(regex, `<span class="glitch-word" onmouseenter="triggerGlitch(this)" onclick="triggerGlitch(this)">$&</span>`);
+            });
+            return result;
+        }
+
+        function triggerGlitch(el) {
+            playGlitchSound();
+            currentEntropy = Math.min(1.0, currentEntropy + 0.05);
+            currentCoreTemp = Math.min(100.0, currentCoreTemp + 2.0);
+            updateTelemetryUI();
+            
+            const originalText = el.innerText;
+            const glitchChars = '!<>-_\\\\/[]{}—=+*^?#_';
+            let i = 0;
+            const glitchInterval = setInterval(() => {
+                el.innerText = originalText.split('').map(c => Math.random() > 0.5 ? glitchChars[Math.floor(Math.random() * glitchChars.length)] : c).join('');
+                i++;
+                if (i > 5) {
+                    clearInterval(glitchInterval);
+                    el.innerText = originalText;
+                }
+            }, 50);
+            writeLog("ANOMALY", "Desgarro termodinámico detectado en texto interactivo.");
+        }
+
+        // 2. Terminal CLI
+        function handleTerminalCommand(e) {
+            if (e.key === 'Enter') {
+                const inputEl = document.getElementById('terminal-input');
+                const cmd = inputEl.value.trim().toLowerCase();
+                inputEl.value = '';
+                
+                writeLog("USER_CMD", `> ${cmd}`);
+                
+                if (cmd === 'help') {
+                    writeLog("SYS", "Comandos soportados: ping uribarri, overclock, purge_anergy, help");
+                } else if (cmd === 'ping uribarri' || cmd === 'ping usera') {
+                    writeLog("SYS", "Haciendo ping... Latencia: 12ms. Conexión C5-REAL estable.");
+                } else if (cmd === 'overclock') {
+                    currentCoreTemp = Math.min(100.0, currentCoreTemp + 15.0);
+                    currentLinearity = Math.min(100.0, currentLinearity + 10.0);
+                    writeLog("SYS", "WARNING: Frecuencia forzada. Exergía sube, pero Core Temp crítico.");
+                    updateTelemetryUI();
+                    playGlitchSound();
+                } else if (cmd === 'purge_anergy') {
+                    currentEntropy = Math.max(0.0, currentEntropy - 0.2);
+                    currentCoreTemp = Math.max(37.0, currentCoreTemp - 5.0);
+                    writeLog("SYS", "Purga de anergía completada. Entropía disipada.");
+                    updateTelemetryUI();
+                } else if (cmd !== '') {
+                    writeLog("ERR", `Comando no reconocido: ${cmd}. Escriba 'help'.`);
+                }
+            }
+        }
+
+        // 3. Degradación Termodinámica (Idle & Mouse Movement)
+        let lastMouseTime = Date.now();
+        document.addEventListener('mousemove', () => {
+            const now = Date.now();
+            if (now - lastMouseTime < 50) { // Movimiento rápido
+                currentEntropy = Math.min(1.0, currentEntropy + 0.0005);
+                currentCoreTemp = Math.min(100.0, currentCoreTemp + 0.05);
+            }
+            lastMouseTime = now;
+        });
+
+        setInterval(() => {
+            // Natural degradation (Anergy increase if nothing happens)
+            currentEntropy = Math.min(1.0, currentEntropy + 0.005);
+            updateTelemetryUI();
+            
+            // Check Emergency
+            const overlay = document.getElementById('emergency-overlay');
+            if (currentEntropy >= 0.90 && !overlay.classList.contains('active')) {
+                overlay.classList.add('active');
+                playGlitchSound();
+                writeLog("CRITICAL", "ENTROPÍA AL LÍMITE. KERNEL PANIC INMINENTE.");
+            }
+        }, 2000);
+
+        function stabilizeNode() {
+            currentEntropy = 0.5;
+            currentCoreTemp = 60.0;
+            document.getElementById('emergency-overlay').classList.remove('active');
+            updateTelemetryUI();
+            writeLog("SYS", "Estabilización manual forzada. Nivel de realidad restaurado.");
+            playClick();
         }
 
         // Carga Inicial
