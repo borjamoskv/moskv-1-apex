@@ -1,2 +1,3 @@
-2026/06/18-20:12:48.268 5a189a Creating DB /Users/borjafernandezangulo/Documents/antigravity/lively-maxwell/apps/vector_zeta/headless_profile/Default/shared_proto_db since it was missing.
-2026/06/18-20:12:48.271 5a189a Reusing MANIFEST /Users/borjafernandezangulo/Documents/antigravity/lively-maxwell/apps/vector_zeta/headless_profile/Default/shared_proto_db/MANIFEST-000001
+2026/06/18-20:14:18.976 5a28ba Reusing MANIFEST /Users/borjafernandezangulo/Documents/antigravity/lively-maxwell/apps/vector_zeta/headless_profile/Default/shared_proto_db/MANIFEST-000001
+2026/06/18-20:14:18.976 5a28ba Recovering log #3
+2026/06/18-20:14:18.976 5a28ba Reusing old log /Users/borjafernandezangulo/Documents/antigravity/lively-maxwell/apps/vector_zeta/headless_profile/Default/shared_proto_db/000003.log 

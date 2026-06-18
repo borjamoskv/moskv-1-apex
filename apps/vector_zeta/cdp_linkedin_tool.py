@@ -157,16 +157,21 @@ class CDPLinkedInTool:
 
         with sync_playwright() as p:
             try:
-                print(f"[C5-REAL] Launching headless browser using extracted session cookies...")
-                browser = p.chromium.launch(headless=True)
-                context = browser.new_context()
+                print(f"[C5-REAL] Launching headless persistent context using extracted session cookies...")
+                user_data_dir = os.path.join(os.path.dirname(self.db_path), "headless_profile")
+                context = p.chromium.launch_persistent_context(
+                    user_data_dir,
+                    headless=True,
+                    user_agent='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36'
+                )
                 
                 # Load cookies
                 cookie_path = os.path.join(os.path.dirname(self.db_path), "linkedin_cookies.json")
                 if os.path.exists(cookie_path):
                     with open(cookie_path, 'r') as f:
                         cookies = json.load(f)
-                        context.add_cookies(cookies)
+                        valid_cookies = [c for c in cookies if 'linkedin.com' in c.get('domain', '')]
+                        context.add_cookies(valid_cookies)
                 else:
                     print("[-] Error: linkedin_cookies.json not found. Run cookie extraction script first.")
                     return
