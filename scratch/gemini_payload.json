@@ -1,0 +1,7 @@
+{
+  "contents": [{
+    "parts": [{
+      "text": "Eres un ingeniero de procesamiento digital de señales (DSP) y compositor de techno industrial. Genera un archivo de código Python autodocumentado y optimizado para sintetizar un videoclip de 60 segundos (140 BPM, 44100Hz, 16-bit Mono WAV) a guardarse en 'apps/brt-video/public/silicon_loop.wav'. El tema es 'El Escudo de Silicio' (Taiwán, TSMC, litografía EUV, Hsinchu). Fusionamos la tensión del Oeste Americano (Spaghetti Western, silbidos con vibrato LFO a 5.8Hz y 1.5% de ruido blanco de respiración, guitarras tremolo de amplitud a 6.2Hz) con la precisión oriental (punteos Guzheng y Shamisen rápidos con timbre de puente zumbante sawari en escala Yo: A, B, D, E, G). Requisitos de código: 1. Kick drum: Bombo techno industrial distorsionado tanh. Varía el volumen en la Intro (0-15s), Build (15-30s, acelerando a doble tempo de 26-30s), Drop (30-48s, clímax) y Outro (48-60s, apagado). 2. Hi-hats: Ruido blanco en contratiempos. 3. Silbido del Oeste: Onda senoidal con portamento (glides de pitch de 120ms) tocando melodías pentatónicas. 4. Guitarra: Síntesis FM con moduladora a 2x de la portadora y envolvente de rasgueado. 5. Guzheng/Shamisen: Punteos rápidos de semicorcheas en escala Yo. 6. Haz Láser EUV: Sweep de frecuencia sincronizado con la animación visual. 7. Drone pad: A1=55Hz de base. Devuelve ÚNICAMENTE el código Python ejecutable dentro de un bloque de código markdown (```python ... ```). No añadas texto explicativo antes ni después."
+    }]
+  }]
+}

@@ -1,6 +1,6 @@
 # VERCEL-CLOUDFLARE INTEGRATION AUDIT
 **Status:** VERIFIED NOMINAL
-**Target:** `agents.archi`
+**Target:** `cortexpersist.com`
 
 ## Issues Detected
 - Zero conflicts detected.
