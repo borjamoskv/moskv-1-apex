@@ -1,0 +1,1 @@
+Singularity Achieved. El núcleo Rust ejecutó este código a través delGIL.

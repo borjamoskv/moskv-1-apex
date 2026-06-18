@@ -7,10 +7,10 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="BRTVideo"
         component={BRTVideo3D}
-        durationInFrames={300}
+        durationInFrames={7800} /* 4 minutes 20 seconds */
         fps={30}
-        width={1080}
-        height={1920}
+        width={1920} /* YouTube standard horizontal */
+        height={1080}
       />
     </>
   );
