@@ -3,7 +3,6 @@ import asyncio
 import aiohttp
 import json
 from moskv_1.event_bus import EventBus, CortexEvent
-from moskv_1.event_bus import EventBus, CortexEvent
 
 class BrainRegion:
     """
