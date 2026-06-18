@@ -11,6 +11,7 @@ const { runTests } = require('../kernel/evolution/test_gate.js');
 const { selectMutation } = require('../kernel/evolution/selector.js');
 const { deployCanary } = require('../kernel/canary/deployer.js');
 const { recordEvent } = require('../kernel/canary/fitness_buffer.js');
+const { selectArchetype } = require('../kernel/swarm/allocator.js');
 
 const app = express();
 app.use(cors());
@@ -46,9 +47,10 @@ app.post('/stripe-webhook', express.raw({ type: 'application/json' }), (req, res
             mutateInfra({ amount_total: session.amount_total });
             
             setImmediate(() => {
+                const archetype = selectArchetype();
                 const payload = { amount: session.amount_total };
-                const branch = proposeMutation(payload);
-                createPR(branch, "autonomous revenue-driven mutation");
+                const branch = proposeMutation(payload, archetype);
+                createPR(branch, `autonomous revenue-driven mutation with ${archetype} archetype`);
                 const ok = runTests();
                 if (!ok) {
                     console.log("[EVOLUTION] mutation failed tests");
@@ -57,7 +59,8 @@ app.post('/stripe-webhook', express.raw({ type: 'application/json' }), (req, res
                 const canary = deployCanary(branch, 10);
                 recordEvent(branch, {
                     amount: payload.amount,
-                    url: canary.url
+                    url: canary.url,
+                    archetype: archetype
                 });
             });
         } catch (e) {

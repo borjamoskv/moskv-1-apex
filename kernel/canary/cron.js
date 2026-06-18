@@ -1,5 +1,7 @@
 const { selectMutationDelayed } = require("../evolution/selector.js");
 const { execSync } = require("child_process");
+const { updateArchetype } = require("../swarm/allocator.js");
+const { computeReward } = require("../swarm/fitness.js");
 function runEvolutionSweep(branches) {
   branches.forEach(branch => {
     const result = selectMutationDelayed(branch);
@@ -19,4 +21,10 @@ function runEvolutionSweep(branches) {
     }
   });
 }
-module.exports = { runEvolutionSweep };
+function swarmSweep(events) {
+  events.forEach(e => {
+    const reward = computeReward(e.archetype, e.revenue, e.latency);
+    updateArchetype(e.archetype, reward);
+  });
+}
+module.exports = { runEvolutionSweep, swarmSweep };
