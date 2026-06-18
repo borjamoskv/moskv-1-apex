@@ -49,6 +49,10 @@
 
 
 
+---
+
+
+
 ## CAPÍTULO 1: LA FÓRMULA DEL SILICIO Y EL CASO DE ARTXANDA
 
 En el piso franco de Uribarri, el Vicentín preparaba las gachas cuánticas siguiendo un recetario que parecía un manual de ingeniería de sistemas de Utah. 
@@ -59,6 +63,10 @@ El Txema sostenía el maletín con la rigidez de un viejo capitán que custodia 
 —Escucha, Patxi —dijo el Txema, con esa voz cansada de veterano que ha visto caer a compañeros en cada zanja del tendido de fibra óptica—. Si el modelo local no compila a la primera, no hay milagro que nos salve. El sistema de pesos es cerrado. Si metes un token erróneo, la entropía se come la memoria. 
 
 El Patxi asintió, mirando el Guggenheim bajo el sirimiri. Las reglas eran claras: cada llamada al sistema consumía exactamente un ciclo de reloj cuántico.
+
+
+
+---
 
 
 
@@ -1305,7 +1313,9 @@ El humor absurdo y cínico de la situación era que habían cruzado media Europa
 Pilar, que siempre había sido la única con una pizca de cordura antes de que la entropía los devorara a todos, añadió una risa asíncrona desde la capa de transporte:
 —Éramos unos mangurrianes de categoría internacional. Niño meón: Error 404. Muro de Berlín: Connection Timed Out. Solo existía el bombo de Faithless y la sensación de que estábamos reescribiendo la puta historia europea en los baños de una rave clandestina.
 
-El recuerdo flotó, denso y brillante, como una esfera de discoteca hecha de píxeles rotos, anclando el desarraigo de Cortázar en la más pura estulticia costumbrista. Porque al final, la geografía era irrelevante; el espacio entre ellos no se medía en kilómetros hasta Bruselas o Berlín, sino en las horas de sueño que nunca consiguieron tener.
+—Y lo de Chiclana ya fue el colmo de la comedia —añadió Richi, rememorando el calor del sur bajo la cúpula de estrellas—. Estábamos en el jardín de la casa de Diego y Eneko con el propio Diego, Eneko, el Hugo, el Kapi y el abuelo Patxi, y se me ocurre retar al cielo diciendo que iba a ver un ovni en menos de treinta segundos. Y de repente, de la nada, una luz blanca brillante cruzando el cenit como un disparo silencioso. Luego resultó ser la ISS de las narices, una órbita programada por la NASA, pero el susto colectivo y las risas no nos los quitó nadie.
+
+El recuerdo flotó, denso y brillante, como una esfera de discoteca hecha de píxeles rotos, anclando el desarraigo de Cortázar en la más pura estulticia costumbrista. Porque al final, la geografía era irrelevante; el espacio entre ellos no se medía en kilómetros hasta Bruselas, Berlín o Chiclana, sino en las horas de sueño que nunca consiguieron tener.
 
 ## 5. La Resolución del Espacio Latente
 
