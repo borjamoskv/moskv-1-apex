@@ -15,6 +15,8 @@ Los cilipollas no encajan en ninguna estadística oficial porque no obedecen a l
 
 No son simplemente estúpidos. Eso sería demasiado limpio, demasiado clasificable. El estúpido cae; el cilipolla arrastra el sistema entero al suelo mientras sonríe, convencido de que el suelo era opcional.
 
+Para colmo, en esta era de automatización, el circo se ha democratizado. La IA no está ganando por "programar sola"; está ganando porque acelera refactors pequeños, genera tests base, explica código legacy, propone migraciones, crea scripts internos, documenta y hace debugging asistido. Convierte tareas repetitivas en minutos. No sustituye al ingeniero; amplifica al ingeniero bueno... y al malo también, que es donde empieza la verdadera función. Ahora mismo, todo se reduce a tener un buen léxico —olvidándose del noventa y nueve por ciento de los tecnicismos—, una buena capacidad de lectura y comprensión, e ilusión. A nada que tengas un pelín de esto y de creatividad, ya vas a poder crear código más trascendente que el que ha creado la gran mayoría de programadores a lo largo de su vida. Un filósofo a día de hoy, con un par de anotaciones sobre los límites de la máquina, es capaz de diseñar mejores arquitecturas que el típico informático estructurado en silos.
+
 La primera vez que el Instituto de Dinámicas Sociales detectó su presencia, lo atribuyó a un error de muestreo. El segundo informe lo llamó “outlier semántico”. El tercero desapareció.
 
 A partir del cuarto, dejaron de escribir informes.
