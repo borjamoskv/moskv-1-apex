@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "start": "remotion preview src/index.ts",
-    "build": "remotion render src/index.ts BRTVideo out/video.mp4"
+    "build": "remotion render src/index.ts BRTVideo out/video.mp4",
+    "build:silicon": "remotion render src/index.ts SiliconTaiwan out/silicon_taiwan.mp4"
   },
   "dependencies": {
     "@react-three/fiber": "^8.18.0",
