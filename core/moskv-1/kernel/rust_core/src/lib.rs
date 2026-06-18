@@ -4,10 +4,13 @@ use dashmap::DashMap;
 use sha2::{Sha256, Digest};
 use std::sync::Arc;
 use std::thread;
+use std::collections::HashSet;
 use crossbeam_channel::{unbounded, Sender};
 use rusqlite::{params, Connection};
 
-/// The pure State Node in the Causal Graph (Base 60)
+const QUORUM_THRESHOLD: usize = 3;
+
+/// The pure State Node in the Causal Graph
 #[pyclass]
 #[derive(Clone)]
 pub struct MutationNode {
@@ -27,12 +30,16 @@ impl MutationNode {
     }
 }
 
-/// The Zero-Latency Deterministic Causal Graph with Async WAL Persistence
+/// The Zero-Latency Deterministic Causal Graph with BFT Quorum Consensus
 #[pyclass]
 pub struct CausalGraph {
-    // Sharded hash map for massive lock-free concurrency. Resolves Thermodynamic Deadlocks.
+    // Official Graph (Only nodes that achieved Quorum)
     nodes: Arc<DashMap<String, MutationNode>>,
-    // Async channel to the Ledger Sentinel
+    
+    // Purgatory: Maps Hash -> Set of Agent IDs that proposed it
+    purgatory: Arc<DashMap<String, HashSet<String>>>,
+    
+    // Async channel to the Ledger Sentinel (SQLite WAL)
     flusher_tx: Sender<MutationNode>,
 }
 
@@ -47,7 +54,6 @@ impl CausalGraph {
             let conn = Connection::open("cortex_dag.sqlite")
                 .expect("[C5-REAL] Error abriendo el anclaje físico SQLite");
             
-            // Regla Global R10: Cumplimiento de WAL mode y busy_timeout
             conn.execute_batch(
                 "PRAGMA journal_mode = WAL;
                  PRAGMA synchronous = NORMAL;
@@ -75,18 +81,19 @@ impl CausalGraph {
 
         CausalGraph {
             nodes: Arc::new(DashMap::new()),
+            purgatory: Arc::new(DashMap::new()),
             flusher_tx: tx,
         }
     }
 
-    /// Injects a mutation into the graph. Validates entropy cryptographically.
-    /// Fails instantly on mismatch (C5-REAL Death Protocol enforced at RAM level).
-    fn inject_mutation(&self, payload: String, target: String, expected_hash: String) -> PyResult<String> {
+    /// Injects a mutation into the Purgatory. Only if QUORUM_THRESHOLD unique agents
+    /// propose the exact same mathematical hash will it crystallize into reality.
+    fn inject_mutation(&self, agent_id: String, payload: String, target: String, expected_hash: String) -> PyResult<String> {
         let mut hasher = Sha256::new();
         hasher.update(payload.as_bytes());
         let computed_hash = format!("{:x}", hasher.finalize());
 
-        // Validate hash prefix (allowing standard 12-char hashes)
+        // Validate basic entropy claim
         if !computed_hash.starts_with(&expected_hash) {
             return Err(PyValueError::new_err(format!(
                 "[DEATH PROTOCOL] Hash mismatch. Computed: {}, Expected: {}",
@@ -96,28 +103,55 @@ impl CausalGraph {
 
         let node_id = expected_hash.clone();
         
-        let node = MutationNode {
-            hash: node_id.clone(),
-            payload,
-            target,
-        };
+        // Check if already in official graph
+        if self.nodes.contains_key(&node_id) {
+            return Ok("AlreadyCrystallized".to_string());
+        }
 
-        // Lock-free insertion en RAM. Latencia Cero.
-        self.nodes.insert(node_id.clone(), node.clone());
-        
-        // Despacho asíncrono hacia SQLite WAL. No bloquea a Python.
-        let _ = self.flusher_tx.send(node);
+        // Add agent signature to Purgatory (Atomic Operation)
+        let mut quorum_reached = false;
+        {
+            let mut signatures = self.purgatory.entry(node_id.clone()).or_insert_with(HashSet::new);
+            signatures.insert(agent_id.clone());
+            if signatures.len() >= QUORUM_THRESHOLD {
+                quorum_reached = true;
+            }
+        } // dashmap write lock drops here
 
-        Ok(node_id)
+        if quorum_reached {
+            // Cristallization Event
+            let node = MutationNode {
+                hash: node_id.clone(),
+                payload,
+                target,
+            };
+
+            // Lock-free insertion en RAM.
+            self.nodes.insert(node_id.clone(), node.clone());
+            
+            // Clean up purgatory to free RAM (optional, but clean)
+            self.purgatory.remove(&node_id);
+            
+            // Despacho asíncrono hacia SQLite WAL.
+            let _ = self.flusher_tx.send(node);
+
+            return Ok("QuorumReached".to_string());
+        }
+
+        Ok("Pending".to_string())
     }
 
-    /// Resolves the current state size without blocking the Swarm.
+    /// Resolves the official state size.
     fn state_size(&self) -> usize {
         self.nodes.len()
     }
+    
+    /// Resolves the amount of hallucinations stuck in Purgatory.
+    fn purgatory_size(&self) -> usize {
+        self.purgatory.len()
+    }
 }
 
-/// A Python module implemented in Rust using PyO3.
 #[pymodule]
 fn moskv_dag_core(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<MutationNode>()?;
