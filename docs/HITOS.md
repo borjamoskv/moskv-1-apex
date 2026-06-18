@@ -57,3 +57,9 @@ The Kernel's progress is not measured in programming hours, but in thermodynamic
 - **Tool:** `kernel/canary/` (Temporal Fitness Buffer, Vercel split-traffic deployer) + `kernel/swarm/` (Bandit UCB Allocator, Archetype definitions) + `kernel/guardrails/` (Active Sentinel latency/error shield).
 - **Status:** COMPLETED, verified under >95% exergy, and active in the Stripe webhook pipeline.
 
+### [x] MILESTONE 10: Vercel-Cloudflare Solver & OSINT RSS-Bypass
+- **Objective:** Automate detection/healing of integration conflicts and evade 403 WAF blocks on public intelligence channels.
+- **Tool:** `scripts/vercel_cloudflare_solver.py` (DNS/Redirect Loop probe & API SSL patcher) + `moskv_reddit_engine/osint_daemon.py` (CDP-driven RSS extractor).
+- **Status:** COMPLETED, verified under >94% exergy, and active.
+
+
