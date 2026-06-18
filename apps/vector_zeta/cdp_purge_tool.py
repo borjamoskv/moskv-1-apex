@@ -98,10 +98,15 @@ class CDPPurgeTool:
                         search_input.evaluate(react_setter_js, email)
                         print(f"[*] Search input populated with: {email}")
                         
-                        # Wait for results
-                        time.sleep(3.5)
-                        row_visible = page.locator(f"tr:has-text('{email}')").first.is_visible()
-                        no_results_visible = page.locator(":has-text('No se encontraron resultados'), :has-text('No results found'), :has-text('0 resultados')").first.is_visible()
+                        # Wait dynamically for results (up to 5s)
+                        row_visible = False
+                        no_results_visible = False
+                        for _ in range(25): # 25 * 0.2s = 5s
+                            row_visible = page.locator(f"tr:has-text('{email}')").first.is_visible()
+                            no_results_visible = page.locator(":has-text('No se encontraron resultados'), :has-text('No results found'), :has-text('0 resultados')").first.is_visible()
+                            if row_visible or no_results_visible:
+                                break
+                            time.sleep(0.2)
                         
                         if no_results_visible and not row_visible:
                             print(f"[+] NOT FOUND (Already deleted): {email}")
