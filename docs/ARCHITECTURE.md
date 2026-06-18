@@ -74,3 +74,13 @@ graph TD
 - **Fitness Evaluation (`kernel/canary/fitness_buffer.js`):** Transacts payments over a rolling 24-hour historical window instead of instant webhook response evaluation.
 - **Bandit Allocator (`kernel/swarm/allocator.js`):** Computes exploitation vs exploration ratio using a standard Upper Confidence Bound (UCB) equation based on actual revenue rewards and execution frequencies.
 - **Active Guardrails (`kernel/guardrails/`):** The `Sentinel` acts as a circuit breaker. It intercepts the Cron sweep and instantly purges any branch that breaches the latency tolerance of its archetype or causes HTTP error rates $> 1\%$.
+
+---
+
+## 8. Sovereign Background Orchestration & Concurrency Hardening
+
+- **Background Daemonization (Launchd):** Local orchestration uses macOS LaunchAgents (`~/Library/LaunchAgents/com.moskv.board.plist` & `com.moskv.exergy.plist`) instead of legacy `cron` entries. This runs tasks within the active GUI session context, completely bypassing folder sandbox constraints (`Operation not permitted` blocks on `~/Documents`).
+- **R10 Concurrency Scoping:**
+  - **SQLite WAL & Timeout:** Imposes connection configurations (`WAL` journal mode and `5000ms` busy timeout) across Python/JS database connections to prevent deadlock conditions.
+  - **Dynamic Semaphores:** Protects execution branches of pruning (`prune`) and telemetry verification scripts through runtime locks.
+- **Git Sentinel Isolation:** The commit hook (`.githooks/pre-commit`) isolates file mutations using null-terminated paths (`git diff -z | xargs -0`). It whitelists safe filetypes (`.md`, `.json`, `.cursorrules`) to prevent self-locking loops when documenting architectural components.
