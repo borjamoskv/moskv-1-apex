@@ -52,6 +52,10 @@ if __name__ == "__main__":
     print(f"-> SCORE DE EXERGÍA: {score * 100:.2f}%")
     
     if score < 0.95:
-        print("\n[!] ALERTA DE SISTEMA: El nivel de Exergía ha caído por debajo del umbral del Operador Soberano (95%). Purga requerida.")
+        print("\n[!] ALERTA DE SISTEMA: El nivel de Exergía ha caído por debajo del umbral del Operador Soberano (95%). Purga requerida. Commit abortado.")
+        import sys
+        sys.exit(1)
     else:
         print("\n[+] SISTEMA ESTABLE. Densidad de señal óptima validada.")
+        import sys
+        sys.exit(0)
