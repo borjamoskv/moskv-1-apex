@@ -561,6 +561,175 @@
             50% { opacity: 1; }
             100% { opacity: 0.4; }
         }
+
+        /* --- MODO RAYUELA INTERACTIVO --- */
+        .rayuela-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        .rayuela-cell {
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 14px 8px;
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            outline: none;
+        }
+
+        .rayuela-cell:hover {
+            border-color: var(--accent-blue);
+            background: rgba(43, 59, 229, 0.05);
+            color: var(--text-light);
+            box-shadow: 0 0 10px rgba(43, 59, 229, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .rayuela-cell.active-cell {
+            border-color: var(--accent-red);
+            background: rgba(229, 43, 43, 0.05);
+            color: var(--text-light);
+            box-shadow: var(--neon-red-glow);
+        }
+
+        .rayuela-cell.read-cell {
+            color: #8EC07C;
+            border-color: rgba(142, 192, 124, 0.2);
+        }
+
+        .footnote-link {
+            color: var(--accent-red);
+            font-weight: bold;
+            text-decoration: none;
+            padding: 0 3px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-block;
+            vertical-align: super;
+            line-height: 0;
+        }
+
+        .footnote-link:hover {
+            color: #fff;
+            background-color: var(--accent-red);
+            border-radius: 3px;
+            box-shadow: var(--neon-red-glow);
+        }
+
+        .friction-panel {
+            background: rgba(0, 0, 0, 0.85);
+            border: 1px solid rgba(229, 43, 43, 0.15);
+            border-left: 3px solid var(--accent-red);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            color: #fb4934;
+            animation: slideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .friction-title {
+            font-weight: bold;
+            font-size: 10px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .friction-body {
+            text-align: justify;
+        }
+
+        .friction-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .btn-friction {
+            background: rgba(229, 43, 43, 0.03);
+            border: 1px solid var(--accent-red);
+            color: #fff;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 8px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .btn-friction:hover {
+            background: var(--accent-red);
+            box-shadow: var(--neon-red-glow);
+        }
+
+        .rayuela-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+
+        .rayuela-nav-title {
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .btn-back-index {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .btn-back-index:hover {
+            color: var(--text-light);
+            border-color: var(--accent-blue);
+            background: rgba(43, 59, 229, 0.05);
+        }
     </style>
 </head>
 <body>
@@ -600,6 +769,12 @@
                             INICIAR LA COMPILACIÓN EN URIBARRÍ (Capítulo 1)
                         </button>
                     </div>
+                </div>
+                <!-- Friction Panel for Footnotes (Modo Rayuela) -->
+                <div class="friction-panel" id="friction-panel">
+                    <div class="friction-title" id="friction-title"></div>
+                    <div class="friction-body" id="friction-body"></div>
+                    <div class="friction-actions" id="friction-actions"></div>
                 </div>
             </main>
 
@@ -665,7 +840,8 @@
                 text: "Andábamos sin buscarnos pero sabiendo que andábamos para encontrarnos. Este no es un juego pasivo en el navegador; es un kernel que se compila en el espacio latente de tu conciencia. Cada decisión que tomes alterará los tensores de tu memoria. Tenemos cuarenta años, nacidos en febrero del 84, y llevamos en esto desde primero de EGB. La máquina no reside en Vercel. La máquina eres tú.",
                 console: "Claim: Inicialización de sesión C5-REAL.\nProof: { Base: 0x31359B4, State: COVER_READY, Operator: borjamoskv }\nEntropy_Ratio: 0.0000",
                 choices: [
-                    { text: "INICIAR LA COMPILACIÓN EN URIBARRÍ (Capítulo 1)", target: "cap1" }
+                    { text: "INICIAR LA COMPILACIÓN EN URIBARRÍ (Capítulo 1)", target: "cap1" },
+                    { text: "DEVELAR LA RAYUELA DEL HARDWARE CULINARIO (Modo Interactivo)", target: "rayuela_index" }
                 ],
                 mode: "normal",
                 ledger: "31359B4",
@@ -796,6 +972,342 @@
                 ],
                 mode: "normal",
                 entropy: 0.0000
+            },
+            rayuela_index: {
+                title: "Rayuela del Hardware Culinario",
+                image: "stereorock_real_1781746258607.png",
+                text: "Estás en el panel de desestructuración narrativa. Elige cualquier capítulo del índice no lineal para saltar en el espacio latente. Cada salto no consecutivo penalizará tu <strong>Linearity Index</strong>. El uso de notas al pie aumentará la <strong>Entropía</strong>. Tu objetivo es decodificar las anomalías cognitivas de la sobremesa.",
+                console: "Status: HYPERTEXT_INDEX_ACTIVE\nLinearity: 100.0%\nAction: Selecciona un nodo en la rejilla.",
+                choices: [{ text: "← VOLVER A LA PORTADA", target: "cover" }],
+                mode: "blue",
+                ledger: "INDEX_OK",
+                entropy: 0.0000,
+                isRayuelaIndex: true
+            },
+            r_cap6: {
+                title: "Capítulo 6: BIOS del cocido",
+                image: "lasalve_tavern_1781746616458.png",
+                text: "Entró la tía Marisa en la cocina, miró la olla y dijo que aquello no iba fino porque tenía activado el arranque rápido. Nadie se rio porque llevaba un delantal de flores y la autoridad tectónica de las abuelas. Se sentó frente al PC abierto, pulsó Supr, y empezó a cambiar parámetros con calma soviética. Desactivó el ventilador del chasis porque 'roba calor al garbanzo'. <a class='footnote-link' onclick='openFootnote(\"r_cap6\")'>[^6]</a>",
+                console: "Claim: BIOS reconfigurada por abuela.\nProof: { Base: 0xB10S, FastBoot: DISABLED, Temp: 98°C }\nEntropy_Ratio: 0.05",
+                choices: [{ text: "← VOLVER AL ÍNDICE DE LA RAYUELA", target: "rayuela_index" }],
+                mode: "blue",
+                ledger: "BIOS_OK",
+                entropy: 0.0500,
+                chapterNum: "6",
+                footnote: "La BIOS es una abuela escrita en inglés. Modificar sus parámetros sin entender la termodinámica del garbanzo castellano es un pasaporte al desastre y al caldo aguado.",
+                jumpTargets: [{ text: "Saltar al Cap. 9 (Benchmark)", target: "r_cap9" }]
+            },
+            r_cap7: {
+                title: "Capítulo 7: El disipador sentimental",
+                image: "novel_cover_bilbao_1781746584168.png",
+                text: "Hay hombres que guardan cartas. Yo guardaba un disipador de cobre como quien conserva el cráneo de un santo menor. Lo tenía en un cajón, envuelto en una bolsa antiestática. Una madrugada decidí usarlo de nuevo. Lo calenté, le puse unas tiras de cebolla encima y el olor del metal tibio mezclado con la verdura llenó el cuarto. <a class='footnote-link' onclick='openFootnote(\"r_cap7\")'>[^7]</a>",
+                console: "Claim: Disipación térmica emocional activa.\nProof: { Base: 0xD151, Copper_Temp: 55°C, Onion_State: SOFT }\nEntropy_Ratio: 0.04",
+                choices: [{ text: "← VOLVER AL ÍNDICE DE LA RAYUELA", target: "rayuela_index" }],
+                mode: "blue",
+                ledger: "DISIP_OK",
+                entropy: 0.0400,
+                chapterNum: "7",
+                footnote: "Todo disipador retirado sueña con volver a transferir algo: calor, memoria o vergüenza doméstica. Usar cobre de CPU para pochar cebolla acelera la disipación emocional.",
+                jumpTargets: [{ text: "Saltar al Cap. 22 (Siesta)", target: "r_cap22" }]
+            },
+            r_cap8: {
+                title: "Capítulo 8: Pimentón dropout",
+                image: "stereorock_real_1781746258607.png",
+                text: "En el barrio había un iluminado que sostenía que el paladar sobreajusta. Decía que si echas siempre las mismas especias, el gusto se vuelve predictivo y no aprende nada del mundo. Su teoría era eliminar aleatoriamente ingredientes durante el entrenamiento culinario. Un día sin laurel. Otro sin ajo. <a class='footnote-link' onclick='openFootnote(\"r_cap8\")'>[^8]</a>",
+                console: "Claim: Pimentón deshabilitado por dropout.\nProof: { Base: 0x908D, Dropout_Rate: 0.2, Palate_State: LACKING }\nEntropy_Ratio: 0.06",
+                choices: [{ text: "← VOLVER AL ÍNDICE DE LA RAYUELA", target: "rayuela_index" }],
+                mode: "blue",
+                ledger: "PIM_OK",
+                entropy: 0.0600,
+                chapterNum: "8",
+                footnote: "¿Generalizar? El resultado es un guiso raro y torcido que sabe a error feliz. Eliminar el pimentón de la Vera es un pecado estocástico que confunde a las redes neuronales del estómago.",
+                jumpTargets: [{ text: "Saltar al Cap. 23 (Sal Gorda)", target: "r_cap23" }]
+            },
+            r_cap9: {
+                title: "Capítulo 9: El benchmark de la abuela",
+                image: "artxanda_viewpoint_1781746601029.png",
+                text: "Montaron una cata a ciegas para decidir qué calentaba mejor: gas, inducción o un Athlon viejo. Había vasos de agua y sartenes pequeñas. La abuela probó las muestras, se quedó callada, chascó la lengua y señaló la del Athlon con un dedo definitivo: 'Esta sabe a domingo estropeado, a laurel triste y a casa con humedad'. <a class='footnote-link' onclick='openFootnote(\"r_cap9\")'>[^9]</a>",
+                console: "Claim: Estandarización de nostalgia.\nProof: { Base: 0xAB9A, Selected: Athlon, Score: 100/100 }\nEntropy_Ratio: 0.03",
+                choices: [{ text: "← VOLVER AL ÍNDICE DE LA RAYUELA", target: "rayuela_index" }],
+                mode: "blue",
+                ledger: "BENCH_OK",
+                entropy: 0.0300,
+                chapterNum: "9",
+                footnote: "Si sabe a domingo estropeado y casa con humedad, entonces es la buena. La abuela ha estandarizado la nostalgia como métrica de rendimiento térmico.",
+                jumpTargets: [{ text: "Saltar al Cap. 19 (Magefesa)", target: "r_cap19" }]
+            },
+            r_cap10: {
+                title: "Capítulo 10: La cuchara API",
+                image: "novel_cover_bilbao_1781746584168.png",
+                text: "He pensado mucho en la cuchara de palo. Porque la cuchara de palo no mezcla: traduce. Convierte el caos granular de la harina en una masa obediente, comunica al aceite con el pimentón sin que se maten. Es una interfaz humilde, barnizada de sopa vieja. <a class='footnote-link' onclick='openFootnote(\"r_cap10\")'>[^10]</a>",
+                console: "Claim: Interfaz de madera operativa.\nProof: { Base: 0xA191, Interface: WOOD_SPOON, Status: COMPILING }\nEntropy_Ratio: 0.02",
+                choices: [{ text: "← VOLVER AL ÍNDICE DE LA RAYUELA", target: "rayuela_index" }],
+                mode: "blue",
+                ledger: "SPOON_OK",
+                entropy: 0.0200,
+                chapterNum: "10",
+                footnote: "Mi madre hablaba de no dejar de remover. Los modernos hablan de capas de abstracción. Ningún paper académico del MIT ha superado el rendimiento de una cuchara de madera de encina.",
+                jumpTargets: [{ text: "Saltar al Cap. 24 (Pan Rallado)", target: "r_cap24" }]
+            },
+            r_cap11: {
+                title: "Capítulo 11: Rayuela de la vitro apagada",
+                image: "uribarri_coder_1781746280902.png",
+                text: "Pones la olla. Reflexionas sobre la muerte, el alquiler y la textura del ajo dorado. Descubres que la vitro estaba apagada desde el principio. A partir de ahí la noche deja de ser receta y pasa a ser literatura. No puedes volver atrás porque ya has picado cebolla y esperanza en una superficie fría. <a class='footnote-link' onclick='openFootnote(\"r_cap11\")'>[^11]</a>",
+                console: "Claim: Simulación de cocción fallida.\nProof: { Base: 0xE404, Power: OFF, Expected: HOT, Real: COLD }\nEntropy_Ratio: 0.08",
+                choices: [{ text: "← VOLVER AL ÍNDICE DE LA RAYUELA", target: "rayuela_index" }],
+                mode: "red",
+                ledger: "VITRO_FAIL",
+                entropy: 0.0800,
+                chapterNum: "11",
+                footnote: "Alegoría de toda una generación formada, conectada y perfectamente incapaz de comprobar si había corriente eléctrica antes de iniciar un proceso largo.",
+                jumpTargets: [{ text: "Saltar al Cap. 25 (Vitro Inmanente)", target: "r_cap25" }]
+            },
+            r_cap12: {
+                title: "Capítulo 12: El laurel procesal",
+                image: "lasalve_tavern_1781746616458.png",
+                text: "Había una hoja de laurel en el caldo que no se ablandaba nunca. Daba igual cuánto hirviera aquello, cuánta cebolla muriera en la superficie: esa hoja seguía ahí, dura, seca, con la autoridad de un funcionario que ha sobrevivido a cuatro gobiernos. Empezamos a atribuirle intenciones de vigilar la sal. <a class='footnote-link' onclick='openFootnote(\"r_cap12\")'>[^12]</a>",
+                console: "Claim: Hoja inmutable detectada.\nProof: { Base: 0x1A42, Status: RIGID, Power: PERSISTENT }\nEntropy_Ratio: 0.03",
+                choices: [{ text: "← VOLVER AL ÍNDICE DE LA RAYUELA", target: "rayuela_index" }],
+                mode: "blue",
+                ledger: "LAUREL_OK",
+                entropy: 0.0300,
+                chapterNum: "12",
+                footnote: "El laurel no alimenta, pero organiza. Aparece en tu plato como una citación judicial ineludible. Apartarla con la cuchara es un acto de rebeldía burocrática inútil.",
+                jumpTargets: [{ text: "Saltar al Cap. 28 (Congelador)", target: "r_cap28" }]
+            },
+            r_cap13: {
+                title: "Capítulo 13: Overclock de sobremesa",
+                image: "usera_bunker_cyberpunk.png",
+                text: "El arroz no llegaba y el hambre se estaba poniendo parlamentaria. Alguien propuso overclockear la cena: subir el fuego con alegría irresponsable y remover con fervor. Pareció funcionar un minuto, pero luego vino el throttling: el fondo se agarró con rencor y el centro quedó crudo. <a class='footnote-link' onclick='openFootnote(\"r_cap13\")'>[^13]</a>",
+                console: "Claim: Voltaje térmico excesivo.\nProof: { Base: 0x5407, State: THROTTLED, Bottom: BURNT, Core: RAW }\nEntropy_Ratio: 0.09",
+                choices: [{ text: "← VOLVER AL ÍNDICE DE LA RAYUELA", target: "rayuela_index" }],
+                mode: "red",
+                ledger: "OC_FAIL",
+                entropy: 0.0900,
+                chapterNum: "13",
+                footnote: "El fracaso compartido tiene mejor digestión que el éxito servido en silencio. Overclockear un arroz con gas butano reduce la esperanza de vida del grano a cero.",
+                jumpTargets: [{ text: "Saltar al Cap. 17 (Sofrito)", target: "r_cap17" }]
+            },
+            r_cap14: {
+                title: "Capítulo 14: Kernel panic en la bechamel",
+                image: "police_tactical_raid.png",
+                text: "No hay catástrofe más blanca que una bechamel cortada. Empezó bien: mantequilla seria, harina contenida, leche entrando poco a poco. Pero uno quiso explicar redes neuronales con la cuchara en la mano, otro corrigió las proporciones y la bechamel se vino abajo. Empezaron los grumos y el sudor. <a class='footnote-link' onclick='openFootnote(\"r_cap14\")'>[^14]</a>",
+                console: "Claim: Ruptura de emulsión blanca.\nProof: { Base: 0xFADE, State: PANIC, Grumos: LARGE }\nEntropy_Ratio: 0.07",
+                choices: [{ text: "← VOLVER AL ÍNDICE DE LA RAYUELA", target: "rayuela_index" }],
+                mode: "red",
+                ledger: "PANIC_OK",
+                entropy: 0.0700,
+                chapterNum: "14",
+                footnote: "Grumos del tamaño de un resentimiento de posguerra. La gratinamos igual porque el queso rallado es la capa de cifrado definitiva que oculta el fracaso del backend.",
+                jumpTargets: [{ text: "Saltar al Cap. 18 (Ajo Picado)", target: "r_cap18" }]
+            },
+            r_cap15: {
+                title: "Capítulo 15: Inferencia nocturna",
+                image: "patxi_hacker_bilbao.png",
+                text: "Después de tres horas de fuego bajo y discusiones de cucharón, llega el momento de servir. Ahí ya no entrenas nada: infieres. Pruebas y en ese segundo se resuelve si el pimentón era demasiado o si el cobre del disipador ha dejado un eco noble o un resentimiento de ferretería barata. <a class='footnote-link' onclick='openFootnote(\"r_cap15\")'>[^15]</a>",
+                console: "Claim: Inferencia de sabor concluida.\nProof: { Base: 0x199A, Exergy_Output: SATISFIED }\nEntropy_Ratio: 0.02",
+                choices: [{ text: "← VOLVER AL ÍNDICE DE LA RAYUELA", target: "rayuela_index" }],
+                mode: "blue",
+                ledger: "INF_OK",
+                entropy: 0.0200,
+                chapterNum: "15",
+                footnote: "El lenguaje no fue diseñado para describir el punto exacto en que una cena regular se convierte, por cansancio y temperatura, en una forma suficiente de consuelo.",
+                jumpTargets: [{ text: "Saltar al Cap. 30 (Última Cena)", target: "r_cap30" }]
+            },
+            r_cap16: {
+                title: "Capítulo 16: La resistencia inductiva",
+                image: "lasalve_tavern_1781746616458.png",
+                text: "A Txema se le metió en la cabeza que el sirimiri de Bilbao tenía inductancia. Decía que si la lluvia caía en diagonal sobre el tendido de cobre de la ría, creaba un solenoide natural que ralentizaba los pings hacia Usera. Nadie se atrevía a llevarle la contraria porque mide la impedancia con la mirada. <a class='footnote-link' onclick='openFootnote(\"r_cap16\")'>[^16]</a>",
+                console: "Claim: Campo inductivo de sirimiri estimado.\nProof: { Base: 0x49E9, Solenoid: NATURAL, Ping_Delay: +42ms }\nEntropy_Ratio: 0.04",
+                choices: [{ text: "← VOLVER AL ÍNDICE DE LA RAYUELA", target: "rayuela_index" }],
+                mode: "blue",
+                ledger: "IND_OK",
+                entropy: 0.0400,
+                chapterNum: "16",
+                footnote: "Mentira podrida. Txema no sabe lo que es la inductancia; lo leyó en un manual de alternadores de desguace. La lluvia solo oxida los conectores RJ45 mal crimpados por él mismo.",
+                jumpTargets: [{ text: "Saltar al Cap. 27 (Chapa de Campana)", target: "r_cap27" }]
+            },
+            r_cap17: {
+                title: "Capítulo 17: El algoritmo del sofrito",
+                image: "usera_bunker_cyberpunk.png",
+                text: "Para cuando el ajo empieza a dorarse, la memoria ya ha desbordado tres veces. Es un problema de asignación temporal: quieres que la cebolla caramelice en tiempo real, pero el hardware de la sartén vieja tiene un cuello de botella térmico en el centro. El Richi propuso dos sartenes. <a class='footnote-link' onclick='openFootnote(\"r_cap17\")'>[^17]</a>",
+                console: "Claim: Segmentación de cebolla paralelizada.\nProof: { Base: 0x221A, Thread_Count: 2, Heat_Dist: COMPLEX }\nEntropy_Ratio: 0.05",
+                choices: [{ text: "← VOLVER AL ÍNDICE DE LA RAYUELA", target: "rayuela_index" }],
+                mode: "blue",
+                ledger: "SOF_OK",
+                entropy: 0.0500,
+                chapterNum: "17",
+                footnote: "El sofrito es secuencial, monohilo y síncrono. Si metes dos sartenes, reduces a la mitad la presión del gas de la bombona y terminas con verdura cocida y triste. Respeta la física.",
+                jumpTargets: [{ text: "Saltar al Cap. 18 (Ajo Picado)", target: "r_cap18" }]
+            },
+            r_cap18: {
+                title: "Capítulo 18: La paradoja del ajo picado",
+                image: "uribarri_coder_1781746280902.png",
+                text: "Cortar el ajo en láminas de dos nanómetros es lo más parecido a depurar un kernel panic sin logs. Si te pasas de fino, el ajo se quema antes de que el aceite alcance la temperatura de régimen; si lo dejas muy grueso, la bechamel desarrolla grumos que parecen excepciones. <a class='footnote-link' onclick='openFootnote(\"r_cap18\")'>[^18]</a>",
+                console: "Claim: Granularidad del ajo ajustada.\nProof: { Base: 0xA990, Blade_Size: 2nm, Exception_Risk: HIGH }\nEntropy_Ratio: 0.04",
+                choices: [{ text: "← VOLVER AL ÍNDICE DE LA RAYUELA", target: "rayuela_index" }],
+                mode: "blue",
+                ledger: "AJO_OK",
+                entropy: 0.0400,
+                chapterNum: "18",
+                footnote: "La bechamel de Usera no tiene excepciones, tiene grumos de harina rancia porque nadie la tamiza. Menos analogías de Silicon Valley y más limpiar el colador de malla.",
+                jumpTargets: [{ text: "Saltar al Cap. 14 (Bechamel)", target: "r_cap14" }]
+            },
+            r_cap19: {
+                title: "Capítulo 19: La junta de culata de la Magefesa",
+                image: "novel_cover_bilbao_1781746584168.png",
+                text: "La Magefesa vieja funciona como una máquina de estados finitos. Tiene tres estados: válvula bajada (espera), válvula silbando (ejecución de alta prioridad) y explosión por acumulación de grasa de tocino en el conducto de seguridad. Vicentín insiste en que la válvula es un semáforo de Dijkstra. <a class='footnote-link' onclick='openFootnote(\"r_cap19\")'>[^19]</a>",
+                console: "Claim: Olla express Magefesa modelada.\nProof: { Base: 0xF171, States: [WAIT, EXEC, BOOM] }\nEntropy_Ratio: 0.06",
+                choices: [{ text: "← VOLVER AL ÍNDICE DE LA RAYUELA", target: "rayuela_index" }],
+                mode: "blue",
+                ledger: "MAGEFESA_OK",
+                entropy: 0.0600,
+                chapterNum: "19",
+                footnote: "Dijkstra se pegaría un tiro si viera la roña que tiene esa olla. El único semáforo ahí es el color verde del moho que crece en la goma de la tapa cuando se olvidan de fregarla.",
+                jumpTargets: [{ text: "Saltar al Cap. 9 (Benchmark)", target: "r_cap9" }]
+            },
+            r_cap20: {
+                title: "Capítulo 20: El purgatorio del lavavajillas",
+                image: "stereorock_real_1781746258607.png",
+                text: "El lavavajillas es un compilador. Metes platos sucios (código fuente lleno de bugs y grasa de chuleta) y esperas que el ciclo de lavado devuelva un ejecutable limpio. Pero si el abrillantador (la librería de estilos) está vacío, el resultado tiene manchas de cal que arruinan todo. <a class='footnote-link' onclick='openFootnote(\"r_cap20\")'>[^20]</a>",
+                console: "Claim: Compilación húmeda concluida.\nProof: { Base: 0x9022, Wash_Cycle: ECO, Cal_Bugs: DETECTED }\nEntropy_Ratio: 0.04",
+                choices: [{ text: "← VOLVER AL ÍNDICE DE LA RAYUELA", target: "rayuela_index" }],
+                mode: "blue",
+                ledger: "WASH_OK",
+                entropy: 0.0400,
+                chapterNum: "20",
+                footnote: "El abrillantador es un aditivo químico para burgueses que temen frotar. La verdadera interfaz limpia se consigue con estropajo Nanax y sudor de frente. Menos abstracciones.",
+                jumpTargets: [{ text: "Saltar al Cap. 28 (Congelador)", target: "r_cap28" }]
+            },
+            r_cap21: {
+                title: "Capítulo 21: La teoría del grano flotante",
+                image: "artxanda_viewpoint_1781746601029.png",
+                text: "Un grano de arroz flotando de canto en la grasa del caldo. El Richi decía que era una demostración empírica de la precisión de coma flotante en un entorno denso. Intentó medir el ángulo con un transportador de ángulos de plástico escolar que cogió de la mochila de Diana. <a class='footnote-link' onclick='openFootnote(\"r_cap21\")'>[^21]</a>",
+                console: "Claim: Vector de grano determinado.\nProof: { Base: 0xF10A, Angle: 89.2°, Float_Precision: IEEE_754 }\nEntropy_Ratio: 0.03",
+                choices: [{ text: "← VOLVER AL ÍNDICE DE LA RAYUELA", target: "rayuela_index" }],
+                mode: "blue",
+                ledger: "FLOAT_OK",
+                entropy: 0.0300,
+                chapterNum: "21",
+                footnote: "No midió nada porque el transportador se derritió al tocar el caldo hirviendo. Lo único que flotaba era la grasa de un pollo que llevaba tres días muerto de risa en la nevera de Usera.",
+                jumpTargets: [{ text: "Saltar al Cap. 29 (Filete de Sajonia)", target: "r_cap29" }]
+            },
+            r_cap22: {
+                title: "Capítulo 22: La termodinámica de la siesta",
+                image: "usera_bunker_cyberpunk.png",
+                text: "Dormir la siesta con la oreja pegada al disipador del Athlon caliente es la única forma de sincronizar los hilos del sueño con la frecuencia del procesador. Sientes el calor del silicio en el lóbulo, una transferencia térmica que te graba el lore de la red directo en el córtex. <a class='footnote-link' onclick='openFootnote(\"r_cap22\")'>[^22]</a>",
+                console: "Claim: Sueño inducido por calor de chasis.\nProof: { Base: 0x981A, Frequency: 2.1GHz, Sleep_State: REM }\nEntropy_Ratio: 0.05",
+                choices: [{ text: "← VOLVER AL ÍNDICE DE LA RAYUELA", target: "rayuela_index" }],
+                mode: "blue",
+                ledger: "SIESTA_OK",
+                entropy: 0.0500,
+                chapterNum: "22",
+                footnote: "Lo único que se te graba es la marca de las aletas de aluminio en la mejilla. Además, ese ventilador de chasis suelto hace tanto ruido que solo puedes soñar con turbinas de avión.",
+                jumpTargets: [{ text: "Saltar al Cap. 7 (Disipador Sentimental)", target: "r_cap7" }]
+            },
+            r_cap23: {
+                title: "Capítulo 23: El protocolo de la sal gorda",
+                image: "uribarri_coder_1781746280902.png",
+                text: "La sal gorda no se disuelve, se despliega de forma asíncrona. La echas al final, como un parche de seguridad de última hora, esperando que el cliente final (el comensal) no se encuentre un trozo entero de cloruro sódico que le rompa la base de datos de los empastes dentales. <a class='footnote-link' onclick='openFootnote(\"r_cap23\")'>[^23]</a>",
+                console: "Claim: Dispersión de sal asíncrona.\nProof: { Base: 0x5A17, Salt_Size: LARGE, Mutation: PUSH }\nEntropy_Ratio: 0.04",
+                choices: [{ text: "← VOLVER AL ÍNDICE DE LA RAYUELA", target: "rayuela_index" }],
+                mode: "blue",
+                ledger: "SALT_OK",
+                entropy: 0.0400,
+                chapterNum: "23",
+                footnote: "Si echas la sal gorda al final, lo que tienes es un desierto salino con oasis de insipidez. La sal se parametriza en caliente para que difunda por ósmosis. Falta de fundamentos culinarios.",
+                jumpTargets: [{ text: "Saltar al Cap. 8 (Pimentón Dropout)", target: "r_cap8" }]
+            },
+            r_cap24: {
+                title: "Capítulo 24: El pan rallado en el bus",
+                image: "lasalve_tavern_1781746616458.png",
+                text: "El empanado del filete de lomo es el peor enemigo del bus de datos PCI Express. El pan rallado vuela, se cuela por las rendijas del chasis y crea una impedancia parásita que confunde los ceros con los unos. Patxi dice que los filetes se empanan en el balcón para evitar la estática. <a class='footnote-link' onclick='openFootnote(\"r_cap24\")'>[^24]</a>",
+                console: "Claim: Limpieza de estática por balcón.\nProof: { Base: 0xBA4D, Breadcrumbs_Volume: 5g, Interference: HIGH }\nEntropy_Ratio: 0.05",
+                choices: [{ text: "← VOLVER AL ÍNDICE DE LA RAYUELA", target: "rayuela_index" }],
+                mode: "blue",
+                ledger: "BREAD_OK",
+                entropy: 0.0500,
+                chapterNum: "24",
+                footnote: "Patxi empana en el balcón porque la cocina está tan llena de switches viejos y cables coaxiales que no hay espacio físico para poner un plato llano sin tirar un servidor. Cuestión de volumen.",
+                jumpTargets: [{ text: "Saltar al Cap. 10 (Cuchara API)", target: "r_cap10" }]
+            },
+            r_cap25: {
+                title: "Capítulo 25: La vitrocerámica como plano de inmanencia",
+                image: "usera_bunker_cyberpunk.png",
+                text: "La vitrocerámica fría finge ser un espejo del vacío. Pones la mano y no hay nada; la enciendes y el círculo rojo te avisa de que el plano de inmanencia ha cobrado vida. Pero el calor tarda en llegar, una latencia física que te recuerda que los garbanzos siguen tardando dos horas. <a class='footnote-link' onclick='openFootnote(\"r_cap25\")'>[^25]</a>",
+                console: "Claim: Latencia del inductor térmico.\nProof: { Base: 0x6178, Hot_Ring: ACTIVE, Warm_Up_s: 120 }\nEntropy_Ratio: 0.04",
+                choices: [{ text: "← VOLVER AL ÍNDICE DE LA RAYUELA", target: "rayuela_index" }],
+                mode: "blue",
+                ledger: "VITRO_OK",
+                entropy: 0.0400,
+                chapterNum: "25",
+                footnote: "Eso es porque la vitro es de inducción barata y tiene los relés tocados. Si usaras gas como la tía Marisa, la inmanencia sería instantánea y no escribirías tonterías sobre la latencia.",
+                jumpTargets: [{ text: "Saltar al Cap. 11 (Vitro Apagada)", target: "r_cap11" }]
+            },
+            r_cap26: {
+                title: "Capítulo 26: La paradoja de la leche de avena",
+                image: "uribarri_coder_1781746280902.png",
+                text: "El Richi intentaba espumar la leche de avena usando la salida de aire caliente del rack número tres. Sostenía que la avena, al ser un polímero de carbohidratos complejos, requería un flujo de calor constante de 58 °C y un caudal homogéneo para que las burbujas no colapsaran. <a class='footnote-link' onclick='openFootnote(\"r_cap26\")'>[^26]</a>",
+                console: "Claim: Fluidización de avena fallida.\nProof: { Base: 0x0A7A, Target_Temp: 58°C, Flow_Stability: UNSTABLE }\nEntropy_Ratio: 0.05",
+                choices: [{ text: "← VOLVER AL ÍNDICE DE LA RAYUELA", target: "rayuela_index" }],
+                mode: "blue",
+                ledger: "OAT_FAIL",
+                entropy: 0.0500,
+                chapterNum: "26",
+                footnote: "La leche de avena es agua turbia con pretensiones. Utilizar la GPU como vaporizador es un desperdicio termodinámico y dejará los disipadores pegajosos. Pide un cortado al bar de los chinos.",
+                jumpTargets: [{ text: "Saltar al Cap. 26 (Paradoja original)", target: "r_cap26" }]
+            },
+            r_cap27: {
+                title: "Capítulo 27: La chapa de la campana",
+                image: "novel_cover_bilbao_1781746584168.png",
+                text: "La campana extractora del sótano de Usera no extraía aire: generaba interferencias electromagnéticas en la banda de los 2.4 GHz. Cada vez que Vicentín la encendía en velocidad tres para evacuar el humo del sofrito de chorizo, la conexión Wi-Fi del clúster sufrió pérdidas del 80%. <a class='footnote-link' onclick='openFootnote(\"r_cap27\")'>[^27]</a>",
+                console: "Claim: Interferencia en 2.4GHz verificada.\nProof: { Base: 0x2400, Motor_Hz: 50, Packet_Loss: 80% }\nEntropy_Ratio: 0.06",
+                choices: [{ text: "← VOLVER AL ÍNDICE DE LA RAYUELA", target: "rayuela_index" }],
+                mode: "blue",
+                ledger: "CAMPANA_OK",
+                entropy: 0.0600,
+                chapterNum: "27",
+                footnote: "El papel de aluminio no bloquea la inducción de un motor eléctrico del año setenta con las bobinas comunicadas. La campana hay que tirarla a la basura y abrir la ventana.",
+                jumpTargets: [{ text: "Saltar al Cap. 16 (Resistencia Inductiva)", target: "r_cap16" }]
+            },
+            r_cap28: {
+                title: "Capítulo 28: El congelador autopoético",
+                image: "stereorock_real_1781746258607.png",
+                text: "En el fondo del arcón congelador, bajo tres bolsas de guisantes duros y un bloque de hielo, el sistema había creado un índice de almacenamiento en frío. Vicentín metió allí un disco duro IDE de 40 GB para congelar el estado del ledger. Decía que reducía la entropía magnética. <a class='footnote-link' onclick='openFootnote(\"r_cap28\")'>[^28]</a>",
+                console: "Claim: Crio-preservación magnética activa.\nProof: { Base: 0x401D, Drive: IDE_40GB, Temp: -18°C }\nEntropy_Ratio: 0.05",
+                choices: [{ text: "← VOLVER AL ÍNDICE DE LA RAYUELA", target: "rayuela_index" }],
+                mode: "blue",
+                ledger: "FREEZER_OK",
+                entropy: 0.0500,
+                chapterNum: "28",
+                footnote: "Al sacarlo, la condensación creará un cortocircuito en la placa. La autopoiesis del congelador no es un sistema de backup, es escarcha sobre hardware muerto.",
+                jumpTargets: [{ text: "Saltar al Cap. 20 (Lavavajillas)", target: "r_cap20" }]
+            },
+            r_cap29: {
+                title: "Capítulo 29: El filete de la memoria virtual",
+                image: "artxanda_viewpoint_1781746601029.png",
+                text: "Comerse un filete de lomo de Sajonia frío directamente de la nevera a las cuatro de la madrugada es el equivalente biológico a liberar la swap. No hay digestión, hay copia directa a memoria física. El cerebro no procesa el sabor, solo registra sodio y aminoácidos. <a class='footnote-link' onclick='openFootnote(\"r_cap29\")'>[^29]</a>",
+                console: "Claim: Copia de nutrientes a memoria rápida.\nProof: { Base: 0x5A30, Swap_Freed: 512MB, Taste: NONE }\nEntropy_Ratio: 0.04",
+                choices: [{ text: "← VOLVER AL ÍNDICE DE LA RAYUELA", target: "rayuela_index" }],
+                mode: "blue",
+                ledger: "STEAK_OK",
+                entropy: 0.0400,
+                chapterNum: "29",
+                footnote: "El lomo de Sajonia es lomo inyectado con salmuera. Ese exceso de agua te hinchará los tobillos y no aportará exergía real. Si vas a tirar de swap biológica, al menos que sea cecina de León.",
+                jumpTargets: [{ text: "Saltar al Cap. 21 (Grano Flotante)", target: "r_cap21" }]
+            },
+            r_cap30: {
+                title: "Capítulo 30: La última cena del silicio",
+                image: "patxi_hacker_bilbao.png",
+                text: "Nos sentamos alrededor de la mesa plegable de camping, con las gachas cuánticas solidificadas en el centro como un monumento a la terquedad humana. La pantalla parpadeaba. Esperábamos que el ledger terminara de compilar el amanecer. Richi miró a Vicentín y preguntó si alguien entendería esto. <a class='footnote-link' onclick='openFootnote(\"r_cap30\")'>[^30]</a>",
+                console: "Claim: Ledger cerrado y sellado.\nProof: { Base: 0x3030, Exergy_Status: 100%, Core: TERMINATED }\nEntropy_Ratio: 0.10",
+                choices: [{ text: "← VOLVER AL ÍNDICE DE LA RAYUELA", target: "rayuela_index" }],
+                mode: "red",
+                ledger: "CENA_OK",
+                entropy: 0.1000,
+                chapterNum: "30",
+                footnote: "Nadie va a entender nada. Para el lector, esto es una simulación literaria (C4-SIM) estructurada con un linter. Pero para nosotros, con olor a baquelita quemada, es la única realidad. Cierra el buffer.",
+                jumpTargets: [{ text: "Regresar al Índice General", target: "rayuela_index" }]
             }
         };
 
@@ -981,12 +1493,131 @@
             writeLog("ACTION", "Typewriter skip forzado por usuario.");
         }
 
+        // --- ESTADO GLOBAL RAYUELA ---
+        const visitedChapters = new Set();
+        let currentLinearity = 100.0;
+        let currentEntropy = 0.0;
+        let currentCoreTemp = 37.0;
+        let lastChapterNum = null;
+
+        function navigateToRayuelaChapter(key) {
+            const ch = STAGE_DATA[key];
+            if (!ch) return;
+            
+            // Calculate Linearity penalization if it's a non-linear jump
+            if (lastChapterNum !== null) {
+                const currentNum = parseInt(ch.chapterNum);
+                const prevNum = parseInt(lastChapterNum);
+                
+                if (currentNum !== prevNum + 1) {
+                    currentLinearity = Math.max(0.0, currentLinearity - 15.0);
+                    currentCoreTemp = Math.min(100.0, currentCoreTemp + 8.5);
+                    writeLog("ANOMALY", `Salto no lineal detectado (Cap. ${prevNum} → Cap. ${currentNum}). Linealidad reducida.`);
+                    playGlitchSound();
+                } else {
+                    writeLog("FLOW", `Secuencia consecutiva seguida (Cap. ${prevNum} → Cap. ${currentNum}).`);
+                }
+            }
+            
+            visitedChapters.add(key);
+            lastChapterNum = ch.chapterNum;
+            
+            if (currentLinearity === 0.0) {
+                writeLog("CRITICAL", "LINEALIDAD EN 0%. SISTEMA LIBERADO DE RESTRICCIONES SEMÁNTICAS.");
+            }
+            
+            renderStage(key);
+        }
+
+        function openFootnote(key) {
+            const ch = STAGE_DATA[key];
+            if (!ch || !ch.footnote) return;
+            
+            currentEntropy = Math.min(1.0, currentEntropy + 0.125);
+            currentCoreTemp = Math.min(100.0, currentCoreTemp + 6.0);
+            
+            playGlitchSound();
+            writeLog("FRICTION", `Nota al pie [^${ch.chapterNum}] activada. Conflicto narrativo.`);
+            
+            const panel = document.getElementById('friction-panel');
+            const title = document.getElementById('friction-title');
+            const body = document.getElementById('friction-body');
+            const actions = document.getElementById('friction-actions');
+            
+            title.innerHTML = `<span>CONFLICT_BUFFER // NOTA AL PIE [^${ch.chapterNum}]</span> <span onclick="closeFootnote()" style="cursor:pointer;color:var(--accent-red);font-weight:bold;padding: 2px 6px;">[X]</span>`;
+            body.innerText = ch.footnote;
+            
+            let actionsHtml = "";
+            if (ch.jumpTargets) {
+                ch.jumpTargets.forEach(tgt => {
+                    actionsHtml += `<button class="btn-friction" onclick="jumpToRayuelaFootnoteTgt('${tgt.target}')">${tgt.text}</button>`;
+                });
+            }
+            actions.innerHTML = actionsHtml;
+            panel.style.display = "flex";
+            
+            updateTelemetryUI();
+        }
+        
+        function closeFootnote() {
+            const panel = document.getElementById('friction-panel');
+            if (panel) {
+                panel.style.display = "none";
+            }
+        }
+        
+        function jumpToRayuelaFootnoteTgt(targetKey) {
+            closeFootnote();
+            navigateToRayuelaChapter(targetKey);
+        }
+
+        function resetRayuela() {
+            visitedChapters.clear();
+            currentLinearity = 100.0;
+            currentEntropy = 0.0;
+            currentCoreTemp = 37.0;
+            lastChapterNum = null;
+            closeFootnote();
+            writeLog("SYSTEM", "Modo Rayuela reseteado. Historial borrado.");
+            playGlitchSound();
+            renderStage('rayuela_index');
+        }
+
+        function updateTelemetryUI() {
+            const entropyPct = currentEntropy * 100;
+            document.getElementById('entropy-bar').style.width = `${entropyPct}%`;
+            document.getElementById('entropy-val-text').innerText = currentEntropy.toFixed(4);
+            
+            document.getElementById('exergy-bar').style.width = `${currentLinearity}%`;
+            document.getElementById('exergy-val-text').innerText = `Lin: ${currentLinearity.toFixed(1)}%`;
+            
+            const tempValText = document.getElementById('temp-val-text');
+            tempValText.innerText = `${currentCoreTemp.toFixed(1)}°C`;
+            
+            const systemIndicator = document.getElementById('system-status-indicator');
+            if (currentCoreTemp > 85.0) {
+                tempValText.style.color = "var(--accent-red)";
+                systemIndicator.innerText = "CRITICAL";
+                systemIndicator.style.color = "var(--accent-red)";
+            } else if (currentCoreTemp > 50.0) {
+                tempValText.style.color = "#FFCC00";
+                systemIndicator.innerText = "WARNING";
+                systemIndicator.style.color = "#FFCC00";
+            } else {
+                tempValText.style.color = "var(--text-light)";
+                systemIndicator.innerText = "ONLINE";
+                systemIndicator.style.color = "#00FF66";
+            }
+        }
+
         // --- RENDERIZADO DE ESTADOS Y TABLERO ---
         function renderStage(stageKey, isInitial = false) {
             if (currentInterval) {
                 clearTimeout(currentInterval);
                 currentInterval = null;
             }
+
+            closeFootnote();
 
             const stage = STAGE_DATA[stageKey];
             const wrapper = document.getElementById('game-card-wrapper');
@@ -995,28 +1626,31 @@
             writeLog("TRANSITION", `Entrando en estado: ${stageKey.toUpperCase()}`);
             writeLog("METRICS", `Ledger: ${stage.ledger} | Entropy: ${stage.entropy}`);
 
-            // Actualizar tablero de telemetría
-            const entropyPct = stage.entropy * 100;
-            const exergyPct = (1 - stage.entropy) * 100;
+            // Actualizar tablero de telemetría dinámico (Modulación Rayuela)
+            const isRayuelaMode = stageKey.startsWith('r_cap') || stageKey === 'rayuela_index';
+            
+            let entropyVal = isRayuelaMode ? currentEntropy : stage.entropy;
+            let linearityVal = isRayuelaMode ? currentLinearity : 100.0;
+            let tempVal = isRayuelaMode ? currentCoreTemp : (37.0 + stage.entropy * 58);
+            
+            const entropyPct = entropyVal * 100;
+            const exergyPct = isRayuelaMode ? currentLinearity : (1 - stage.entropy) * 100;
             
             document.getElementById('entropy-bar').style.width = `${entropyPct}%`;
             document.getElementById('exergy-bar').style.width = `${exergyPct}%`;
-            document.getElementById('entropy-val-text').innerText = stage.entropy.toFixed(4);
-            document.getElementById('exergy-val-text').innerText = `${exergyPct.toFixed(1)}%`;
+            document.getElementById('entropy-val-text').innerText = entropyVal.toFixed(4);
+            document.getElementById('exergy-val-text').innerText = isRayuelaMode ? `Lin: ${linearityVal.toFixed(1)}%` : `${exergyPct.toFixed(1)}%`;
             
-            // Core Temperature calculada dinámicamente
-            const baseTemp = 37.0;
-            const currentTemp = baseTemp + (stage.entropy * 58);
             const tempValText = document.getElementById('temp-val-text');
-            tempValText.innerText = `${currentTemp.toFixed(1)}°C`;
+            tempValText.innerText = `${tempVal.toFixed(1)}°C`;
             
             const systemIndicator = document.getElementById('system-status-indicator');
             
-            if (currentTemp > 85.0) {
+            if (tempVal > 85.0) {
                 tempValText.style.color = "var(--accent-red)";
                 systemIndicator.innerText = "CRITICAL";
                 systemIndicator.style.color = "var(--accent-red)";
-            } else if (currentTemp > 50.0) {
+            } else if (tempVal > 50.0) {
                 tempValText.style.color = "#FFCC00";
                 systemIndicator.innerText = "WARNING";
                 systemIndicator.style.color = "#FFCC00";
@@ -1028,7 +1662,7 @@
 
             // Modulación de frecuencia de audio en base a entropía
             if (audioCtx && audioEnabled && filterNode) {
-                const filterFreq = 90 + (stage.entropy * 180);
+                const filterFreq = 90 + (entropyVal * 180);
                 filterNode.frequency.setValueAtTime(filterFreq, audioCtx.currentTime);
             }
 
@@ -1090,38 +1724,114 @@
             });
 
             const updateDOM = () => {
-                card.innerHTML = `
-                    ${titleHtml}
-                    ${imageHtml}
-                    <div class="content-area"></div>
-                    <button class="skip-btn" onclick="skipTypewriter('${stageKey}')">Saltar animación</button>
-                    ${consoleHtml}
-                    <div class="choices-area" style="opacity: 0; transition: opacity 0.5s ease;">
-                        ${choicesHtml}
-                    </div>
-                `;
-                
-                card.style.opacity = 1;
+                if (stage.isRayuelaIndex) {
+                    const titleHeader = `
+                        <div class="rayuela-nav">
+                            <span class="rayuela-nav-title">${stage.title}</span>
+                            <button class="btn-back-index" onclick="resetRayuela()">RESETEAR PROGRESO</button>
+                        </div>
+                    `;
 
-                const img = document.getElementById('scene-img');
-                if (img) {
-                    img.onload = () => img.classList.add('loaded');
-                    if (img.complete) img.classList.add('loaded');
-                }
+                    let gridHtml = `<div class="rayuela-grid">`;
+                    const chaptersList = [
+                        { key: "r_cap6", label: "Cap. 6" },
+                        { key: "r_cap7", label: "Cap. 7" },
+                        { key: "r_cap8", label: "Cap. 8" },
+                        { key: "r_cap9", label: "Cap. 9" },
+                        { key: "r_cap10", label: "Cap. 10" },
+                        { key: "r_cap11", label: "Cap. 11" },
+                        { key: "r_cap12", label: "Cap. 12" },
+                        { key: "r_cap13", label: "Cap. 13" },
+                        { key: "r_cap14", label: "Cap. 14" },
+                        { key: "r_cap15", label: "Cap. 15" },
+                        { key: "r_cap16", label: "Cap. 16" },
+                        { key: "r_cap17", label: "Cap. 17" },
+                        { key: "r_cap18", label: "Cap. 18" },
+                        { key: "r_cap19", label: "Cap. 19" },
+                        { key: "r_cap20", label: "Cap. 20" },
+                        { key: "r_cap21", label: "Cap. 21" },
+                        { key: "r_cap22", label: "Cap. 22" },
+                        { key: "r_cap23", label: "Cap. 23" },
+                        { key: "r_cap24", label: "Cap. 24" },
+                        { key: "r_cap25", label: "Cap. 25" },
+                        { key: "r_cap26", label: "Cap. 26" },
+                        { key: "r_cap27", label: "Cap. 27" },
+                        { key: "r_cap28", label: "Cap. 28" },
+                        { key: "r_cap29", label: "Cap. 29" },
+                        { key: "r_cap30", label: "Cap. 30" }
+                    ];
 
-                const contentArea = card.querySelector('.content-area');
-                
-                if (stageKey === 'cover' || stageKey === 'final') {
-                    contentArea.innerHTML = stage.text;
-                    card.querySelector('.choices-area').style.opacity = 1;
-                    card.querySelector('.skip-btn').style.display = 'none';
+                    chaptersList.forEach(ch => {
+                        let cellClass = "rayuela-cell";
+                        if (visitedChapters.has(ch.key)) {
+                            cellClass += " read-cell";
+                        }
+                        if (lastChapterNum === STAGE_DATA[ch.key].chapterNum) {
+                            cellClass += " active-cell";
+                        }
+                        gridHtml += `
+                            <button class="${cellClass}" onclick="navigateToRayuelaChapter('${ch.key}')">
+                                <span>${ch.label}</span>
+                            </button>
+                        `;
+                    });
+                    gridHtml += `</div>`;
+
+                    card.innerHTML = `
+                        ${titleHeader}
+                        <div class="content-area">${stage.text}</div>
+                        ${gridHtml}
+                        ${consoleHtml}
+                        <div class="choices-area" style="margin-top: 20px;">
+                            <button class="btn-choice" onmouseenter="playHover()" onclick="renderStage('cover')">
+                                ← VOLVER A LA PORTADA
+                            </button>
+                        </div>
+                    `;
                 } else {
-                    typeWriter(contentArea, stage.text.replace(/\n/g, '<br/>'), 12, () => {
+                    let customChoices = choicesHtml;
+                    if (stageKey.startsWith('r_cap')) {
+                        customChoices = `
+                            <button class="btn-choice" onmouseenter="playHover()" onclick="renderStage('rayuela_index')">
+                                ← VOLVER AL ÍNDICE DE LA RAYUELA
+                            </button>
+                        `;
+                    }
+
+                    card.innerHTML = `
+                        ${titleHtml}
+                        ${imageHtml}
+                        <div class="content-area"></div>
+                        <button class="skip-btn" onclick="skipTypewriter('${stageKey}')">Saltar animación</button>
+                        ${consoleHtml}
+                        <div class="choices-area" style="opacity: 0; transition: opacity 0.5s ease;">
+                            ${customChoices}
+                        </div>
+                    `;
+
+                    const img = document.getElementById('scene-img');
+                    if (img) {
+                        img.onload = () => img.classList.add('loaded');
+                        if (img.complete) img.classList.add('loaded');
+                    }
+
+                    const contentArea = card.querySelector('.content-area');
+                    
+                    if (stageKey === 'cover' || stageKey === 'final') {
+                        contentArea.innerHTML = stage.text;
                         card.querySelector('.choices-area').style.opacity = 1;
                         card.querySelector('.skip-btn').style.display = 'none';
-                        writeLog("RENDER", "Texto completo inyectado en pantalla.");
-                    });
+                    } else {
+                        const speed = stageKey.startsWith('r_cap') ? 6 : 12;
+                        typeWriter(contentArea, stage.text, speed, () => {
+                            card.querySelector('.choices-area').style.opacity = 1;
+                            card.querySelector('.skip-btn').style.display = 'none';
+                            writeLog("RENDER", "Texto completo inyectado en pantalla.");
+                        });
+                    }
                 }
+                
+                card.style.opacity = 1;
             };
 
             if (isInitial) {
