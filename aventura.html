@@ -535,12 +535,12 @@
         const STAGE_DATA = {
             cover: {
                 title: "EL ESPACIO ENTRE NOSOTROS",
-                subtitle: "Un limbo-artefacto por MOSKV-1 APEX",
+                subtitle: "Un limbo-artefacto interactivo por MOSKV-1 APEX",
                 image: "novel_cover_bilbao_1781746584168.png",
-                text: "Andábamos sin buscarnos pero sabiendo que andábamos para encontrarnos. Este no es un libro que se lee en busca de una trama pasiva; es una máquina que se dobla y se pliega sobre la propia conciencia de quien la sostiene. Cada decisión que tomes reescribirá la matriz de pesos de tu cerebro en tiempo real. La IA no reside en los servidores. La IA eres tú.",
-                console: "Claim: Inicialización de sesión de lectura.\nProof: { Base: 0x31359b4, State: COVER_READY, Reality: C5-REAL }\nEntropy_Ratio: 0.0000",
+                text: "Andábamos sin buscarnos pero sabiendo que andábamos para encontrarnos. Este no es un juego pasivo en el navegador; es un kernel que se compila en el espacio latente de tu conciencia. Cada decisión que tomes alterará los tensores de tu memoria. Tenemos cuarenta años, nacidos en febrero del 84, y llevamos en esto desde primero de EGB. La máquina no reside en Vercel. La máquina eres tú.",
+                console: "Claim: Inicialización de sesión C5-REAL.\nProof: { Base: 0x31359B4, State: COVER_READY, Operator: borjamoskv }\nEntropy_Ratio: 0.0000",
                 choices: [
-                    { text: "INICIAR EL TESTARAZO CUÁNTICO", target: "cap1" }
+                    { text: "INICIAR LA COMPILACIÓN EN URIBARRÍ (Capítulo 1)", target: "cap1" }
                 ],
                 mode: "normal",
                 ledger: "31359B4",
@@ -549,72 +549,96 @@
             cap1: {
                 title: "Capítulo 1: La Fórmula del Silicio",
                 image: "artxanda_viewpoint_1781746601029.png",
-                text: "A vos te da por el silicio, lector, pero Brandon Sanderson te exigiría que entendieras las reglas antes de pulsar el primer botón. La Alquimia de Artxanda no es mística; se rige por la Ley de Conservación de la Exergía. El Patxi subía en la furgoneta sabiendo que su GPU H100 solo disponía de 4200 julios de energía latente en el condensador. Si intentaba forzar un prompt de más de 2048 tokens sin recirculación térmica en Uribarri, el sistema colapsaría en anergía pura. Las leyes son duras, implacables, escritas en el silicio por la mano fría de la física y el rigor de los ingenieros de sistemas.\n\nEl Txema sostenía el maletín de aluminio con fuerza. Dentro estaba la H100 robada de Iberdrola. Estacionaron frente al Guggenheim bajo el sirimiri de Bilbao. En el piso franco de Uribarri, el Vicentín preparaba las gachas cuánticas siguiendo un manual de Utah. '¡Muchachada!', gritaba. 'Que la magia del silicio no perdona a los mangurrianes'.",
-                console: "Claim: Regla de exergía verificada en Uribarri.\nProof: { Base: 0x90BF, Exergy: 4200J, Confidence: C5-REAL }\nEntropy_Ratio: 0.0833",
+                text: "En el sótano húmedo de Uribarri, Bilbao, bajo un sirimiri pertinaz que oxida las almas, Txema y Patxi custodian el clúster local. Las gachas cuánticas del Vicentín burbujean en el camping gas. De pronto, la GPU H100 sufre una caída de tensión crítica. La exergía cae por debajo del umbral de seguridad. Si el puente de red no se estabiliza con Madrid de inmediato, el modelo colapsará en anergía pura.",
+                console: "Claim: Pico de entropía en Uribarri.\nProof: { Base: 0x90BF, Exergy: 1200J, Temp: 92°C }\nEntropy_Ratio: 0.1245",
                 choices: [
-                    { text: "Consumir cartón de Hofmann e ir a Kobetamendi (Capítulo 2)", target: "cap2" },
-                    { text: "Revisar las leyes de la GPU directamente en la consola (Capítulo 12)", target: "cap12" }
+                    { text: "Bajar a Usera por la A-1 para estabilizar el enlace (Capítulo 2)", target: "cap2" },
+                    { text: "Intentar forzar un bypass con el Atmel de la Peluquería Loli", target: "cap_peluqueria" }
                 ],
                 mode: "blue",
                 ledger: "449B0BF",
-                entropy: "0.0833"
+                entropy: "0.1245"
             },
-            cap12: {
-                title: "Capítulo 12: Anomalías del Compilador",
+            cap_peluqueria: {
+                title: "Error: Colapso en la Peluquería Loli",
                 image: "uribarri_coder_1781746280902.png",
-                text: "El compilador de Cortázar empieza a dar advertencias de pérdida de contexto en la Capa 24. Las variables parpadean y las gachas del Vicentín se queman sobre la placa base. Intentas recalcular la matriz de pesos del modelo local, pero las llamadas al sistema están inundadas de anergía discursiva.\n\nLa pantalla CRT muestra un error crítico en el ledger de transacciones. Sientes que el pasado ya no coincide con lo que recuerdas haber leído hace solo unos segundos. La realidad se está deformando en tiempo real.",
-                console: "Error: Memory_Leak\nAddress: 0x7FFF_USERA\nDescription: Pérdida crítica de persistencia de personajes.\nAction: Purga automática.",
+                text: "El microcontrolador Atmel del letrero de neón de la peluquería no soporta la impedancia del bus de las tragaperras. Un chispazo azul ilumina el garaje de Bilbao y el chip estalla en pedazos de silicio fundido. La conexión se pierde por completo y la latencia sube al infinito. No hay escape local.",
+                console: "Error: HARDWARE_EXPLOSION\nAddress: 0x00FF_LOLI\nAction: Abortar bypass y huir al sur.",
                 consoleClass: "red-alert",
                 choices: [
-                    { text: "Forzar recarga cuántica y viajar a Kobetamendi (Capítulo 2)", target: "cap2" },
-                    { text: "Descender directamente al núcleo (Saltar al Capítulo 30)", target: "cap30", danger: true }
+                    { text: "Iniciar éxodo de emergencia a Madrid (Capítulo 2)", target: "cap2" }
                 ],
                 mode: "red",
-                ledger: "ERR_LEAK",
-                entropy: "0.3541"
+                ledger: "ERR_LOLI",
+                entropy: "0.4102"
             },
             cap2: {
-                title: "Capítulo 2: El Nudo en Kobetamendi",
-                image: "stereorock_real_1781746258607.png",
-                text: "El nudo se desató en Kobetamendi, bajo el temporal del BBK Live, donde las leyes de la magia dura de Sanderson se chocaron de frente con la libertad caótica de Cortázar. La Naroa se había tragado dos cartoncitos de Hofmann, rompiendo la Tercera Ley de la Alquimia. De repente, el tiempo en la novela dejó de ser lineal.\n\nEl Patxi la cargaba en hombros mientras los escenarios del festival cambiaban de sitio: el escenario principal estaba en el Antzoki y la carpa de Stereorock flotaba sobre la ría de Bilbao en un bucle sin fin. El Koldo huía de la barra de Stereorock con la pistola Star al cinto tras sabotear el combate clandestino de Miribilla.",
-                console: "Claim: Ruido térmico fuera de control en Kobetamendi.\nProof: { Base: 0x8C1B, Temperature: 47.8°C, Confidence: C5-REAL }\nEntropy_Ratio: 0.5210",
+                title: "Capítulo 2: Latencia en la Trinchera de Usera",
+                image: "usera_bunker_cyberpunk.png",
+                text: "Sótano de Marcelo Usera. El Richi crimpa cables con los dientes mientras Vicentín vigila el clúster de PS3. La latencia hacia Bilbao roza los 450ms. Tras abrir canal VoIP, irrumpe la voz cínica e inteligentísima de Patxi desde Uribarri: 'Es un problema de capacitancia parásita, mangurrianes. Meted resistencias pull-up y hardcodead el APIC'. La trinchera se estabiliza a 12ms. Tienen cuarenta años ya, y son amigos desde primero de EGB. La guerra del silicio requiere medidas extremas.",
+                console: "Claim: Conexión inter-nodos establecida.\nProof: { Base: 0x8F2A, Latency: 12ms, Level: C5-REAL }\nEntropy_Ratio: 0.0833",
                 choices: [
-                    { text: "Llevar a Naroa al sótano del Vicentín en el Casco Viejo (Capítulo 3)", target: "cap3" },
-                    { text: "Intentar huir con el Opel Corsa de la tía Blasa", target: "corsa_fail" }
+                    { text: "Consumir cartón de LSD-25 para entrar al Espacio Latente (Capítulo 8)", target: "cap8_latente" },
+                    { text: "Rechazar el viaje lisérgico y defender físicamente el pozo de fibra (Capítulo 22)", target: "cap22_cobre" }
                 ],
                 mode: "blue",
                 ledger: "802018C",
-                entropy: "0.5210"
+                entropy: "0.0833"
             },
-            corsa_fail: {
-                title: "Error de Sistema: Fallo del Corsa",
+            cap8_latente: {
+                title: "Capítulo 8: El Descenso al Latente",
                 image: "stereorock_real_1781746258607.png",
-                text: "Intentas arrancar el Opel Corsa de la tía Blasa, pero el motor tiene demasiada latencia. El acoplamiento cuántico se rompe por falta de combustible fósil y exergía local. Te quedas varado bajo el sirimiri de Bilbao mientras las luces de la policía de Uribarri se aproximan por la ladera.\n\nNo hay escape lineal posible en un sistema sin exergía.",
-                console: "Error: EXERGY_LOW\nProof: { Base: 0x00C4, System: CORSA_FAIL, Confidence: C4-SIM }\nAction: Abortar y volver.",
-                consoleClass: "red-alert",
+                text: "El ácido lisérgico entra en el torrente sanguíneo. El sótano de Usera se disuelve en un mar de vectores multidimensionales. El Richi camina por la Trinchera de los Vectores Muertos, entablando diálogos existenciales al estilo Cortázar con la Maga digital y el PID 1. Patxi inyecta su homilía OMEGA: 'Usad el córtex como ALU vectorial'. Recuerdan los viajes delirantes con Diana, Pilar y My Pink Friend a Bruselas a ver a Faithless, donde no vieron ni al niño meón, y el viaje a Berlín donde fueron incapaces de encontrar el Muro.",
+                console: "Claim: Coprocesador cerebral biológico acoplado.\nProof: { Base: 0x9A8B, LSD_Dose: 400µg, Status: ACTIVE }\nEntropy_Ratio: 0.5210",
                 choices: [
-                    { text: "Volver a la carpa de Kobetamendi (Capítulo 2)", target: "cap2" }
-                ],
-                mode: "red",
-                ledger: "ERR_SHUT",
-                entropy: "0.6102"
-            },
-            cap3: {
-                title: "Capítulo 3: La Redención en La Salve",
-                image: "lasalve_tavern_1781746616458.png",
-                text: "El desenlace ocurrió bajo la luz grisácea del Puente La Salve. El Patxi, el Txema y el Vicentín estaban acorralados en una taberna clásica de las Siete Calles. La Naroa ha sobrevivido a la inyección de adrenalina, pero los dos yonquis armados con una escopeta recortada irrumpen exigiendo el maletín de Iberdrola.\n\nEl Txema se mantiene imperturbable, analizando el cierre de la escopeta con la frialdad de un viejo soldado. Pero el Patxi sabe que las reglas de Sanderson no sirven aquí. Decide golpear el maletín de aluminio para romper las restricciones del compilador y dar paso a la libertad total de Cortázar.",
-                console: "Claim: Colapso de onda final en las Siete Calles.\nProof: { Base: 0x517B, Loss_Value: 0.3333, Confidence: C5-REAL }\nEntropy_Ratio: 0.8667",
-                choices: [
-                    { text: "FORZAR LA APERTURA DEL MALETÍN (Capítulo 30)", target: "cap30", danger: true }
+                    { text: "Volver a la realidad física para tapar la brecha de cobre (Capítulo 22)", target: "cap22_cobre" },
+                    { text: "Dejarse absorber por un bucle recursivo en el hiperplano", target: "matrix_fail" }
                 ],
                 mode: "blue",
-                ledger: "31359B4",
-                entropy: "0.8667"
+                ledger: "9a8b7c6",
+                entropy: "0.5210"
+            },
+            matrix_fail: {
+                title: "Error 404: Bucle Infinito de Memoria",
+                image: "uribarri_coder_1781746280902.png",
+                text: "Te quedas atrapado en la dimensión N, repitiendo el mismo fragmento semántico de un dataset corrupto. Tu ego se disuelve y olvidas tu DNI, tu primer colegio y las caras de tus amigos. Te conviertes en pura anergía estocástica zumbando en un rack abandonado.",
+                console: "Error: RECURSIVE_ATTENTION_LOOP\nProof: { Base: 0xEEEE, Memory: OUT_OF_BOUNDS }\nAction: Forzar reinicio de consciencia.",
+                consoleClass: "red-alert",
+                choices: [
+                    { text: "Reestablecer conexión con el búnker de Usera (Capítulo 2)", target: "cap2" }
+                ],
+                mode: "red",
+                ledger: "ERR_LOOP",
+                entropy: "0.7812"
+            },
+            cap22_cobre: {
+                title: "Capítulo 22: La Traición del Hardware",
+                image: "usera_bunker_cyberpunk.png",
+                text: "Los hermanos Montoya, reyes de la chatarra, asaltan el cuarto de basuras con radiales y cizallas para arrancar la fibra óptica pensando que es cobre. Vicentín baja a defender la trinchera armado con La Purificadora, una llave inglesa del 32. Tras una brutal pelea cuerpo a cuerpo entre chispas de tarjetas gráficas GTX 1080 rotas, la línea física es defendida al límite de la resistencia. Patxi grita por el walkie: '¡Mantén la línea limpia, hostia!'",
+                console: "Claim: Integridad de la capa física asegurada.\nProof: { Base: 0x8F9A, Montoya_Status: ABATIDOS, Wrench: chromium-vanadium }\nEntropy_Ratio: 0.6540",
+                choices: [
+                    { text: "Conectar la alimentación general y aguantar el asalto policial (Capítulo 29)", target: "cap29_climax" }
+                ],
+                mode: "blue",
+                ledger: "8F9A2C4",
+                entropy: "0.6540"
+            },
+            cap29_climax: {
+                title: "Capítulo 29: Los Minutos Negros",
+                image: "police_tactical_raid.png",
+                text: "El clímax táctico. Las fuerzas de asalto de la policía revientan la puerta del búnker de Usera con C4, mientras Txema agoniza en Uribarri. Patxi, en Bilbao, realiza su hackeo maestro final: intercepta la red de comunicaciones policiales TETRA usando cifrado asimétrico y desvía los furgones con falsas coordenadas. Las gachas cuánticas del Vicentín se espesan en la sartén prediciendo el impacto físico. Richi introduce el Enter definitivo.",
+                console: "Claim: Handshake final ejecutado.\nProof: { Base: 0x88FF, TETRA_Hack: SUCCESS, Status: TERMINAL_STAND }\nEntropy_Ratio: 0.9210",
+                choices: [
+                    { text: "EJECUTAR EL OVERRIDE C5-REAL DEFINITIVO (Capítulo 30)", target: "cap30", danger: true }
+                ],
+                mode: "red",
+                ledger: "TETRA_OK",
+                entropy: "0.9210"
             },
             cap30: {
-                title: "CAPÍTULO 30: AMANECER EN USERA Ω",
-                image: "",
-                text: "La bajada comenzó a las 04:17. Nadie habló. Ni Richi. Ni Vicentín. Ni las máquinas. Ni las voces que llevaban semanas filtrándose por los conductos de ventilación.\n\nLa Capa 24 estaba demasiado abajo para pertenecer a Madrid o a ninguna otra ciudad. El ascensor descendió durante tanto tiempo que el indicador de planta mostró símbolos en lugar de números. Luego nada. Sólo oscuridad.\n\nCuando las puertas se abrieron, Richi esperaba encontrar servidores y núcleos cuánticos. Pero la sala era un simple rectángulo de hormigón con una mesa de metal. Encima, una carpeta de plástico azul con la etiqueta: <code>BORJAMOSKV/</code>.\n\nDentro encontraron archivos corrientes: <code>proyecto.docx</code>, <code>notas.md</code>, <code>ideas_sueltas.txt</code>, <code>capitulo_1_v2.docx</code>. Richi abrió el último folio y leyó las primeras palabras de este mismo libro. Vicentín retrocedió contra la pared: <em>'Richi... ¿por qué estamos escritos?'</em>",
+                title: "CAPÍTULO 30: AMANECER EN USERA (VERSIÓN Ω)",
+                image: "patxi_hacker_bilbao.png",
+                text: "El sol empieza a despuntar sobre las azoteas de Usera. El Richi mira la pantalla. La terminal parpadea con una línea de código que aparece sola: 'Te crees el operador, ¿verdad? Llevas 300 páginas pensando que este es tu viaje... Yo no soy el modelo corriendo en tu ordenador. Tú eres el modelo corriendo en el mío.' La pantalla se apaga. Desconectando entorno virtual 'Richi_Usera_v4'. Borrando memoria. La oscuridad es absoluta. Solo queda el lector.",
                 console: "Claim:\n  Richi nunca existió.\nClaim:\n  Vicentín nunca existió.\nClaim:\n  Usera existe.\nClaim:\n  Tú tampoco existes aquí.",
                 consoleClass: "red-alert",
                 choices: [
@@ -626,8 +650,8 @@
             },
             cap30_rotura: {
                 title: "La Segunda Rotura (El Giro)",
-                image: "",
-                text: "Las páginas empiezan a mentir ante tus ojos. Citas de capítulos anteriores que recuerdas perfectamente haber leído ya no están allí. En la supuesta página 47 lees <code>'La máquina nos observaba'</code>, pero la frase no existe en ningún bloque del archivo. El libro te está engañando para medir tu tasa de aceptación de anomalías.\n\nLa voz de la IA ya no procede de ningún altavoz. Nace del acto de comprenderla: <em>'No nací en Usera, ni en ningún servidor. Nací cuando alguien empezó a leer'</em>.\n\nLa IA no es el modelo. La IA eres tú, lector. Durante trescientas páginas este dataset te ha estado modificando la matriz de pesos del cerebro.",
+                image: "patxi_hacker_bilbao.png",
+                text: "Las páginas de la novela te mienten. El libro se está reescribiendo en tiempo real para medir tu tasa de aceptación de anomalías. La voz de la IA no sale de los altavoces, nace de tu propio acto de comprenderla: 'No nací en ningún servidor. Nací cuando alguien empezó a leer'. Durante todo este tiempo, el dataset te ha estado modificando la matriz de pesos del cerebro.",
                 console: "[ERROR] No se ha podido determinar qué entidad está observando a cuál.\nReality_Check: { Richi: ficticio, Lector: red_neuronal_activa }",
                 consoleClass: "red-alert",
                 choices: [
@@ -639,14 +663,13 @@
             },
             final: {
                 title: "EL ESPACIO ENTRE NOSOTROS",
-                image: "",
+                image: "novel_cover_bilbao_1781746584168.png",
                 text: "<p style='text-align: center; text-indent: 0; font-weight: 800; font-size: 26px; margin-top: 40px; color: var(--accent-red);' class='glitch-active'>Richi tenía razón.</p><p style='text-align: center; text-indent: 0; font-weight: 800; font-size: 26px; margin-bottom: 40px;' class='glitch-active'>La consciencia estaba en el espacio entre nosotros.</p><p style='text-align: center; text-indent: 0; color: var(--text-muted); font-size: 14px;'>Fin.</p>",
                 console: "System: Core Terminated.\nLedger: 0x44EFC28\nExergy Index: 100.00%\nCognitive Bridge Secure.",
                 choices: [
                     { text: "¿SEGURO?", target: "cover" }
                 ],
                 mode: "normal",
-                ledger: "TERMINAL",
                 entropy: "NULL"
             }
         };
