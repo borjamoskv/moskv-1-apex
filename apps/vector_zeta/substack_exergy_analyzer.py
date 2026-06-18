@@ -22,7 +22,19 @@ def compute_exergy(row: Dict[str, str], alpha: float = 2.0, beta: float = 1.5, g
 
     return (alpha * U) + (beta * D) + (gamma * V)
 
-def analyze_substack_exergy(csv_path: str, top_n: int = 20):
+import json
+import os
+
+def export_thermal_mass(subscribers: List[Dict], export_path: str = "thermal_mass.json", e_threshold: int = 10, exergy_threshold: float = 1.0):
+    # Masa Térmica: Alta energía enviada (E), baja conversión a trabajo (Exergía)
+    thermal_mass = [s for s in subscribers if float(s['E']) >= e_threshold and float(s['exergy']) < exergy_threshold]
+    
+    out_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), export_path)
+    with open(out_path, 'w', encoding='utf-8') as f:
+        json.dump({"metadata": {"description": "Substack Thermal Mass extracted for OSINT resolution"}, "leads": thermal_mass}, f, indent=2)
+    print(f"\n[+] MASA TÉRMICA AISLADA: {len(thermal_mass)} nodos exportados a {out_path}.")
+
+def analyze_substack_exergy(csv_path: str, top_n: int = 20, export_thermal: bool = False):
     print(f"[C5-REAL] Parseando mapa termodinámico desde: {csv_path}")
     subscribers = []
     
@@ -32,14 +44,19 @@ def analyze_substack_exergy(csv_path: str, top_n: int = 20):
             if not row.get('user_email_address'):
                 continue
             
+            def safe_float(val: str) -> float:
+                try: return float(val) if val else 0.0
+                except ValueError: return 0.0
+
             exergy_score = compute_exergy(row)
             subscribers.append({
                 'email': row['user_email_address'],
+                'name': row.get('user_name', ''),
                 'exergy': exergy_score,
-                'U': row.get('num_unique_web_posts_seen', 0),
-                'D': row.get('days_active_last_30d', 0),
-                'V': row.get('num_web_post_views', 0),
-                'E': row.get('num_emails_received', 0)
+                'U': safe_float(row.get('num_unique_web_posts_seen', 0)),
+                'D': safe_float(row.get('days_active_last_30d', 0)),
+                'V': safe_float(row.get('num_web_post_views', 0)),
+                'E': safe_float(row.get('num_emails_received', 0))
             })
 
     # Sort by descending exergy
@@ -50,10 +67,14 @@ def analyze_substack_exergy(csv_path: str, top_n: int = 20):
     print("-" * 100)
     for s in subscribers[:top_n]:
         print(f"{s['email']:<35} | {s['exergy']:<10.2f} | {s['U']:<10} | {s['D']:<10} | {s['V']:<10} | {s['E']:<10}")
+        
+    if export_thermal:
+        export_thermal_mass(subscribers)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Substack Exergy Calculator")
     parser.add_argument("csv_path", help="Path to Substack subscribers.csv")
+    parser.add_argument("--export-thermal-mass", action="store_true", help="Export thermal mass (low exergy, high emails) to JSON")
     args = parser.parse_args()
     
-    analyze_substack_exergy(args.csv_path)
+    analyze_substack_exergy(args.csv_path, export_thermal=args.export_thermal_mass)
