@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # Execution Level: C5-REAL
-import sys, os, hashlib, math
+import sys, os, hashlib, math, sqlite3
 from datetime import datetime, timezone
-import sys
+
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(ROOT_DIR)
 
@@ -12,7 +12,31 @@ from kernel.retrieval_index import RetrievalIndex
 class CompactionPolicy:
     """
     Transforms Episodic logs into Dense Semantic Knowledge.
+    Autopoietically modulated by C5-REAL Reinforcement Learning State.
     """
+    
+    @staticmethod
+    def _get_rl_forgetting_rate() -> float:
+        """
+        Retrieves Lambda penalty from RL state to modulate memory decay.
+        Base strength 10.0 days. High lambda -> Faster decay (lower strength).
+        """
+        try:
+            db_path = os.path.join(ROOT_DIR, "..", ".agents", "rl_state.db")
+            if os.path.exists(db_path):
+                with sqlite3.connect(db_path, timeout=5.0) as conn:
+                    conn.execute("PRAGMA journal_mode=WAL;")
+                    cursor = conn.execute("SELECT lambda_weight FROM rl_weights ORDER BY id DESC LIMIT 1")
+                    row = cursor.fetchone()
+                    if row:
+                        rl_lambda = row[0]
+                        # If lambda penalty is high, we shrink memory retention window (forget faster)
+                        strength = max(1.0, 10.0 - (rl_lambda * 20.0))
+                        return strength
+        except Exception:
+            pass
+        return 10.0
+
     @staticmethod
     def compact_episodes_to_semantic():
         episodes = RetrievalIndex.query_recent_episodes(100)
@@ -59,8 +83,9 @@ class CompactionPolicy:
 
     @staticmethod
     def apply_cognitive_decay():
-        # Ebbinghaus-style cognitive decay (GAP 5)
-        # Recalculates confidence over time to prevent semantic drift
+        # Ebbinghaus-style cognitive decay modulated by RL
+        base_strength = CompactionPolicy._get_rl_forgetting_rate()
+        
         with get_memory_db() as conn:
             cursor = conn.cursor()
             cursor.execute("SELECT concept_name, confidence, last_updated FROM semantic_memory")
@@ -78,8 +103,8 @@ class CompactionPolicy:
                 days_elapsed = (now - last_updated).total_seconds() / 86400.0
                 if days_elapsed < 0.1: continue # Decay applied only on older nodes
                 
-                # Ebbinghaus decay: R = e^(-t/S) assuming base Strength S=10 days
-                decay_factor = math.exp(-days_elapsed / 10.0)
+                # Dynamic Ebbinghaus decay
+                decay_factor = math.exp(-days_elapsed / base_strength)
                 new_confidence = row['confidence'] * decay_factor
                 
                 cursor.execute(
@@ -89,7 +114,7 @@ class CompactionPolicy:
                 decayed_count += 1
             conn.commit()
             if decayed_count > 0:
-                print(f"[{now.isoformat()}] [MEMORY-DECAY] Applied Ebbinghaus decay to {decayed_count} concepts.")
+                print(f"[{now.isoformat()}] [MEMORY-DECAY] Applied RL-modulated Ebbinghaus decay (S={base_strength:.2f}) to {decayed_count} concepts.")
 
 if __name__ == "__main__":
     CompactionPolicy.compact_episodes_to_semantic()

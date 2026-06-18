@@ -109,17 +109,38 @@ def force_abort_active_tasks():
     )
 
 async def get_exergy_scaling_factor() -> float:
+    """
+    C5-REAL Autopoietic Scaling: 
+    Calculates execution scaling factor dynamically based on active RL parameters.
+    """
     try:
+        import sqlite3
+        db_path = os.path.join(ROOT_DIR, "..", ".agents", "rl_state.db")
+        rl_q, rl_lambda = 1.0, 0.1
+        
+        if os.path.exists(db_path):
+            with sqlite3.connect(db_path, timeout=5.0) as conn:
+                conn.execute("PRAGMA journal_mode=WAL;")
+                cursor = conn.execute("SELECT q_weight, lambda_weight FROM rl_weights ORDER BY id DESC LIMIT 1")
+                row = cursor.fetchone()
+                if row:
+                    rl_q, rl_lambda = row
+
         cmd = ["python3", os.path.join(ROOT_DIR, "exergy_sensor.py"), "--workspace"]
         proc = await asyncio.create_subprocess_exec(*cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE, cwd=ROOT_DIR)
         stdout, _ = await proc.communicate()
         match = re.search(r"Global Workspace Exergy Index:\s*([0-9.]+)", stdout.decode("utf-8", errors="ignore"))
         if match:
             idx = float(match.group(1))
-            if idx < 65.0: return 2.0
-            elif idx < 75.0: return 1.5
+            # Dynamic RL-based mapping: Lower exergy index + High RL Penalty (Lambda) -> Slower execution
+            anergy_gap = max(0.0, 100.0 - idx)
+            scaling = 1.0 + (anergy_gap * rl_lambda * rl_q * 0.05)
+            return min(5.0, max(0.5, scaling))
+            
         return 1.0
-    except: return 1.0
+    except Exception as e:
+        print(f"[CRONOS-RL] Fallback to static scaling: {e}")
+        return 1.0
 
 def signal_handler(sig, frame):
     shutdown_event.set()
