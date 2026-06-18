@@ -34,22 +34,6 @@ TASKS = {
         "timeout_seconds": 60,
         "description": "Materializa EventEnvelope V2 a SQLite asíncronamente"
     },
-    "exergy_monitor": {
-        "command": apply_resource_limits(["/bin/zsh", "/Users/borjafernandezangulo/.cortex/scripts/cron_exergy_monitor.sh"]),
-        "base_interval": 300,
-        "type": "interval",
-        "lock_file": "/tmp/cronos_exergy_monitor.lock",
-        "timeout_seconds": 60,
-        "description": "Calcula y purga anergía"
-    },
-    "v_omega_shield": {
-        "command": apply_resource_limits(["python3", os.path.join(ROOT_DIR, "scripts", "v_omega_shield.py"), "--kill"], profile="worker_network"),
-        "base_interval": 300,
-        "type": "interval",
-        "lock_file": "/tmp/cronos_v_omega_shield.lock",
-        "timeout_seconds": 60,
-        "description": "Escudo de red"
-    },
     "board_of_directors": {
         "command": apply_resource_limits(["python3", os.path.join(ROOT_DIR, "kernel", "board_of_directors.py")], profile="worker_network"),
         "base_interval": 3600,
@@ -241,7 +225,7 @@ async def scheduler_loop():
 
         for name, config in TASKS.items():
             if config["type"] == "interval":
-                actual_interval = config["base_interval"] if name in ("v_omega_shield", "exergy_monitor", "event_projector") else int(config["base_interval"] * scaling_factor)
+                actual_interval = config["base_interval"] if name in ("event_projector",) else int(config["base_interval"] * scaling_factor)
                 if now_ts - last_run_times.get(name, 0.0) >= actual_interval:
                     last_run_times[name] = now_ts
                     asyncio.create_task(run_task(name, config))

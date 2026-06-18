@@ -1,7 +1,7 @@
 from typing import Optional, List, Any
 import asyncio
 import aiohttp
-from moskv_1.event_bus import EventBus, CortexEvent
+from kernel.event_bus import EventBus, CortexEvent
 
 class BrainRegion:
     """
