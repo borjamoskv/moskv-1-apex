@@ -35,17 +35,42 @@ class RetrievalIndex:
 
     @staticmethod
     def recall(concept: str) -> list:
-        # Cognee-style semantic traversal (GAP 2)
-        # Navigates from semantic memory down to related episodic logs
+        # FTS5 Accelerated Semantic Traversal (O(log N) latency)
+        # Event-driven decay trigger on recall miss (Bottleneck mitigation)
         with get_memory_db() as conn:
             cursor = conn.cursor()
             cursor.execute("""
                 SELECT e.event_id, e.timestamp, e.narrative 
-                FROM episodic_memory e
-                WHERE e.narrative LIKE ?
+                FROM episodic_memory_fts f
+                JOIN episodic_memory e ON e.rowid = f.rowid
+                WHERE episodic_memory_fts MATCH ?
                 ORDER BY e.timestamp DESC
-            """, (f'%{concept}%',))
-            return [dict(row) for row in cursor.fetchall()]
+            """, (f'"{concept}"',))
+            results = [dict(row) for row in cursor.fetchall()]
+
+            if not results:
+                # Recall miss: Event-driven decay execution
+                import math
+                cursor.execute("SELECT confidence, last_updated FROM semantic_memory WHERE concept_name = ?", (concept,))
+                row = cursor.fetchone()
+                if row:
+                    try:
+                        from datetime import datetime, timezone
+                        last_str = row['last_updated'].replace('Z', '+00:00')
+                        last_updated = datetime.fromisoformat(last_str)
+                        days_elapsed = (datetime.now(timezone.utc) - last_updated).total_seconds() / 86400.0
+                        if days_elapsed > 0.1:
+                            decay_factor = math.exp(-days_elapsed / 10.0)
+                            new_confidence = row['confidence'] * decay_factor
+                            cursor.execute(
+                                "UPDATE semantic_memory SET confidence = ?, last_updated = ? WHERE concept_name = ?",
+                                (new_confidence, datetime.now(timezone.utc).isoformat(), concept)
+                            )
+                            conn.commit()
+                    except Exception:
+                        pass
+                        
+            return results
 
     @staticmethod
     def forget(node_id: str) -> bool:
