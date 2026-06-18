@@ -46,6 +46,10 @@ class TeamNode {
     this.ga = 0;
     this.status = "ACTIVE"; // ACTIVE, ELIMINATED, CHAMPION
     
+    // Core Learning Vectors
+    this.momentum = 0.0;
+    this.volatility = 0.0;
+    
     // Physics parameters for canvas particle
     this.x = Math.random() * 400 + 50;
     this.y = Math.random() * 400 + 50;
@@ -80,6 +84,8 @@ class TeamNode {
     this.gf = 0;
     this.ga = 0;
     this.status = "ACTIVE";
+    this.momentum = 0.0;
+    this.volatility = 0.0;
     this.x = Math.random() * 400 + 50;
     this.y = Math.random() * 400 + 50;
     this.vx = (Math.random() - 0.5) * 0.8;
@@ -94,13 +100,14 @@ class TeamNode {
     this.liveExergy = Math.max(0.2, this.baseExergy * (1.0 - decayFactor));
   }
 
-  learnFromMatch(won) {
+  learnFromMatch(gd, wasUpset, lr, upsetPressure) {
+    const won = gd > 0;
     if (won) {
       this.liveExergy += 0.015 * (1.0 - this.liveExergy);
-      this.momentum += 0.08;
+      this.momentum = (this.momentum || 0) + 0.08;
     } else {
       this.liveExergy -= 0.02 * this.liveExergy;
-      this.volatility += 0.05;
+      this.volatility = (this.volatility || 0) + 0.05;
     }
 
     this.momentum *= 0.92;
@@ -108,6 +115,10 @@ class TeamNode {
 
     // clamp
     this.liveExergy = Math.max(0.2, Math.min(0.99, this.liveExergy));
+
+    if (wasUpset) {
+      this.volatility += upsetPressure * 0.5;
+    }
   }
 }
 
@@ -228,10 +239,16 @@ class TournamentSimulator {
   }
 
   simulatePoisson(t1, t2) {
-    const diff = t1.liveExergy - t2.liveExergy;
+    const ea = t1.liveExergy + (t1.momentum || 0) * 0.2;
+    const eb = t2.liveExergy + (t2.momentum || 0) * 0.2;
+    const diff = ea - eb;
+    
+    const va = t1.volatility || 0;
+    const vb = t2.volatility || 0;
+    
     // Bivariate Poisson expected goals with volatility jitter
-    const jitter1 = (Math.random() - 0.5) * this.volatility * 2;
-    const jitter2 = (Math.random() - 0.5) * this.volatility * 2;
+    const jitter1 = (Math.random() - 0.5) * (this.volatility + va) * 2;
+    const jitter2 = (Math.random() - 0.5) * (this.volatility + vb) * 2;
     
     const expG1 = Math.max(0.1, 1.3 + (diff * 2.5) + jitter1);
     const expG2 = Math.max(0.1, 1.3 - (diff * 2.5) + jitter2);
@@ -263,15 +280,15 @@ class TournamentSimulator {
     t1.applyThermalDecay(roundDepth);
     t2.applyThermalDecay(roundDepth);
     
-    const ea = t1.liveExergy + t1.momentum * 0.2;
-    const eb = t2.liveExergy + t2.momentum * 0.2;
-
-    const va = t1.volatility;
-    const vb = t2.volatility;
-
+    const ea = t1.liveExergy + (t1.momentum || 0) * 0.2;
+    const eb = t2.liveExergy + (t2.momentum || 0) * 0.2;
+    
+    const va = t1.volatility || 0;
+    const vb = t2.volatility || 0;
+    
     const chaos = (va - vb) * 0.15;
-
-    const p = 1 / (1 + Math.exp(-(ea - eb) * 10));
+    
+    let p = 1 / (1 + Math.exp(-(ea - eb) * 10));
     const finalProb = Math.max(0.05, Math.min(0.95, p + chaos));
     
     const roll = Math.random();
@@ -519,7 +536,7 @@ class TournamentSimulator {
         document.getElementById("tel-state").innerText = "COMPLETE";
         
         this.logMessage(`\n🏆 [GRAND COLLAPSE] CHAMPION CONVERGENCE ATTAINED: ${champion.name.toUpperCase()} 🏆<br>` +
-                        `Final Exergy Vector: ${champion.liveExergy.toFixed(3)} // Residual Entropy: ${champion.entropy.toFixed(3)}`, "champion");
+                        `Final Exergy Vector: ${champion.liveExergy.toFixed(3)} // Momentum: ${champion.momentum.toFixed(3)}`, "champion");
         
         this.updateLeaderboard();
         this.renderBracket();
@@ -578,7 +595,7 @@ class TournamentSimulator {
       tr.innerHTML = `
         <td class="leaderboard-name-cell">${t.name}</td>
         <td align="right" class="leaderboard-exergy-cell">${t.liveExergy.toFixed(3)}</td>
-        <td align="right" class="leaderboard-entropy-cell">${t.entropy.toFixed(2)}</td>
+        <td align="right" class="leaderboard-entropy-cell">${(t.volatility || 0).toFixed(2)}</td>
         <td align="center">${statusBadge}</td>
       `;
       tbody.appendChild(tr);
@@ -771,6 +788,12 @@ class ExergyPhysicsEngine {
       t.vx *= this.friction;
       t.vy *= this.friction;
 
+      // Dynamic Gravity mapping
+      t.radius = 6 + t.liveExergy * 8 + (t.momentum || 0) * 5;
+      
+      // Cold losers drift effect
+      t.vy += (t.volatility || 0) * 0.08;
+
       // Keep inside boundary canvas margins
       const margin = t.radius + 10;
       if (t.x < margin) { t.x = margin; t.vx *= -0.5; }
@@ -778,7 +801,7 @@ class ExergyPhysicsEngine {
       if (t.y < margin) { t.y = margin; t.vy *= -0.5; }
       if (t.y > height - margin) { t.y = height - margin; t.vy *= -0.5; }
       
-      t.pulse += 0.05;
+      t.pulse += 0.05 + (t.momentum || 0) * 0.15;
     });
 
     // Particle-to-particle collisions (Elastic deflection)
@@ -864,16 +887,22 @@ class ExergyPhysicsEngine {
       
       // Base glow effects
       this.ctx.beginPath();
-      let colorGlow = "rgba(43, 59, 229, 0.2)";
+      
+      // Node opacity influenced by volatility
+      const nodeAlpha = Math.max(0.1, 1.0 - (t.volatility || 0) * 2.0);
+      this.ctx.globalAlpha = t.status === "ELIMINATED" ? 0.2 : nodeAlpha;
+      
+      let colorGlow = `rgba(43, 59, 229, ${Math.min(0.8, 0.2 + (t.momentum || 0) * 0.6)})`;
       if (t.status === "ELIMINATED") {
         colorGlow = "rgba(243, 244, 246, 0.02)";
       } else if (t.status === "CHAMPION") {
-        colorGlow = "rgba(255, 215, 0, 0.5)";
-      } else if (t.entropy > 0.15) {
-        colorGlow = "rgba(255, 159, 28, 0.3)";
+        colorGlow = "rgba(255, 215, 0, 0.8)";
+      } else if ((t.volatility || 0) > 0.1) {
+        colorGlow = `rgba(255, 159, 28, ${Math.min(0.6, 0.2 + t.volatility)})`;
       }
       
-      const glowRad = t.radius * (1.3 + Math.sin(t.pulse) * 0.15);
+      const pulseAmp = 0.15 + (t.momentum || 0) * 0.3;
+      const glowRad = t.radius * (1.3 + Math.sin(t.pulse) * pulseAmp);
       const gradGlow = this.ctx.createRadialGradient(t.x, t.y, t.radius * 0.5, t.x, t.y, glowRad);
       gradGlow.addColorStop(0, colorGlow);
       gradGlow.addColorStop(1, "rgba(10, 10, 10, 0)");
@@ -888,9 +917,12 @@ class ExergyPhysicsEngine {
         nodeFill = "#222222";
       } else if (t.status === "CHAMPION") {
         nodeFill = "#FFD700";
-      } else if (t.entropy > 0.15) {
-        // Mix with Sovereign Amber depending on entropy amount
+      } else if ((t.volatility || 0) > 0.1) {
+        // Cold fade
         nodeFill = "#FF9F1C";
+      } else if ((t.momentum || 0) > 0.2) {
+        // Brightness from momentum
+        nodeFill = "#4D5FFF";
       }
       
       this.ctx.fillStyle = nodeFill;
@@ -900,6 +932,8 @@ class ExergyPhysicsEngine {
       this.ctx.fill();
       this.ctx.stroke();
 
+      this.ctx.globalAlpha = 1.0; // Reset for label
+      
       // Node label
       if (t.status !== "ELIMINATED" || t.radius > 9) {
         this.ctx.fillStyle = t.status === "ELIMINATED" ? "rgba(243, 244, 246, 0.2)" : "#F3F4F6";
