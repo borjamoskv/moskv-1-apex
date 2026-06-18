@@ -1,0 +1,9 @@
+Cost Center,Formula,Annual Cost Avoided (EUR)
+AI Act Fines,"7% Revenue * 5% Probability",350000
+AI Compliance Team,"3 FTEs * 85k",255000
+External Audits,"2/year * 40k",80000
+Customer Disputes,"-40% chargebacks * 200k/year",80000
+Time-to-Market,"18 months -> 4 hours",100000
+TOTAL SAVINGS,,865000
+MOSKV-1 Managed Cost,"5k/mo * 12",60000
+NET ROI,,1341%

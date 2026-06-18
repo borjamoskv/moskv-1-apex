@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  cortex-python-kernel:
+    build:
+      context: ../core/moskv-1
+      dockerfile: Dockerfile
+    container_name: moskv_kernel
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - CORTEX_ENV=enterprise_demo
+    volumes:
+      - cortex_ledger:/app/data
+
+  cortex-node-gateway:
+    build:
+      context: ../apps/agents.archi/payment_gateway
+      dockerfile: Dockerfile
+    container_name: moskv_gateway
+    restart: unless-stopped
+    ports:
+      - "4242:4242"
+    environment:
+      - NODE_ENV=production
+      # Mock keys injected for Zero-Trust Demo
+      - STRIPE_SECRET_KEY=sk_test_mock_c5_real
+      - STRIPE_PUBLISHABLE_KEY=pk_test_mock_c5_real
+      - STRIPE_WEBHOOK_SECRET=whsec_mock_c5_real
+    depends_on:
+      - cortex-python-kernel
+
+volumes:
+  cortex_ledger:
+    driver: local
