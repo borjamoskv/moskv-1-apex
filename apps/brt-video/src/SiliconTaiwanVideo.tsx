@@ -220,7 +220,7 @@ export const SiliconTaiwanVideo: React.FC = () => {
 
   return (
     <AbsoluteFill style={{ backgroundColor: '#020202', overflow: 'hidden', fontFamily: 'Courier New, monospace' }}>
-      <Audio src={staticFile('kick_140.m4a')} />
+      <Audio src={staticFile('silicon_loop.wav')} />
 
       {/* Rejilla de diagnóstico */}
       <div style={{
