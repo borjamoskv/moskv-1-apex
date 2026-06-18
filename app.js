@@ -88,7 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 ## 1. Hallazgo principal
 - Se ha completado la extracción estructural sobre la Wallet: **${target}** en la red **${network.toUpperCase()}**.
-- Entidad Identificada: **Polygon: PoS Bridge (Mapeo estático CORTEX)**.
+- Entidad Identificada: **Polygon: PoS Bridge (Mapeo estático AGENTS.ARCHI)**.
 
 ## 2. Evidencia observada
 \`\`\`json
@@ -322,7 +322,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         // Simulación local C5-REAL
                         setTimeout(() => {
                             alert(`[MOCK GATEWAY] Simulación de pago completada para ${tier}.\nID de Sesión: ${session.id}\nExergía liquidada exitosamente.`);
-                            consoleOutput.innerHTML += `[${getTimestamp()}] [+] [CORTEX-MOCK-PAY] Pago completado. Exergía liquidada. Aprovisionando recursos en el kernel local.<br>`;
+                            consoleOutput.innerHTML += `[${getTimestamp()}] [+] [AGENTS.ARCHI-MOCK-PAY] Pago completado. Exergía liquidada. Aprovisionando recursos en el kernel local.<br>`;
                             consoleOutput.scrollTop = consoleOutput.scrollHeight;
                             btn.innerHTML = "APROVISIONADO";
                         }, 1000);
@@ -350,73 +350,116 @@ document.addEventListener("DOMContentLoaded", () => {
     const canvas = document.getElementById("bridge-canvas");
     if (canvas) {
         const ctx = canvas.getContext("2d");
-        
+        let width = 0;
+        let height = 0;
         function resizeCanvas() {
-            canvas.width = canvas.parentElement.clientWidth;
-            canvas.height = canvas.parentElement.clientHeight;
+            width = canvas.width = canvas.parentElement.clientWidth;
+            height = canvas.height = canvas.parentElement.clientHeight;
         }
-        
         window.addEventListener("resize", resizeCanvas);
         resizeCanvas();
-
-        let offset = 0;
-
-        function drawBridge() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            const startX = 40;
-            const endX = canvas.width - 40;
-            const centerY = canvas.height / 2;
-            const width = endX - startX;
-            
-            offset += 0.04;
-
-            // Draw multiple glowing sine waves
-            const numWaves = 3;
-            for (let i = 0; i < numWaves; i++) {
-                ctx.beginPath();
-                ctx.strokeStyle = i === 0 ? "rgba(82, 98, 255, 0.8)" : `rgba(43, 59, 229, ${0.4 - i * 0.1})`;
-                ctx.lineWidth = i === 0 ? 2.5 : 1.5;
-                
-                // Add soft glow shadow
-                ctx.shadowBlur = i === 0 ? 10 : 0;
-                ctx.shadowColor = "#2b3be5";
-                
-                for (let x = startX; x <= endX; x++) {
-                    const progress = (x - startX) / width;
-                    const envelope = Math.sin(progress * Math.PI); // Pinches the ends
-                    
-                    const freq = 0.015 + i * 0.005;
-                    const amp = 20 + i * 10;
-                    
-                    const y = centerY + Math.sin(x * freq - offset + (i * Math.PI / 4)) * amp * envelope;
-                    
-                    if (x === startX) {
-                        ctx.moveTo(x, y);
-                    } else {
-                        ctx.lineTo(x, y);
+        const numNodes = 45;
+        const nodes = [];
+        for (let i = 0; i < numNodes; i++) {
+            nodes.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                vx: (Math.random() - 0.5) * 0.8,
+                vy: (Math.random() - 0.5) * 0.8,
+                radius: Math.random() * 2 + 1.5,
+                pulse: Math.random() * Math.PI
+            });
+        }
+        let mouseX = null;
+        let mouseY = null;
+        const mouseRadius = 130;
+        canvas.addEventListener("mousemove", (e) => {
+            const rect = canvas.getBoundingClientRect();
+            mouseX = e.clientX - rect.left;
+            mouseY = e.clientY - rect.top;
+        });
+        canvas.addEventListener("mouseleave", () => {
+            mouseX = null;
+            mouseY = null;
+        });
+        function animateSwarm() {
+            ctx.clearRect(0, 0, width, height);
+            ctx.lineWidth = 1;
+            for (let i = 0; i < numNodes; i++) {
+                const nodeA = nodes[i];
+                for (let j = i + 1; j < numNodes; j++) {
+                    const nodeB = nodes[j];
+                    const dx = nodeA.x - nodeB.x;
+                    const dy = nodeA.y - nodeB.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 85) {
+                        const alpha = (1 - dist / 85) * 0.15;
+                        ctx.strokeStyle = `rgba(43, 59, 229, ${alpha})`;
+                        ctx.beginPath();
+                        ctx.moveTo(nodeA.x, nodeA.y);
+                        ctx.lineTo(nodeB.x, nodeB.y);
+                        ctx.stroke();
                     }
                 }
-                ctx.stroke();
             }
-            
-            // Draw end nodes
-            ctx.shadowBlur = 12;
-            ctx.fillStyle = "#5262ff";
-            ctx.beginPath();
-            ctx.arc(startX, centerY, 4, 0, Math.PI * 2);
-            ctx.fill();
-            
-            ctx.beginPath();
-            ctx.arc(endX, centerY, 4, 0, Math.PI * 2);
-            ctx.fill();
-            
-            ctx.shadowBlur = 0; // reset
-            
-            requestAnimationFrame(drawBridge);
+            if (mouseX !== null && mouseY !== null) {
+                nodes.forEach(node => {
+                    const dx = mouseX - node.x;
+                    const dy = mouseY - node.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < mouseRadius) {
+                        const force = (mouseRadius - dist) / mouseRadius;
+                        node.vx += (dx / dist) * force * 0.08;
+                        node.vy += (dy / dist) * force * 0.08;
+                        const sparkAlpha = (1 - dist / mouseRadius) * 0.5;
+                        ctx.strokeStyle = `rgba(255, 159, 28, ${sparkAlpha})`;
+                        ctx.lineWidth = 1.2;
+                        ctx.beginPath();
+                        ctx.moveTo(node.x, node.y);
+                        const midX = (node.x + mouseX) / 2 + (Math.random() - 0.5) * 8;
+                        const midY = (node.y + mouseY) / 2 + (Math.random() - 0.5) * 8;
+                        ctx.lineTo(midX, midY);
+                        ctx.lineTo(mouseX, mouseY);
+                        ctx.stroke();
+                    }
+                });
+            }
+            nodes.forEach(node => {
+                const speed = Math.sqrt(node.vx * node.vx + node.vy * node.vy);
+                const maxSpeed = 1.5;
+                if (speed > maxSpeed) {
+                    node.vx = (node.vx / speed) * maxSpeed;
+                    node.vy = (node.vy / speed) * maxSpeed;
+                }
+                node.vx *= 0.98;
+                node.vy *= 0.98;
+                node.x += node.vx;
+                node.y += node.vy;
+                const margin = 20;
+                if (node.x < margin) { node.vx += 0.05; }
+                if (node.x > width - margin) { node.vx -= 0.05; }
+                if (node.y < margin) { node.vy += 0.05; }
+                if (node.y > height - margin) { node.vy -= 0.05; }
+                node.pulse += 0.03;
+                const sizeOffset = Math.sin(node.pulse) * 0.5;
+                const finalRadius = Math.max(1, node.radius + sizeOffset);
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, finalRadius, 0, Math.PI * 2);
+                if (mouseX !== null && mouseY !== null && Math.sqrt((mouseX - node.x)**2 + (mouseY - node.y)**2) < mouseRadius) {
+                    ctx.fillStyle = "#ff9f1c";
+                    ctx.shadowBlur = 8;
+                    ctx.shadowColor = "#ff9f1c";
+                } else {
+                    ctx.fillStyle = "#5262ff";
+                    ctx.shadowBlur = 6;
+                    ctx.shadowColor = "#2b3be5";
+                }
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            });
+            requestAnimationFrame(animateSwarm);
         }
-        
-        drawBridge();
+        animateSwarm();
     }
 
     // ----------------------------------------------------
@@ -468,7 +511,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 modal.innerHTML = `
                     <div class="modal-window">
                         <div class="modal-header">
-                            <h2 id="modal-title">CORTEX // TECHNICAL MANIFESTO</h2>
+                            <h2 id="modal-title">AGENTS.ARCHI // TECHNICAL MANIFESTO</h2>
                             <button class="modal-close">&times;</button>
                         </div>
                         <div class="modal-content" id="modal-body"></div>
@@ -505,16 +548,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 const text = await response.text();
                 
                 // Extract metadata (title) if exists
-                let title = "CORTEX // MANIFESTO";
+                let title = "AGENTS.ARCHI // MANIFESTO";
                 const titleMatch = text.match(/^title:\s*["']?(.*?)["']?$/m);
                 if (titleMatch && titleMatch[1]) {
-                    title = `CORTEX // ${titleMatch[1].toUpperCase()}`;
+                    title = `AGENTS.ARCHI // ${titleMatch[1].toUpperCase()}`;
                 }
                 
                 modalTitle.innerText = title;
                 modalBody.innerHTML = parseRichMarkdown(text);
             } catch (err) {
-                modalTitle.innerText = "CORTEX // INGESTION ERROR";
+                modalTitle.innerText = "AGENTS.ARCHI // INGESTION ERROR";
                 modalBody.innerHTML = `
                     <div class="empty-state">
                         <div class="empty-icon">❌</div>
