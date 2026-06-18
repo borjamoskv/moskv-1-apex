@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CORTEX // INDEX SEARCH & FILE FINDER</title>
+  <meta name="description" content="Sovereign Industrial Noir File Finder and Brain Index Explorer for C5-REAL Workspace.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .finder-container {
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+    .search-panel {
+      background: var(--surface-glass);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    }
+    .search-wrapper {
+      position: relative;
+      margin-bottom: 20px;
+    }
+    .search-input {
+      width: 100%;
+      background: rgba(10, 10, 10, 0.6);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-md);
+      padding: 18px 25px 18px 60px;
+      font-family: var(--font-primary);
+      font-size: 1.2rem;
+      color: var(--parchment-white);
+      transition: var(--transition-smooth);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8);
+    }
+    .search-input:focus {
+      outline: none;
+      border-color: var(--yinmn-light);
+      box-shadow: 0 0 20px var(--yinmn-glow), inset 0 2px 4px rgba(0, 0, 0, 0.8);
+    }
+    .search-icon {
+      position: absolute;
+      left: 22px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.3rem;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      align-items: center;
+      border-top: 1px solid rgba(243, 244, 246, 0.04);
+      padding-top: 20px;
+    }
+    .filter-label {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .filter-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .filter-tag {
+      background: rgba(243, 244, 246, 0.03);
+      border: 1px solid var(--border-glass);
+      color: var(--text-muted);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-family: var(--font-primary);
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+    .filter-tag:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+      color: var(--parchment-white);
+    }
+    .filter-tag.active {
+      background: var(--yinmn-blue);
+      border-color: var(--yinmn-light);
+      color: var(--parchment-white);
+      box-shadow: 0 0 12px var(--yinmn-glow);
+    }
+    .badge-novel { background: rgba(82, 98, 255, 0.15); border: 1px solid #5262ff; color: #8ba4ff; }
+    .badge-manifesto { background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; color: #a7f3d0; }
+    .badge-script { background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; color: #fca5a5; }
+    .badge-config { background: rgba(245, 158, 11, 0.15); border: 1px solid #f59e0b; color: #fde68a; }
+    .badge-database { background: rgba(167, 139, 250, 0.15); border: 1px solid #a78bfa; color: #ddd6fe; }
+    .badge-system { background: rgba(236, 72, 153, 0.15); border: 1px solid #ec4899; color: #fbcfe8; }
+    .badge-audit { background: rgba(6, 182, 212, 0.15); border: 1px solid #06b6d4; color: #cffafe; }
+    .badge-doc { background: rgba(107, 114, 128, 0.15); border: 1px solid #6b7280; color: #e5e7eb; }
+    .badge-document { background: rgba(251, 191, 36, 0.15); border: 1px solid #fbbf24; color: #fef3c7; }
+    .badge-other { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: var(--text-muted); }
+    .results-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border-glass);
+      padding-bottom: 10px;
+    }
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      margin-top: 10px;
+    }
+    .file-card {
+      background: var(--surface-glass);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-md);
+      padding: 25px;
+      transition: var(--transition-smooth);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .file-card:hover {
+      border-color: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+    .file-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 3px;
+      height: 100%;
+      background: transparent;
+      transition: var(--transition-smooth);
+    }
+    .file-card:hover::before {
+      background: var(--yinmn-light);
+    }
+    .file-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 15px;
+    }
+    .file-title-section {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .file-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--parchment-white);
+      text-decoration: none;
+      transition: var(--transition-smooth);
+    }
+    .file-title:hover {
+      color: var(--yinmn-light);
+    }
+    .file-name {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .file-meta-badges {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .badge-category {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .badge-location {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+    .file-preview {
+      font-size: 0.9rem;
+      color: rgba(243, 244, 246, 0.7);
+      background: rgba(0, 0, 0, 0.2);
+      padding: 12px 15px;
+      border-radius: 6px;
+      border-left: 2px solid rgba(255, 255, 255, 0.1);
+      margin: 5px 0;
+      line-height: 1.5;
+    }
+    .file-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      border-top: 1px solid rgba(243, 244, 246, 0.03);
+      padding-top: 12px;
+      margin-top: 5px;
+    }
+    .file-links {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .action-link {
+      color: var(--yinmn-light);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+    .action-link:hover {
+      color: var(--parchment-white);
+      text-shadow: 0 0 8px var(--yinmn-glow);
+    }
+    .copy-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+    .copy-btn:hover {
+      color: var(--parchment-white);
+    }
+    .file-specs {
+      display: flex;
+      gap: 15px;
+    }
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      background: var(--surface-glass);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-md);
+    }
+    .empty-icon {
+      font-size: 3rem;
+      margin-bottom: 15px;
+      color: var(--text-muted);
+    }
+    .reindex-panel {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(43, 59, 229, 0.04);
+      border: 1px dashed rgba(82, 98, 255, 0.2);
+      border-radius: var(--radius-md);
+      padding: 15px 25px;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+    }
+    .reindex-btn {
+      background: rgba(82, 98, 255, 0.1);
+      border: 1px solid var(--yinmn-light);
+      color: var(--yinmn-light);
+      padding: 6px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+    }
+    .reindex-btn:hover {
+      background: var(--yinmn-blue);
+      color: white;
+      box-shadow: 0 0 10px var(--yinmn-glow);
+    }
+    .highlight {
+      background: rgba(255, 159, 28, 0.25);
+      border-bottom: 1px solid var(--sovereign-amber);
+      color: white;
+      padding: 0 2px;
+      border-radius: 2px;
+    }
+  </style>
+</head>
+<body>
+  <div class="analog-grain"></div>
+  <div class="glow-orb orb-1"></div>
+  <div class="glow-orb orb-2"></div>
+  <div class="glow-orb orb-3"></div>
+  <div class="container" style="gap: 40px;">
+    <header>
+      <div class="brand">
+        <span class="brand-badge">C5-REAL</span>
+        <h1>CORTEX<span class="accent-text"> // FINDER</span></h1>
+      </div>
+      <nav class="main-nav">
+        <a href="index.html" class="nav-link">Main Hub</a>
+        <a href="dashboard.html" class="nav-link">Swarm Control</a>
+      </nav>
+      <div class="system-status">
+        <div class="status-indicator"></div>
+        <span class="status-label">INDEXER ACTIVE</span>
+      </div>
+    </header>
+    <div class="finder-container">
+      <section class="search-panel">
+        <div class="search-wrapper">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="search-input" class="search-input" placeholder="Type a filename, category, term or content snippet..." autofocus>
+        </div>
+        <div class="filter-bar">
+          <span class="filter-label">Category:</span>
+          <div class="filter-group" id="category-filters">
+            <span class="filter-tag active" data-category="all">All</span>
+            <span class="filter-tag" data-category="Novel">Novels</span>
+            <span class="filter-tag" data-category="Manifesto">Manifestos</span>
+            <span class="filter-tag" data-category="Script">Scripts</span>
+            <span class="filter-tag" data-category="Database">Databases</span>
+            <span class="filter-tag" data-category="Config">Config</span>
+            <span class="filter-tag" data-category="System">System</span>
+            <span class="filter-tag" data-category="Audit">Audits</span>
+            <span class="filter-tag" data-category="Doc">Docs</span>
+            <span class="filter-tag" data-category="Document">PDF/EPUB</span>
+          </div>
+        </div>
+        <div class="filter-bar" style="border-top: none; padding-top: 10px;">
+          <span class="filter-label">Location:</span>
+          <div class="filter-group" id="location-filters">
+            <span class="filter-tag active" data-location="all">All Locations</span>
+            <span class="filter-tag" data-location="Workspace">Workspace</span>
+            <span class="filter-tag" data-location="brain">Brain History</span>
+          </div>
+        </div>
+      </section>
+      <div class="reindex-panel">
+        <div>
+          <span>LAST INDEXED: </span>
+          <span id="index-date" style="color: var(--parchment-white);">Ingesting ledger...</span>
+        </div>
+        <button class="reindex-btn" id="reindex-btn">Run indexer script</button>
+      </div>
+      <div class="results-meta">
+        <span id="results-count">Showing 0 of 0 files</span>
+        <span style="letter-spacing: 1px;">SOVEREIGN OS INDEX</span>
+      </div>
+      <div class="results-grid" id="results-grid">
+        <div class="empty-state">
+          <div class="empty-icon">⏳</div>
+          <p>Ingesting indices...</p>
+          <span>Loading files and metadata from the local database.</span>
+        </div>
+      </div>
+    </div>
+    <footer>
+      <div class="footer-content">
+        <p>CORTEX // FINDER v1.0.0 // REALITY LEVEL: C5-REAL</p>
+        <p class="footer-ledger">Ledger Hash: <span style="color: var(--oxide-gold);">e0a741ad48f7311ce</span> // Operator: borjamoskv</p>
+      </div>
+    </footer>
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      let filesData = [];
+      let activeCategory = "all";
+      let activeLocation = "all";
+      const searchInput = document.getElementById("search-input");
+      const resultsGrid = document.getElementById("results-grid");
+      const resultsCount = document.getElementById("results-count");
+      const indexDate = document.getElementById("index-date");
+      async function loadIndex() {
+        try {
+          const res = await fetch('./cortex_index.json');
+          if (!res.ok) throw new Error("Index file not found.");
+          const data = await res.json();
+          filesData = data.files || [];
+          const genDate = new Date(data.generated_at);
+          indexDate.innerText = genDate.toLocaleString();
+          renderFiles();
+        } catch (err) {
+          resultsGrid.innerHTML = `
+            <div class="empty-state" style="border-color: rgba(239, 68, 68, 0.4);">
+              <div class="empty-icon" style="color: #ef4444;">❌</div>
+              <p>Index Database Error</p>
+              <span>Please run the indexer script in your terminal to build the database:<br>
+              <code style="display: block; margin-top: 10px; background: rgba(0,0,0,0.4); padding: 8px; border-radius: 4px; color: #ff5252;">python3 scripts/workspace_finder.py</code>
+              </span>
+            </div>
+          `;
+          console.error("Index load failed:", err);
+        }
+      }
+      function getCategoryBadgeClass(category) {
+        return `badge-${category.toLowerCase()}`;
+      }
+      function escapeHtml(text) {
+        return text
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
+      }
+      function highlightText(text, searchVal) {
+        if (!searchVal) return escapeHtml(text);
+        const escapedSearch = searchVal.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+        const regex = new RegExp(`(${escapedSearch})`, 'gi');
+        return escapeHtml(text).replace(regex, '<span class="highlight">$1</span>');
+      }
+      function renderFiles() {
+        const query = searchInput.value.trim().toLowerCase();
+        const filtered = filesData.filter(file => {
+          if (activeCategory !== "all" && file.category !== activeCategory) {
+            return false;
+          }
+          if (activeLocation !== "all") {
+            if (activeLocation === "Workspace" && file.location !== "Workspace") return false;
+            if (activeLocation === "brain" && !file.location.startsWith("Brain")) return false;
+          }
+          if (query) {
+            const matchName = file.name.toLowerCase().includes(query);
+            const matchTitle = file.title.toLowerCase().includes(query);
+            const matchPath = file.path.toLowerCase().includes(query);
+            const matchPreview = file.preview.toLowerCase().includes(query);
+            const matchLocation = file.location.toLowerCase().includes(query);
+            return matchName || matchTitle || matchPath || matchPreview || matchLocation;
+          }
+          return true;
+        });
+        resultsCount.innerText = `Showing ${filtered.length} of ${filesData.length} files`;
+        if (filtered.length === 0) {
+          resultsGrid.innerHTML = `
+            <div class="empty-state">
+              <div class="empty-icon">🌀</div>
+              <p>Zero files matched</p>
+              <span>Try adjusting your filters or query constraints.</span>
+            </div>
+          `;
+          return;
+        }
+        resultsGrid.innerHTML = filtered.map(file => {
+          const categoryClass = getCategoryBadgeClass(file.category);
+          const formattedDate = new Date(file.last_modified).toLocaleString();
+          return `
+            <div class="file-card">
+              <div class="file-header">
+                <div class="file-title-section">
+                  <a href="file://${file.path}" target="_blank" class="file-title" title="Open directly in OS">
+                    ${highlightText(file.title, query)}
+                  </a>
+                  <span class="file-name">${highlightText(file.rel_path, query)}</span>
+                </div>
+                <div class="file-meta-badges">
+                  <span class="badge-category ${categoryClass}">${file.category}</span>
+                  <span class="badge-location">${highlightText(file.location, query)}</span>
+                </div>
+              </div>
+              <p class="file-preview">${highlightText(file.preview, query)}</p>
+              <div class="file-footer">
+                <div class="file-links">
+                  <a href="file://${file.path}" target="_blank" class="action-link">Open Local File</a>
+                  <span class="action-divider">•</span>
+                  <button class="copy-btn" onclick="navigator.clipboard.writeText('${file.path.replace(/'/g, "\\'")}'); alert('Path copied: ${file.name}')">Copy Absolute Path</button>
+                </div>
+                <div class="file-specs">
+                  <span>Size: ${file.size}</span>
+                  <span>Modified: ${formattedDate}</span>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join("");
+      }
+      document.getElementById("category-filters").addEventListener("click", (e) => {
+        if (e.target.classList.contains("filter-tag")) {
+          document.querySelectorAll("#category-filters .filter-tag").forEach(tag => tag.classList.remove("active"));
+          e.target.classList.add("active");
+          activeCategory = e.target.getAttribute("data-category");
+          renderFiles();
+        }
+      });
+      document.getElementById("location-filters").addEventListener("click", (e) => {
+        if (e.target.classList.contains("filter-tag")) {
+          document.querySelectorAll("#location-filters .filter-tag").forEach(tag => tag.classList.remove("active"));
+          e.target.classList.add("active");
+          activeLocation = e.target.getAttribute("data-location");
+          renderFiles();
+        }
+      });
+      searchInput.addEventListener("input", renderFiles);
+      document.getElementById("reindex-btn").addEventListener("click", async () => {
+        const btn = document.getElementById("reindex-btn");
+        btn.innerText = "Indexing via Python...";
+        btn.disabled = true;
+        alert("To rebuild indices, run this command in your terminal:\n\npython3 scripts/workspace_finder.py\n\nIndices are live-loaded on browser refresh.");
+        btn.innerText = "Run indexer script";
+        btn.disabled = false;
+      });
+      loadIndex();
+    });
+  </script>
+</body>
+</html>

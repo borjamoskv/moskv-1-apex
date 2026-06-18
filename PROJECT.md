@@ -35,3 +35,4 @@
 | 6 | M6. Vercel-Cloudflare | CDN caching rules, security bypasses, and redirect loop resolution | M5 | DONE |
 | 7 | M7. Dynamic Sandbox | Hashing-based deterministic OSINT mockup telemetry engine | M6 | DONE |
 | 8 | M8. Manifesto Modal UX | Copy-to-clipboard button overlays in technical code blocks | M7 | DONE |
+| 9 | M9. Telemetry Injection Bridge | Real-time C5-REAL SSE telemetry bridge (FastAPI) | M8 | DONE |

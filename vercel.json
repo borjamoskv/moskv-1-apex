@@ -20,6 +20,14 @@
     {
       "src": "success.html",
       "use": "@vercel/static"
+    },
+    {
+      "src": "el_espacio_entre_nosotros.pdf",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "el_espacio_entre_nosotros.epub",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
