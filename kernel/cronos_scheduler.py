@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# CRONOS SCHEDULER v2.0 — ANTI-ENTROPIC BRUTALIST DAEMON
+# CRONOS SCHEDULER v4.0 — SRE-GRADE AUTONOMOUS DAEMON
 # Execution Level: C5-REAL
 import os
 import sys
@@ -10,42 +10,59 @@ import subprocess
 import fcntl
 import re
 import signal
+import json
 from datetime import datetime, timezone, timedelta
 
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DB_PATH = "/Users/borjafernandezangulo/.cortex/scheduler.db"
 SCHEDULER_LOCK_PATH = "/tmp/cronos_scheduler.lock"
 LOG_DIR = "/tmp/cronos_logs"
+HEARTBEAT_PATH = "/Users/borjafernandezangulo/.cortex/cronos_heartbeat.json"
 
 os.makedirs(LOG_DIR, exist_ok=True)
+os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
+
+def apply_resource_limits(cmd_list):
+    return ["/usr/bin/nice", "-n", "10"] + cmd_list
+
+def rotate_log(log_path):
+    if os.path.exists(log_path) and os.path.getsize(log_path) > 50 * 1024 * 1024:
+        try:
+            os.rename(log_path, log_path + ".old")
+        except Exception:
+            pass
 
 TASKS = {
     "exergy_monitor": {
-        "command": ["/bin/zsh", "/Users/borjafernandezangulo/.cortex/scripts/cron_exergy_monitor.sh"],
+        "command": apply_resource_limits(["/bin/zsh", "/Users/borjafernandezangulo/.cortex/scripts/cron_exergy_monitor.sh"]),
         "base_interval": 300,
         "type": "interval",
         "lock_file": "/tmp/cronos_exergy_monitor.lock",
+        "timeout_seconds": 60,
         "description": "Calcula y purga anergía en los logs del sistema"
     },
     "v_omega_shield": {
-        "command": ["python3", os.path.join(ROOT_DIR, "scripts", "v_omega_shield.py"), "--kill"],
+        "command": apply_resource_limits(["python3", os.path.join(ROOT_DIR, "scripts", "v_omega_shield.py"), "--kill"]),
         "base_interval": 300,
         "type": "interval",
         "lock_file": "/tmp/cronos_v_omega_shield.lock",
+        "timeout_seconds": 60,
         "description": "Escudo de conexiones de red no permitidas"
     },
     "board_of_directors": {
-        "command": ["python3", os.path.join(ROOT_DIR, "kernel", "board_of_directors.py")],
+        "command": apply_resource_limits(["python3", os.path.join(ROOT_DIR, "kernel", "board_of_directors.py")]),
         "base_interval": 3600,
         "type": "interval",
         "lock_file": "/tmp/cronos_board_of_directors.lock",
+        "timeout_seconds": 3600,
         "description": "Orquestación asíncrona de los ejecutivos del swarm"
     },
     "death_protocol": {
-        "command": ["/bin/zsh", "/Users/borjafernandezangulo/.cortex/scripts/cron_death_protocol.sh", ROOT_DIR],
+        "command": apply_resource_limits(["/bin/zsh", "/Users/borjafernandezangulo/.cortex/scripts/cron_death_protocol.sh", ROOT_DIR]),
         "cron_time": "03:00",
         "type": "daily",
         "lock_file": "/tmp/cronos_death_protocol.lock",
+        "timeout_seconds": 300,
         "description": "Escaneo y purga de archivos inactivos por más de 7 días"
     }
 }
@@ -78,14 +95,28 @@ class FileLock:
                 pass
             self.fd = None
 
-def get_db_connection():
-    os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
-    conn = sqlite3.connect(DB_PATH, timeout=5.0)
-    conn.execute("PRAGMA journal_mode=WAL;")
-    conn.row_factory = sqlite3.Row
-    return conn
+shutdown_event = asyncio.Event()
+active_tasks_state = {}
 
-def init_db():
+def get_db_connection():
+    try:
+        conn = sqlite3.connect(DB_PATH, timeout=5.0)
+        conn.execute("PRAGMA journal_mode=WAL;")
+        conn.row_factory = sqlite3.Row
+        conn.execute("SELECT 1")
+        return conn
+    except sqlite3.DatabaseError:
+        print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS-RECOVERY] Corrupción en DB. Purgando y recreando...")
+        try:
+            os.remove(DB_PATH)
+        except OSError:
+            pass
+        conn = sqlite3.connect(DB_PATH, timeout=5.0)
+        conn.execute("PRAGMA journal_mode=WAL;")
+        conn.row_factory = sqlite3.Row
+        return conn
+
+def init_db_and_recover():
     with get_db_connection() as conn:
         conn.execute("""
             CREATE TABLE IF NOT EXISTS task_runs (
@@ -106,10 +137,40 @@ def init_db():
                 updated_at TEXT NOT NULL
             );
         """)
+        cursor = conn.cursor()
+        cursor.execute("UPDATE task_runs SET status = 'ORPHANED_CRASH', error = 'Daemon died without cleanup' WHERE status = 'RUNNING'")
+        if cursor.rowcount > 0:
+            print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS-RECOVERY] Sanados {cursor.rowcount} registros huérfanos (ORPHANED_CRASH).")
         conn.commit()
 
+def emit_heartbeat():
+    state = {
+        "status": "ALIVE" if not shutdown_event.is_set() else "SHUTTING_DOWN",
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "active_tasks_count": len(active_tasks_state),
+        "active_tasks": list(active_tasks_state.values())
+    }
+    try:
+        with open(HEARTBEAT_PATH + ".tmp", "w") as f:
+            json.dump(state, f)
+        os.rename(HEARTBEAT_PATH + ".tmp", HEARTBEAT_PATH)
+    except Exception as e:
+        print(f"[CRONOS-HEARTBEAT-ERR] Fallo al emitir heartbeat: {e}")
+
+def force_abort_active_tasks():
+    try:
+        with get_db_connection() as conn:
+            for run_id, name in active_tasks_state.items():
+                conn.execute(
+                    "UPDATE task_runs SET status = 'ABORTED_SIGTERM', end_time = ?, error = 'Terminated by OS signal' WHERE id = ?",
+                    (datetime.now(timezone.utc).isoformat(), run_id)
+                )
+            conn.commit()
+            print(f"[CRONOS-SHUTDOWN] Marcados {len(active_tasks_state)} procesos como ABORTED_SIGTERM.")
+    except Exception as e:
+        print(f"[CRONOS-SHUTDOWN-ERR] Fallo al actualizar DB en shutdown: {e}")
+
 def prune_db():
-    """Apoptosis del Ledger: Evita el crecimiento infinito eliminando registros de más de 7 días."""
     try:
         with get_db_connection() as conn:
             limit_date = (datetime.now(timezone.utc) - timedelta(days=7)).isoformat()
@@ -145,16 +206,17 @@ async def get_exergy_scaling_factor() -> float:
     except Exception:
         return 1.0
 
-shutdown_event = asyncio.Event()
-
 def signal_handler(sig, frame):
-    print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS-SHUTDOWN] Señal {sig} recibida. Iniciando muerte controlada...")
+    print(f"\n[{datetime.now(timezone.utc).isoformat()}] [CRONOS-SHUTDOWN] Señal {sig} recibida. Iniciando muerte limpia...")
     shutdown_event.set()
+    force_abort_active_tasks()
+    emit_heartbeat()
+    sys.exit(0)
 
 async def run_task(name: str, config: dict):
     lock = FileLock(config["lock_file"])
     if not lock.acquire():
-        print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS-ERR] Tarea {name} bloqueada por Mutex físico. Abortando colisión.")
+        print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS-ERR] Tarea {name} bloqueada por Mutex. Abortando colisión.")
         return
 
     start_time = datetime.now(timezone.utc).isoformat()
@@ -168,6 +230,7 @@ async def run_task(name: str, config: dict):
             )
             conn.commit()
             run_id = cursor.lastrowid
+            active_tasks_state[run_id] = name
     except Exception as e:
         print(f"[CRONOS-DB-ERR] Fallo al insertar {name}: {e}")
 
@@ -177,6 +240,8 @@ async def run_task(name: str, config: dict):
     
     out_log_path = os.path.join(LOG_DIR, f"{name}.out")
     err_log_path = os.path.join(LOG_DIR, f"{name}.err")
+    rotate_log(out_log_path)
+    rotate_log(err_log_path)
 
     try:
         with open(out_log_path, "w") as out_fd, open(err_log_path, "w") as err_fd:
@@ -187,9 +252,8 @@ async def run_task(name: str, config: dict):
                 cwd=ROOT_DIR
             )
             
-            # Wait for either process to finish or shutdown signal
             kill_task = asyncio.create_task(shutdown_event.wait())
-            wait_task = asyncio.create_task(proc.wait())
+            wait_task = asyncio.create_task(asyncio.wait_for(proc.wait(), timeout=config.get("timeout_seconds", 3600)))
             
             done, pending = await asyncio.wait([kill_task, wait_task], return_when=asyncio.FIRST_COMPLETED)
             
@@ -199,10 +263,16 @@ async def run_task(name: str, config: dict):
                 await asyncio.sleep(1)
                 if proc.returncode is None:
                     proc.kill()
-                status = "KILLED_BY_SIGNAL"
+                status = "ABORTED_SIGTERM"
             else:
-                if proc.returncode != 0:
-                    status = "FAILED"
+                try:
+                    await wait_task
+                    if proc.returncode != 0:
+                        status = "FAILED"
+                except asyncio.TimeoutError:
+                    print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS-ERR] Tarea {name} (PID: {proc.pid}) excedió timeout de {config.get('timeout_seconds')}s. Ejecutando SIGKILL.")
+                    proc.kill()
+                    status = "TIMEOUT_KILL"
             
         duration = time.time() - t_start
     except Exception as e:
@@ -211,9 +281,11 @@ async def run_task(name: str, config: dict):
         print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS-ERR] Excepción letal en {name}: {e}")
     finally:
         lock.release()
+        if run_id in active_tasks_state:
+            del active_tasks_state[run_id]
 
     end_time = datetime.now(timezone.utc).isoformat()
-    if run_id:
+    if run_id and not shutdown_event.is_set():
         try:
             with get_db_connection() as conn:
                 conn.execute(
@@ -229,14 +301,16 @@ async def run_task(name: str, config: dict):
             print(f"[CRONOS-DB-ERR] Fallo al actualizar {name}: {e}")
 
 async def scheduler_loop():
-    print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS] Inicializando Bucle C5-REAL...")
-    init_db()
+    print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS] Inicializando Bucle SRE-GRADE...")
+    init_db_and_recover()
+    emit_heartbeat()
     
     last_run_times = {}
     daily_completed_date = {}
     
     scaling_factor = 1.0
     last_exergy_check = 0.0
+    last_heartbeat = 0.0
 
     while not shutdown_event.is_set():
         now_ts = time.time()
@@ -244,10 +318,14 @@ async def scheduler_loop():
         current_date_str = now_dt.strftime("%Y-%m-%d")
         current_time_str = now_dt.strftime("%H:%M")
         
+        if now_ts - last_heartbeat >= 10:
+            emit_heartbeat()
+            last_heartbeat = now_ts
+
         if now_ts - last_exergy_check >= 3600:
             scaling_factor = await get_exergy_scaling_factor()
             last_exergy_check = now_ts
-            prune_db() # Apoptosis periódica
+            prune_db()
             try:
                 with get_db_connection() as conn:
                     conn.execute(
@@ -281,8 +359,6 @@ async def scheduler_loop():
         except asyncio.TimeoutError:
             pass
 
-    print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS-SHUTDOWN] Bucle finalizado limpiamente.")
-
 def main():
     signal.signal(signal.SIGTERM, signal_handler)
     signal.signal(signal.SIGINT, signal_handler)
@@ -292,13 +368,14 @@ def main():
         print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS-ERR] Planificador ya activo. Previniendo colapso multiversal. Abortando.")
         sys.exit(1)
         
-    print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS] Demonio Brutalista Iniciado.")
+    print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS] Demonio SRE-GRADE Iniciado. Aislamiento y Telemetría habilitados.")
     try:
         asyncio.run(scheduler_loop())
-    except KeyboardInterrupt:
-        pass
+    except Exception as e:
+        print(f"[CRONOS-ERR] Fallo general del planificador: {e}")
     finally:
-        print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS-SHUTDOWN] Liberando Mutex Físico.")
+        print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS-SHUTDOWN] Liberando Mutex Físico y cerrando sockets.")
+        emit_heartbeat()
         scheduler_lock.release()
 
 if __name__ == "__main__":
