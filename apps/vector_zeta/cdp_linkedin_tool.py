@@ -167,7 +167,7 @@ class CDPLinkedInTool:
                         url = lead['url']
                         print(f"\n[>] Navigating to target: {name} | {url}")
                         page.goto(url, wait_until="domcontentloaded", timeout=30000)
-                        time.sleep(3.0)
+                        time.sleep(2.0)
 
                         # Simulating scrolling to make connection buttons load
                         page.mouse.wheel(0, 500)
@@ -175,22 +175,28 @@ class CDPLinkedInTool:
                         page.mouse.wheel(0, -200)
                         time.sleep(1.0)
 
-                        # Try to locate Connect or Message buttons directly
-                        connect_button = page.locator("button:has-text('Connect'), button:has-text('Conectar'), button[aria-label*='Connect'], button[aria-label*='Conectar']").first
-                        message_button = page.locator("button:has-text('Message'), button:has-text('Mensaje'), button:has-text('Enviar mensaje'), button[aria-label*='Message'], button[aria-label*='Mensaje'], button[aria-label*='Enviar mensaje']").first
+                        # Wait for top card button elements to render
+                        try:
+                            page.locator("main button:has-text('Connect'), main button:has-text('Conectar'), main button:has-text('Message'), main button:has-text('Mensaje'), main button:has-text('Enviar mensaje'), main button:has-text('Seguir'), main button:has-text('Follow'), main button:has-text('Más'), main button:has-text('More')").first.wait_for(state="visible", timeout=10000)
+                        except Exception as e:
+                            print(f"[*] Profile action buttons load timeout: {e}")
+
+                        # Try to locate Connect or Message buttons directly under main to avoid chat overlay match
+                        connect_button = page.locator("main button:has-text('Connect'), main button:has-text('Conectar'), main button[aria-label*='Connect'], main button[aria-label*='Conectar']").first
+                        message_button = page.locator("main button:has-text('Message'), main button:has-text('Mensaje'), main button:has-text('Enviar mensaje'), main button[aria-label*='Message'], main button[aria-label*='Mensaje'], main button[aria-label*='Enviar mensaje']").first
 
                         # Personalize the note template
                         first_name = name.split()[0]
                         personalized_msg = message_template.replace("{{name}}", first_name)
 
                         if connect_button.is_visible():
-                            print("[*] Connect button found directly. Clicking Connect...")
+                            print("[*] Connect button found directly under main. Clicking Connect...")
                             connect_button.click(force=True)
                             time.sleep(1.5)
                             self._handle_connect_modal(page, personalized_msg, lead)
 
                         elif message_button.is_visible():
-                            print("[*] Message button found directly. Clicking Message...")
+                            print("[*] Message button found directly under main. Clicking Message...")
                             message_button.click(force=True)
                             time.sleep(2.0)
                             self._handle_message_flow(page, personalized_msg, lead)
