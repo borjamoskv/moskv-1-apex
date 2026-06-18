@@ -34,3 +34,4 @@
 | 5 | M5. Rebranding & UI | Rebrand landing page to AGENTS.ARCHI under Industrial Noir 2026 guidelines | M4 | DONE |
 | 6 | M6. Vercel-Cloudflare | CDN caching rules, security bypasses, and redirect loop resolution | M5 | DONE |
 | 7 | M7. Dynamic Sandbox | Hashing-based deterministic OSINT mockup telemetry engine | M6 | DONE |
+| 8 | M8. Manifesto Modal UX | Copy-to-clipboard button overlays in technical code blocks | M7 | DONE |
