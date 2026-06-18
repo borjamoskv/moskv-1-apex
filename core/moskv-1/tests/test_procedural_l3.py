@@ -28,4 +28,6 @@ def test_crystallize_and_retrieve_fallback(procedural_store):
     assert res is True, "Should return True because the fallback avoids crashing when DBs are missing"
 
     res_retrieve = procedural_store.retrieve_closest_skill("do math")
-    assert res_retrieve is None, "Should return None if DBs are not attached"
+    assert res_retrieve is not None, "Should retrieve the crystallized skill from the isolated SQLite DB"
+    assert res_retrieve["name"] == "math_skill"
+    assert res_retrieve["code"] == "def foo(): pass"

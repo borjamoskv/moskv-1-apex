@@ -4,7 +4,6 @@ import hashlib
 import asyncio
 from typing import Callable, Any, Dict, Optional, Awaitable, List
 from dataclasses import dataclass, asdict, field
-from moskv_1.exergy import ExergyMeter
 
 @dataclass
 class CortexEvent:
@@ -81,6 +80,7 @@ class EventBus:
         self._scheduler_task = None
         self._ledger_hashes = set()
         self._ledger_hashes.add("GENESIS")
+        from moskv_1.exergy import ExergyMeter
         self.exergy_meter = ExergyMeter()
 
     async def _exergy_scheduler_worker(self):

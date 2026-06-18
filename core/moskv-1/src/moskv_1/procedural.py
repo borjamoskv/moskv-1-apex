@@ -12,7 +12,9 @@ class ProceduralStore:
     Manages autonomous extraction, crystallization, and retrieval of execution scripts and AST skills.
     Maintains a strictly isolated procedural latent space using SQLite WAL (CortexDb) - Zero heavy external dependencies.
     """
-    def __init__(self):
+    def __init__(self, lancedb_db=None, driver=None):
+        self.lancedb_db = lancedb_db
+        self.driver = driver
         self._init_db()
 
     def _init_db(self):
