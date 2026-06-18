@@ -22,3 +22,12 @@ sprol_audits/
 apps/vector_zeta/subscribers_mock.csv
 apps/vector_zeta/thermal_mass.json
 apps/vector_zeta/leads_db.json
+
+# MOSKV-1 APEX Hardening (R9)
+.cortex/
+.moskv_data/
+.test_moskv_data/
+.venv/
+.pytest_cache/
+.unlighthouse/
+.devcontainer/
