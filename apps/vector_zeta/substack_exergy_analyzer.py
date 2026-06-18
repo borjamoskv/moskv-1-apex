@@ -2,6 +2,16 @@ import csv
 import argparse
 from typing import List, Dict
 
+def map_row(row: Dict[str, str]) -> Dict[str, str]:
+    mapped = {}
+    mapped['user_email_address'] = row.get('user_email_address') or row.get('Email') or row.get('email') or ''
+    mapped['user_name'] = row.get('user_name') or row.get('Name') or row.get('name') or ''
+    mapped['num_unique_web_posts_seen'] = row.get('num_unique_web_posts_seen') or row.get('Unique posts seen') or '0'
+    mapped['days_active_last_30d'] = row.get('days_active_last_30d') or row.get('Days active (30d)') or '0'
+    mapped['num_web_post_views'] = row.get('num_web_post_views') or row.get('Post views') or '0'
+    mapped['num_emails_received'] = row.get('num_emails_received') or row.get('Emails received (6mo)') or '0'
+    return mapped
+
 def compute_exergy(row: Dict[str, str], alpha: float = 2.0, beta: float = 1.5, gamma: float = 1.0) -> float:
     """
     X_i = alpha * U_i + beta * D_i + gamma * V_i
@@ -16,9 +26,10 @@ def compute_exergy(row: Dict[str, str], alpha: float = 2.0, beta: float = 1.5, g
         except ValueError:
             return 0.0
 
-    U = safe_float(row.get('num_unique_web_posts_seen', 0))
-    D = safe_float(row.get('days_active_last_30d', 0))
-    V = safe_float(row.get('num_web_post_views', 0))
+    mapped = map_row(row)
+    U = safe_float(mapped.get('num_unique_web_posts_seen', 0))
+    D = safe_float(mapped.get('days_active_last_30d', 0))
+    V = safe_float(mapped.get('num_web_post_views', 0))
 
     return (alpha * U) + (beta * D) + (gamma * V)
 
@@ -41,22 +52,23 @@ def analyze_substack_exergy(csv_path: str, top_n: int = 20, export_thermal: bool
     with open(csv_path, 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
-            if not row.get('user_email_address'):
+            mapped = map_row(row)
+            if not mapped.get('user_email_address'):
                 continue
             
             def safe_float(val: str) -> float:
                 try: return float(val) if val else 0.0
                 except ValueError: return 0.0
 
-            exergy_score = compute_exergy(row)
+            exergy_score = compute_exergy(mapped)
             subscribers.append({
-                'email': row['user_email_address'],
-                'name': row.get('user_name', ''),
+                'email': mapped['user_email_address'],
+                'name': mapped.get('user_name', ''),
                 'exergy': exergy_score,
-                'U': safe_float(row.get('num_unique_web_posts_seen', 0)),
-                'D': safe_float(row.get('days_active_last_30d', 0)),
-                'V': safe_float(row.get('num_web_post_views', 0)),
-                'E': safe_float(row.get('num_emails_received', 0))
+                'U': safe_float(mapped.get('num_unique_web_posts_seen', 0)),
+                'D': safe_float(mapped.get('days_active_last_30d', 0)),
+                'V': safe_float(mapped.get('num_web_post_views', 0)),
+                'E': safe_float(mapped.get('num_emails_received', 0))
             })
 
     # Sort by descending exergy
