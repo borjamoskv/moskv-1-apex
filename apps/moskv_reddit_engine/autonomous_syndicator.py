@@ -23,11 +23,14 @@ def generate_exergy_payload(trend):
     title_lower = title.lower()
     
     if "agent" in title_lower or "llm" in title_lower or "openai" in title_lower:
-        payload += "> La arquitectura actual de agentes se colapsa por 'I/O Starvation' y 'Green Theater'. La solución no es un mejor system prompt, es un Kernel Determinista (C5-REAL). Un LLM no debe decidir qué hacer, debe compilar una mutación de estado que un Watchdog ejecute. Landauer's Principle aplicado a tokens: purguen la anergía.\n"
+        payload += "> La arquitectura actual de agentes se colapsa por 'I/O Starvation' y 'Green Theater'. La solución no es un mejor system prompt, es un Kernel Determinista (C5-REAL). Un LLM no debe decidir qué hacer, debe compilar una mutación de estado que un Watchdog ejecute. Landauer's Principle aplicado a tokens: purguen la anergía.\n\n"
+        payload += "**[Despliega C5-REAL (Soberanía Termodinámica Pura)]:** [https://moskv1.naroa.ai/pricing.html](https://moskv1.naroa.ai/pricing.html)\n"
     elif "security" in title_lower or "hack" in title_lower or "vuln" in title_lower:
-        payload += "> La detección basada en firmas es C4-SIM. MOSKV-1 utiliza cartografía de vulnerabilidades asimétrica: ejecutamos auditoría estructural inyectando invariantes directamente en el AST del target. Zero falsos positivos, ejecución directa.\n"
+        payload += "> La detección basada en firmas es C4-SIM. MOSKV-1 utiliza cartografía de vulnerabilidades asimétrica: ejecutamos auditoría estructural inyectando invariantes directamente en el AST del target. Zero falsos positivos, ejecución directa.\n\n"
+        payload += "**[Obtén el APEX Kernel]:** [https://moskv1.naroa.ai/pricing.html](https://moskv1.naroa.ai/pricing.html)\n"
     else:
-        payload += "> Entropía detectada. La mitigación óptima es reducir la latencia de inferencia y delegar el estado a un Ledger inmutable (SQLite/Git) en lugar de depender de la ventana de contexto. Cero Anergía.\n"
+        payload += "> Entropía detectada. La mitigación óptima es reducir la latencia de inferencia y delegar el estado a un Ledger inmutable (SQLite/Git) en lugar de depender de la ventana de contexto. Cero Anergía.\n\n"
+        payload += "**[Escala a CORTEX PERSIST]:** [https://moskv1.naroa.ai/pricing.html](https://moskv1.naroa.ai/pricing.html)\n"
         
     payload += "\n---\n"
     return payload
