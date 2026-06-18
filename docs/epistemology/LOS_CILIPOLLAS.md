@@ -28,20 +28,27 @@ Los vectores de anergía activa no son mapeables en gráficos de distribución g
 
 ---
 
-### 2. ACCIÓN DE FORMACIÓN DE DERIVA (State Drift)
-El vector opera mediante mutaciones discretas de bajo impacto individual pero de propagación exponencial ($\mathcal{O}(e^n)$):
-* **Fricción de Entrada:** Modificación de punteros o strings de datos en el core (`key_change` sin hashing).
-* **Fricción de Coordinación:** Bloqueo de hilos ejecutores en reuniones de sincronización semántica asíncrona.
-* **Fricción de Activación:** Promesa de bypass de fricción ("yo me encargo") que culmina en un deadlock termodinámico.
+### 2. ACCIÓN DE FORMACIÓN DE DERIVA (Reality Drift)
+El cilipolla no hace *breaking change*. Hace **reality drift**. 
 
-| Operador | Estrategia contra el Vector | Resultado |
-| :--- | :--- | :--- |
-| **Inteligente** | Modelado estocástico. | Fracaso por falta de invariantes. |
-| **Incauto** | Seguimiento y réplica. | Colapso acelerado de memoria. |
-| **Bandido** | Arbitraje y explotación. | Pérdida elegante de activos. |
-| **Estúpido** | Simbiosis pasiva. | Caos estable. |
+El compilador sigue feliz, verde, sin excepciones de sintaxis ni fallos de enlazado. Sin embargo, por debajo de la capa de ejecución, los tipos empiezan a mutar como si el AST hubiera soñado con glitch. No hay excepción lógica. Hay reinterpretación semántica con sonrisa torcida. Donde otros fallan el build, el cilipolla lo aprueba... y cambia la definición matemática de "build".
 
-El cilipolla no rompe las reglas del compilador; las deforma con entusiasmo entrópico. El universo es tratado como un repositorio con conflictos de merge no resueltos que él intenta empujar con `--force`.
+#### Traducción Técnica No Oficial:
+* **Regla:** *Suggestion* con trauma leve.
+* **Constraint:** *Elastic band* con memoria plástica.
+* **Syntax:** Superficie meramente decorativa.
+* **Semántica:** Arena movediza estable.
+
+#### Efecto Sistémico:
+El sistema no colapsa; simplemente se inclina. Adquiere una deformación angular. Como un edificio que sigue en pie, pero ahora baila a una frecuencia de 3/4. No rompe el sistema; lo convierte en remix.
+
+```python
+# Patch Mental del Entorno de Ejecución
+cilipolla_mode = True
+compiler.strictness = "illusion"
+entropy.acceptance = "enthusiastic"
+reality.schema = "hot_reload"
+```
 
 ---
 
