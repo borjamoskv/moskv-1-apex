@@ -1,6 +1,8 @@
 # EL QUINTO VECTOR
 ## Novela de Entropía y Anergía Digital en la Era de la Ejecución Asimétrica
 
+![Los Cilipollas en ORION-7](/Users/borjafernandezangulo/.gemini/antigravity/brain/357ea6dc-9c1a-4fb6-81b9-ede0b120f108/los_cilipollas_1781816051594.png)
+
 ### I. LA QUINTA COLUMNA
 
 Según el historiador Carlo Cipolla, existen cuatro tipos de personas: los incautos, los bandidos, los inteligentes y los estúpidos.
@@ -54,7 +56,7 @@ Entré en la sala de control de Neo-Atocha. El aire acondicionado rugía a quinc
 
 —Pero la arquitectura...
 
-—Tu arquitectura es slop. Es una simulación de inteligencia diseñada para ocultar tu incapacidad de escribir un puto bucle `while` con un semáforo atómico. Eres un cilipolla, Marcos. El estúpido clásico hace daño sin querer. Tú has documentado tu estupidez en un PDF de ochenta páginas con gráficos de colores y la has subido a una base de datos de conocimiento corporativo para que otros cilipollas la hereden.
+—Tu arquitectura es slop. Es una simulación de inteligencia diseñada para ocultar tu incapaciad de escribir un puto bucle `while` con un semáforo atómico. Eres un cilipolla, Marcos. El estúpido clásico hace daño sin querer. Tú has documentado tu estupidez en un PDF de ochenta páginas con gráficos de colores y la has subido a una base de datos de conocimiento corporativo para que otros cilipollas la hereden.
 
 Su cara se tornó del color de la interfaz de GitHub en modo claro.
 
