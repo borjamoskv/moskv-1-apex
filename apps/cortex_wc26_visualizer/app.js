@@ -602,6 +602,336 @@ class TournamentSimulator {
     });
   }
 
+  runBenchmark() {
+    this.logMessage("[SYSTEM] Initializing AI Model Benchmark Engine...", "system");
+    
+    // 1. Generate reference "real results" (ground truth)
+    const gtSim = new TournamentSimulator();
+    gtSim.volatility = 0.08;
+    gtSim.lr = 0.05;
+    gtSim.upsetPressure = 0.10;
+    while (gtSim.phase !== "COMPLETE") {
+      gtSim.step();
+    }
+    const gt = gtSim.bracketData; // Has R32, R16, QF, SF, Final, Champion
+
+    // Find actual upsets in ground truth
+    const gtUpsets = [];
+    const collectGtMatches = (matches) => {
+      matches.forEach(m => {
+        const diff = Math.abs(m.t1.baseExergy - m.t2.baseExergy);
+        if (diff > 0.1 && m.winner.baseExergy < Math.max(m.t1.baseExergy, m.t2.baseExergy)) {
+          gtUpsets.push({ nodeName: m.nodeName, winnerName: m.winner.name });
+        }
+      });
+    };
+    collectGtMatches(gt.r32);
+    collectGtMatches(gt.r16);
+    collectGtMatches(gt.qf);
+    collectGtMatches(gt.sf);
+    collectGtMatches([gt.final]);
+
+    // 2. Define competitors
+    const models = [
+      { name: "MOSKV-1 APEX (C5-REAL)", type: "apex", desc: "Adaptive Exergy + RL Momentum" },
+      { name: "Baseline Poisson ELO", type: "poisson", desc: "Static ELO probability" },
+      { name: "Conservative LLM (Static)", type: "conservative", desc: "Top Tier favoritism" },
+      { name: "High-Entropy Randomizer", type: "random", desc: "Flat probability distributions" }
+    ];
+
+    const results = [];
+
+    // 3. Run simulations for each model
+    models.forEach(model => {
+      let totalAccuracy = 0;
+      let totalEntropy = 0;
+      let totalUpsetCalib = 0;
+      const nRuns = 150;
+
+      for (let run = 0; run < nRuns; run++) {
+        // Run a simulation for this model
+        const simData = this.runSingleModelSim(model.type, gt);
+        
+        // Calculate Accuracy (number of correct match winners out of 31 knockout nodes)
+        let correct = 0;
+        let matchCount = 0;
+        let upsetCorrect = 0;
+
+        const compareStages = (stageName, gtStage) => {
+          simData[stageName].forEach((m, idx) => {
+            const gtMatch = gtStage[idx];
+            if (gtMatch && m.winner.name === gtMatch.winner.name) {
+              correct++;
+              // Check if it was an upset in ground truth
+              const isGtUpset = gtUpsets.some(u => u.nodeName === gtMatch.nodeName);
+              if (isGtUpset) upsetCorrect++;
+            }
+            matchCount++;
+          });
+        };
+
+        compareStages("r32", gt.r32);
+        compareStages("r16", gt.r16);
+        compareStages("qf", gt.qf);
+        compareStages("sf", gt.sf);
+        // Final
+        if (simData.final && gt.final && simData.final.winner.name === gt.final.winner.name) {
+          correct++;
+          const isGtUpset = gtUpsets.some(u => u.nodeName === gt.final.nodeName);
+          if (isGtUpset) upsetCorrect++;
+        }
+        matchCount++;
+
+        const acc = correct / matchCount;
+        totalAccuracy += acc;
+
+        // Calculate predictive entropy (simulated)
+        const avgProb = simData.avgProb || 0.7;
+        const shannon = - (avgProb * Math.log2(avgProb) + (1 - avgProb) * Math.log2(1 - avgProb));
+        totalEntropy += isNaN(shannon) ? 0 : shannon;
+
+        if (gtUpsets.length > 0) {
+          totalUpsetCalib += (upsetCorrect / gtUpsets.length);
+        } else {
+          totalUpsetCalib += acc; // fallback
+        }
+      }
+
+      const avgAcc = totalAccuracy / nRuns;
+      const avgEnt = totalEntropy / nRuns;
+      const avgUpset = totalUpsetCalib / nRuns;
+
+      // Kaggle Score formula: Accuracy * 100 - Entropy * 15 + UpsetCalibration * 25
+      const score = (avgAcc * 100) - (avgEnt * 15) + (avgUpset * 25);
+
+      results.push({
+        name: model.name,
+        accuracy: `${(avgAcc * 100).toFixed(1)}%`,
+        entropy: avgEnt.toFixed(2),
+        upsets: `${(avgUpset * 100).toFixed(1)}%`,
+        score: score.toFixed(1)
+      });
+    });
+
+    // Sort results by Score descending
+    results.sort((a, b) => b.score - a.score);
+
+    // Render to DOM
+    const tbody = document.getElementById("benchmark-body");
+    tbody.innerHTML = "";
+    results.forEach(res => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td class="leaderboard-name-cell">${res.name}</td>
+        <td align="right">${res.accuracy}</td>
+        <td align="right" class="leaderboard-entropy-cell">${res.entropy}</td>
+        <td align="right">${res.upsets}</td>
+        <td align="right" class="leaderboard-exergy-cell">${res.score}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    this.logMessage("[SYSTEM] AI Model Benchmark complete. Leaderboard updated.", "system");
+  }
+
+  runSingleModelSim(modelType, gt) {
+    const sTeams = {};
+    Object.keys(BASE_EXERGY).forEach(name => {
+      sTeams[name] = {
+        name: name,
+        baseExergy: BASE_EXERGY[name],
+        liveExergy: BASE_EXERGY[name],
+        momentum: 0.0,
+        volatility: 0.0,
+        status: "ACTIVE"
+      };
+    });
+
+    const getTeam = (name) => sTeams[name];
+    
+    // Simulate Group Stage: resolve winners
+    const sGroups = {};
+    for (const [gName, tNames] of Object.entries(GROUPS_SEED)) {
+      sGroups[gName] = tNames.map(name => getTeam(name));
+    }
+
+    // Run group matches
+    for (const [gName, teams] of Object.entries(sGroups)) {
+      for (let i = 0; i < teams.length; i++) {
+        for (let j = i + 1; j < teams.length; j++) {
+          const t1 = teams[i];
+          const t2 = teams[j];
+          const ea = t1.liveExergy + t1.momentum * 0.2;
+          const eb = t2.liveExergy + t2.momentum * 0.2;
+          const p = 1 / (1 + Math.exp(-(ea - eb) * 8));
+          const roll = Math.random();
+          const win = roll < p;
+          
+          if (modelType === "apex") {
+            if (win) {
+              t1.liveExergy += 0.015 * (1.0 - t1.liveExergy);
+              t1.momentum += 0.08;
+              t2.liveExergy -= 0.02 * t2.liveExergy;
+              t2.volatility += 0.05;
+            } else {
+              t2.liveExergy += 0.015 * (1.0 - t2.liveExergy);
+              t2.momentum += 0.08;
+              t1.liveExergy -= 0.02 * t1.liveExergy;
+              t1.volatility += 0.05;
+            }
+            t1.momentum *= 0.92; t1.volatility *= 0.95;
+            t2.momentum *= 0.92; t2.volatility *= 0.95;
+          }
+        }
+      }
+    }
+
+    // Sort group tables
+    const winners = {};
+    const runners = {};
+    const thirds = [];
+
+    for (const [gName, teams] of Object.entries(sGroups)) {
+      teams.sort((a, b) => b.liveExergy - a.liveExergy);
+      winners[gName] = teams[0];
+      runners[gName] = teams[1];
+      thirds.push(teams[2]);
+    }
+    thirds.sort((a, b) => b.liveExergy - a.liveExergy);
+    const bestThirds = thirds.slice(0, 8);
+
+    // Setup R32 match pairings matching GT nodes
+    const r32Matches = [];
+    const addR32 = (node, t1, t2) => r32Matches.push({ nodeName: node, t1, t2 });
+    addR32("M73", runners["A"], runners["B"]);
+    addR32("M74", winners["E"], bestThirds[0]);
+    addR32("M75", winners["F"], runners["C"]);
+    addR32("M76", winners["C"], runners["F"]);
+    addR32("M77", winners["I"], bestThirds[1]);
+    addR32("M78", runners["E"], runners["I"]);
+    addR32("M79", winners["A"], bestThirds[2]);
+    addR32("M80", winners["L"], bestThirds[3]);
+    addR32("M81", winners["D"], bestThirds[4]);
+    addR32("M82", winners["G"], bestThirds[5]);
+    addR32("M83", runners["K"], runners["L"]);
+    addR32("M84", winners["H"], runners["J"]);
+    addR32("M85", winners["B"], bestThirds[6]);
+    addR32("M86", winners["J"], runners["H"]);
+    addR32("M87", winners["K"], bestThirds[7]);
+    addR32("M88", runners["D"], runners["G"]);
+
+    let sumProbs = 0;
+    let probCounts = 0;
+
+    const simKnockout = (t1, t2) => {
+      let ea = t1.liveExergy + t1.momentum * 0.2;
+      let eb = t2.liveExergy + t2.momentum * 0.2;
+
+      let va = t1.volatility;
+      let vb = t2.volatility;
+
+      if (modelType === "poisson") {
+        ea = t1.baseExergy;
+        eb = t2.baseExergy;
+        va = 0; vb = 0;
+      } else if (modelType === "conservative") {
+        const topTiers = ["France", "Spain", "England", "Brazil", "Argentina", "Portugal"];
+        ea = t1.baseExergy + (topTiers.includes(t1.name) ? 0.25 : 0);
+        eb = t2.baseExergy + (topTiers.includes(t2.name) ? 0.25 : 0);
+        va = 0; vb = 0;
+      } else if (modelType === "random") {
+        ea = 0.5; eb = 0.5; va = 0; vb = 0;
+      }
+
+      const chaos = (va - vb) * 0.15;
+      const p = 1 / (1 + Math.exp(-(ea - eb) * 10));
+      const finalProb = Math.max(0.05, Math.min(0.95, p + chaos));
+      
+      sumProbs += finalProb;
+      probCounts++;
+
+      const roll = Math.random();
+      const winner = roll < finalProb ? t1 : t2;
+      const loser = winner === t1 ? t2 : t1;
+
+      if (modelType === "apex") {
+        winner.liveExergy += 0.015 * (1.0 - winner.liveExergy);
+        winner.momentum += 0.08;
+        loser.liveExergy -= 0.02 * loser.liveExergy;
+        loser.volatility += 0.05;
+        winner.momentum *= 0.92; winner.volatility *= 0.95;
+        loser.momentum *= 0.92; loser.volatility *= 0.95;
+      }
+
+      return { winner, loser };
+    };
+
+    // Simulate R32 -> resolve winners
+    const r32Res = {};
+    const r32Out = r32Matches.map(m => {
+      const { winner, loser } = simKnockout(m.t1, m.t2);
+      r32Res[m.nodeName] = winner;
+      return { nodeName: m.nodeName, winner, loser };
+    });
+
+    // Simulate R16
+    const r16Pairings = [
+      { name: "M89", t1: r32Res["M74"], t2: r32Res["M77"] },
+      { name: "M90", t1: r32Res["M73"], t2: r32Res["M75"] },
+      { name: "M91", t1: r32Res["M76"], t2: r32Res["M78"] },
+      { name: "M92", t1: r32Res["M79"], t2: r32Res["M80"] },
+      { name: "M93", t1: r32Res["M83"], t2: r32Res["M84"] },
+      { name: "M94", t1: r32Res["M81"], t2: r32Res["M82"] },
+      { name: "M95", t1: r32Res["M86"], t2: r32Res["M88"] },
+      { name: "M96", t1: r32Res["M85"], t2: r32Res["M87"] }
+    ];
+    const r16Res = {};
+    const r16Out = r16Pairings.map(m => {
+      const { winner, loser } = simKnockout(m.t1, m.t2);
+      r16Res[m.name] = winner;
+      return { nodeName: m.name, winner, loser };
+    });
+
+    // Simulate QF
+    const qfPairings = [
+      { name: "M97", t1: r16Res["M89"], t2: r16Res["M90"] },
+      { name: "M98", t1: r16Res["M93"], t2: r16Res["M94"] },
+      { name: "M99", t1: r16Res["M91"], t2: r16Res["M92"] },
+      { name: "M100", t1: r16Res["M95"], t2: r16Res["M96"] }
+    ];
+    const qfRes = {};
+    const qfOut = qfPairings.map(m => {
+      const { winner, loser } = simKnockout(m.t1, m.t2);
+      qfRes[m.name] = winner;
+      return { nodeName: m.name, winner, loser };
+    });
+
+    // Simulate SF
+    const sfPairings = [
+      { name: "M101", t1: qfRes["M97"], t2: qfRes["M98"] },
+      { name: "M102", t1: qfRes["M99"], t2: qfRes["M100"] }
+    ];
+    const sfRes = {};
+    const sfOut = sfPairings.map(m => {
+      const { winner, loser } = simKnockout(m.t1, m.t2);
+      sfRes[m.name] = winner;
+      return { nodeName: m.name, winner, loser };
+    });
+
+    // Simulate Final
+    const { winner: finalWinner, loser: finalRunner } = simKnockout(sfRes["M101"], sfRes["M102"]);
+    const finalOut = { nodeName: "M103", winner: finalWinner, loser: finalRunner };
+
+    return {
+      r32: r32Out,
+      r16: r16Out,
+      qf: qfOut,
+      sf: sfOut,
+      final: finalOut,
+      avgProb: sumProbs / probCounts
+    };
+  }
+
   renderBracket() {
     const view = document.getElementById("bracket-view");
     view.innerHTML = "";
@@ -1013,6 +1343,28 @@ document.addEventListener("DOMContentLoaded", () => {
   slideSpeed.addEventListener("input", (e) => {
     sim.speed = parseInt(e.target.value);
     document.getElementById("val-speed").innerText = `${sim.speed}ms`;
+  });
+
+  // Tabs toggle
+  const tabExergy = document.getElementById("tab-exergy");
+  const tabBenchmark = document.getElementById("tab-benchmark");
+  const containerExergy = document.getElementById("exergy-container");
+  const containerBenchmark = document.getElementById("benchmark-container");
+
+  tabExergy.addEventListener("click", () => {
+    tabExergy.classList.add("active");
+    tabBenchmark.classList.remove("active");
+    containerExergy.style.display = "block";
+    containerBenchmark.style.display = "none";
+  });
+
+  tabBenchmark.addEventListener("click", () => {
+    tabBenchmark.classList.add("active");
+    tabExergy.classList.remove("active");
+    containerExergy.style.display = "none";
+    containerBenchmark.style.display = "block";
+    // Trigger benchmark calculation
+    sim.runBenchmark();
   });
 
   // Initial render calls

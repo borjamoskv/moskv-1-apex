@@ -444,8 +444,53 @@ input[type="range"]::-webkit-slider-thumb:hover {
   min-height: 0;
 }
 
-.leaderboard-container {
+.tab-header {
+  display: flex;
+  padding: 0 !important;
+  border-bottom: 1px solid rgba(243, 244, 246, 0.05);
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 14px 20px;
+  background: transparent;
+  border: none;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: rgba(243, 244, 246, 0.4);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  border-bottom: 2px solid transparent;
+  outline: none;
+}
+
+.tab-btn:hover {
+  color: var(--color-parchment);
+  background: rgba(243, 244, 246, 0.02);
+}
+
+.tab-btn.active {
+  color: var(--color-yinmn);
+  border-bottom-color: var(--color-yinmn);
+  background: rgba(43, 59, 229, 0.04);
+  text-shadow: var(--glow-yinmn);
+}
+
+.tab-panel {
   height: 45%;
+  display: none;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.tab-panel.active {
+  display: flex;
+}
+
+.leaderboard-container {
+  flex-grow: 1;
   overflow-y: auto;
   border-bottom: 1px solid rgba(243, 244, 246, 0.05);
 }

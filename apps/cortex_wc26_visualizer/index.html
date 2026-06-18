@@ -108,25 +108,51 @@
 
       <!-- Column 3: Telemetry Leaderboard & Raw Console -->
       <section class="workspace-panel panel-right">
-        <div class="panel-header">
-          <h3>3. CONVERGENCE LEDGER</h3>
-          <span class="header-desc">Real-time state matrices</span>
+        <div class="panel-header tab-header">
+          <button id="tab-exergy" class="tab-btn active">1. TEAMS EXERGY</button>
+          <button id="tab-benchmark" class="tab-btn">2. AI BENCHMARK</button>
         </div>
-        <div class="leaderboard-container">
-          <table class="leaderboard-table">
-            <thead>
-              <tr>
-                <th align="left">NODE (TEAM)</th>
-                <th align="right">EXERGY</th>
-                <th align="right">VOLATILITY</th>
-                <th align="center">STATUS</th>
-              </tr>
-            </thead>
-            <tbody id="leaderboard-body">
-              <!-- Sorted dynamic rows -->
-            </tbody>
-          </table>
+        
+        <!-- Tab 1: Teams Exergy -->
+        <div id="exergy-container" class="tab-panel active">
+          <div class="leaderboard-container">
+            <table class="leaderboard-table">
+              <thead>
+                <tr>
+                  <th align="left">NODE (TEAM)</th>
+                  <th align="right">EXERGY</th>
+                  <th align="right">ENTROPY</th>
+                  <th align="center">STATUS</th>
+                </tr>
+              </thead>
+              <tbody id="leaderboard-body">
+                <!-- Sorted dynamic rows -->
+              </tbody>
+            </table>
+          </div>
         </div>
+
+        <!-- Tab 2: AI Model Benchmark -->
+        <div id="benchmark-container" class="tab-panel" style="display: none;">
+          <div class="leaderboard-container">
+            <table class="leaderboard-table">
+              <thead>
+                <tr>
+                  <th align="left">MODEL COMPETITOR</th>
+                  <th align="right">ACC</th>
+                  <th align="right">ENTROPY</th>
+                  <th align="right">UPSETS</th>
+                  <th align="right">SCORE</th>
+                </tr>
+              </thead>
+              <tbody id="benchmark-body">
+                <!-- AI Model rows will be populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Terminal Logs (Persistent) -->
         <div class="terminal-container">
           <div class="terminal-header">
             <span>CORE TELEMETRY LOG</span>
