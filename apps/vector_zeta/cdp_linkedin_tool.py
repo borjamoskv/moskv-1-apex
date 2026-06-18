@@ -49,31 +49,34 @@ class CDPLinkedInTool:
                 page.mouse.wheel(0, -300)
                 time.sleep(1.0)
 
-                profiles = page.locator('li.reusable-search__result-container, .search-results-container li').all()
-                print(f"[*] Found {len(profiles)} result elements on page.")
+                containers = page.locator('a[tabindex="0"][href*="/in/"]').all()
+                print(f"[*] Found {len(containers)} result containers on page.")
                 
                 extracted = []
-                for profile in profiles[:limit]:
+                for container in containers[:limit]:
                     try:
-                        name_elem = profile.locator('span[dir="ltr"] > span:first-child, span[dir="ltr"]').first
-                        name = name_elem.inner_text(timeout=2000).strip()
+                        text = container.inner_text().strip()
+                        url = container.get_attribute('href').split('?')[0]
                         
-                        role_elem = profile.locator('.entity-result__primary-subtitle, .actor-description').first
-                        role = role_elem.inner_text(timeout=2000).strip()
-                        
-                        link_elem = profile.locator('a.app-aware-link, a[href*="/in/"]').first
-                        raw_url = link_elem.get_attribute('href')
-                        url = raw_url.split('?')[0] if raw_url else ""
-                        
-                        if name and url:
-                            extracted.append({
-                                "name": name,
-                                "role": role,
-                                "url": url,
-                                "status": "RAW"
-                            })
-                            print(f"    [+] Extracted: {name} | {role}")
-                    except Exception:
+                        lines = [line.strip() for line in text.split('\n') if line.strip()]
+                        if len(lines) >= 2:
+                            name = lines[0]
+                            # Detect and strip connection level (e.g. 2º)
+                            if any(term in lines[1] for term in ['1º', '2º', '3º', '•']):
+                                role = lines[2] if len(lines) > 2 else ''
+                            else:
+                                role = lines[1]
+                                
+                            if name and url:
+                                extracted.append({
+                                    "name": name,
+                                    "role": role,
+                                    "url": url,
+                                    "status": "RAW"
+                                })
+                                print(f"    [+] Extracted: {name} | {role}")
+                    except Exception as e:
+                        print(f"[-] Row parse error: {e}")
                         continue
 
                 # Merge into JSON DB
