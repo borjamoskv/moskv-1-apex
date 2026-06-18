@@ -3,69 +3,157 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BRT_PROTOCOL // C5-REAL</title>
+  <title>BRT_KERNEL // EXERGY_MAX</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+    :root {
+      --bg: #040404;
+      --fg: #ffffff;
+      --blood: #e52b2b;
     }
+    * { box-sizing: border-box; margin: 0; padding: 0; cursor: crosshair; }
     body {
-      background-color: #040404;
-      color: #ffffff;
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--fg);
+      font-family: "Impact", "Helvetica Neue", sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
       overflow: hidden;
+      perspective: 1000px;
     }
-    h1 {
-      font-size: 2rem;
-      letter-spacing: 0.5em;
-      text-transform: uppercase;
-      margin-bottom: 2rem;
-      color: #e52b2b;
-      mix-blend-mode: exclusion;
-      z-index: 10;
+    /* CRT Scanlines */
+    body::before {
+      content: " ";
+      display: block;
+      position: absolute;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+      z-index: 100;
+      background-size: 100% 2px, 3px 100%;
+      pointer-events: none;
     }
-    .video-container {
+    .glitch-layer {
+      position: absolute;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background-color: var(--blood);
+      mix-blend-mode: color-burn;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 50;
+      transition: opacity 0.05s ease-out;
+    }
+    .container {
       position: relative;
       width: 100vw;
       max-width: 500px;
       aspect-ratio: 9/16;
-      border: 1px solid #333;
-      box-shadow: 0 0 50px rgba(229, 43, 43, 0.2);
+      border: 2px solid #333;
+      transform-style: preserve-3d;
+      transition: transform 0.1s ease-out;
     }
     video {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      filter: contrast(1.2) saturate(0) sepia(1) hue-rotate(315deg) saturate(3);
+      filter: contrast(1.4) grayscale(1);
+      mix-blend-mode: screen;
     }
-    .status {
+    .overlay-text {
       position: absolute;
-      bottom: -40px;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 3rem;
+      letter-spacing: 0.2em;
+      color: transparent;
+      -webkit-text-stroke: 2px var(--blood);
+      pointer-events: none;
+      text-align: center;
+      z-index: 10;
+      mix-blend-mode: exclusion;
+    }
+    .instruction {
+      position: absolute;
+      bottom: 20px;
       font-family: monospace;
-      font-size: 0.8rem;
-      color: #888;
-      letter-spacing: 0.1em;
-    }
-    .blink {
-      animation: blink 0.461s infinite; /* 130 BPM */
-    }
-    @keyframes blink {
-      0%, 49% { opacity: 1; }
-      50%, 100% { opacity: 0; }
+      font-size: 0.9rem;
+      color: #555;
+      letter-spacing: 0.2em;
+      z-index: 101;
     }
   </style>
 </head>
 <body>
-  <h1>BRT_C5_REAL</h1>
-  <div class="video-container">
-    <video src="video.mp4" autoplay loop muted playsinline></video>
-    <div class="status">NODE_STATUS: <span class="blink">MAX_DENSITY</span> // 130 BPM</div>
+  <div class="glitch-layer" id="strobe"></div>
+  <div class="container" id="box">
+    <video id="vid" src="video.mp4" loop muted playsinline></video>
+    <div class="overlay-text" id="hud">INITIATE<br/>C5-REAL</div>
   </div>
+  <div class="instruction">CLICK TO ENGAGE 130 BPM WEB-AUDIO KICK</div>
+
+  <script>
+    const box = document.getElementById('box');
+    const strobe = document.getElementById('strobe');
+    const hud = document.getElementById('hud');
+    const vid = document.getElementById('vid');
+    
+    let audioCtx;
+    let isPlaying = false;
+    const BPM = 130;
+    const interval = 60 / BPM;
+
+    // Fricción Cinética con el cursor
+    document.addEventListener('mousemove', (e) => {
+      const x = (e.clientX / window.innerWidth - 0.5) * 20;
+      const y = (e.clientY / window.innerHeight - 0.5) * -20;
+      box.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
+    });
+
+    // Motor Sintetizador 808 Kick
+    function playKick(time) {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      
+      osc.frequency.setValueAtTime(150, time);
+      osc.frequency.exponentialRampToValueAtTime(0.01, time + 0.5);
+      
+      gain.gain.setValueAtTime(1, time);
+      gain.gain.exponentialRampToValueAtTime(0.01, time + 0.5);
+      
+      osc.start(time);
+      osc.stop(time + 0.5);
+
+      // Sincronización DOM/Strobe
+      setTimeout(() => {
+        strobe.style.opacity = '1';
+        setTimeout(() => strobe.style.opacity = '0', 50);
+      }, (time - audioCtx.currentTime) * 1000);
+    }
+
+    function scheduleKicks() {
+      let nextNoteTime = audioCtx.currentTime + 0.1;
+      setInterval(() => {
+        while (nextNoteTime < audioCtx.currentTime + 0.1) {
+          playKick(nextNoteTime);
+          nextNoteTime += interval;
+        }
+      }, 25);
+    }
+
+    document.addEventListener('click', () => {
+      if (!isPlaying) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        scheduleKicks();
+        vid.play();
+        hud.innerHTML = "BERGHAIN<br/>[ACTIVE]";
+        document.querySelector('.instruction').style.opacity = '0';
+        isPlaying = true;
+      }
+    });
+  </script>
 </body>
 </html>
