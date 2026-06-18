@@ -1282,3 +1282,16 @@ footer {
     background: var(--border-glass);
     margin: 30px 0;
 }
+
+/* Inline links styling */
+.inline-link {
+    color: var(--yinmn-light);
+    text-decoration: none;
+    border-bottom: 1px dashed rgba(82, 98, 255, 0.4);
+    transition: var(--transition-smooth);
+}
+.inline-link:hover {
+    color: var(--parchment-white);
+    border-bottom-color: var(--parchment-white);
+    text-shadow: 0 0 8px rgba(82, 98, 255, 0.6);
+}
