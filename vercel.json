@@ -22,11 +22,27 @@
       "use": "@vercel/static"
     },
     {
+      "src": "aventura.html",
+      "use": "@vercel/static"
+    },
+    {
       "src": "el_espacio_entre_nosotros.pdf",
       "use": "@vercel/static"
     },
     {
       "src": "el_espacio_entre_nosotros.epub",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "cover_bilbao_noir_1781746242043.png",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "stereorock_real_1781746258607.png",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "uribarri_coder_1781746280902.png",
       "use": "@vercel/static"
     }
   ],
