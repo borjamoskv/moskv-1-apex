@@ -1,0 +1,37 @@
+name: C5-REAL Structural Audit
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  exergy-audit:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: 1. Anergy Purge (R1)
+      run: |
+        if grep -rnw 'core/' -e 'print(' | grep -q 'sleep('; then
+          echo "[FATAL] C4-SIM behavior detected: print() + sleep()."
+          exit 1
+        fi
+        echo "Cero Anergía Validada."
+
+    - name: 2. Entropy / Dirty Loop Prevention (R9)
+      run: |
+        if [ ! -f .gitignore ] || ! grep -q '.cortex/' .gitignore; then
+          echo "[FATAL] Missing R9 Exclusions in .gitignore"
+          exit 1
+        fi
+        echo "R9 Validada."
+
+    - name: 3. DB Concurrency Enforcer (R10)
+      run: |
+        if grep -rnw 'core/' -e 'sqlite3.connect' | grep -v 'timeout=5.0'; then
+          echo "[FATAL] SQLite connection found without timeout=5.0"
+          exit 1
+        fi
+        echo "R10 Validada."
