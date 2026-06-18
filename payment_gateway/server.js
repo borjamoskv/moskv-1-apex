@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || 'sk_test_mock_c5_real');
+const { mutateInfra } = require('../kernel/edge/claw.js');
 
 const app = express();
 app.use(cors());
@@ -34,6 +35,12 @@ app.post('/stripe-webhook', express.raw({ type: 'application/json' }), (req, res
         const session = event.data.object;
         console.log(`[CORTEX-PAYMENT-OK] Exergy Liquidated. Payment of ${session.amount_total / 100} ${session.currency.toUpperCase()} successful.`);
         console.log(`[CORTEX-PAYMENT-OK] Payment Method: ${session.payment_method_types[0]}`);
+        
+        try {
+            mutateInfra({ amount_total: session.amount_total });
+        } catch (e) {
+            console.error(`[CORTEX-EDGE-ERR] Claw mutation dispatch failed: ${e.message}`);
+        }
     }
 
     res.json({ received: true });
