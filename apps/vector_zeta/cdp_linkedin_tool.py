@@ -147,7 +147,7 @@ class CDPLinkedInTool:
             lead['status'] = 'ERROR'
 
     def run_outreach(self, message_template, limit=5):
-        print(f"[C5-REAL] Connecting to Brave via CDP on port {self.port} for outreach injection...")
+        print(f"[C5-REAL] Initiating Headless Outreach Injection...")
         db = self.load_leads()
         raw_leads = [l for l in db.get('leads', []) if l.get('status') == 'RAW'][:limit]
         
@@ -157,8 +157,19 @@ class CDPLinkedInTool:
 
         with sync_playwright() as p:
             try:
-                browser = p.chromium.connect_over_cdp(f"http://127.0.0.1:{self.port}")
-                context = browser.contexts[0]
+                print(f"[C5-REAL] Launching headless browser using extracted session cookies...")
+                browser = p.chromium.launch(headless=True)
+                context = browser.new_context()
+                
+                # Load cookies
+                cookie_path = os.path.join(os.path.dirname(self.db_path), "linkedin_cookies.json")
+                if os.path.exists(cookie_path):
+                    with open(cookie_path, 'r') as f:
+                        cookies = json.load(f)
+                        context.add_cookies(cookies)
+                else:
+                    print("[-] Error: linkedin_cookies.json not found. Run cookie extraction script first.")
+                    return
 
                 for lead in raw_leads:
                     page = None
