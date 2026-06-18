@@ -13,15 +13,15 @@
     
     <style>
         :root {
-            --bg-color: #050506;
-            --card-bg: rgba(10, 10, 12, 0.9);
+            --bg-color: #030304;
+            --card-bg: rgba(8, 8, 10, 0.9);
             --accent-blue: #2B3BE5;
             --accent-red: #E52B2B;
             --text-light: #F3F3F3;
-            --text-muted: #6F6F7F;
-            --border-color: rgba(255, 255, 255, 0.05);
-            --neon-blue-glow: 0 0 30px rgba(43, 59, 229, 0.4);
-            --neon-red-glow: 0 0 30px rgba(229, 43, 43, 0.4);
+            --text-muted: #5F5F6F;
+            --border-color: rgba(255, 255, 255, 0.04);
+            --neon-blue-glow: 0 0 30px rgba(43, 59, 229, 0.35);
+            --neon-red-glow: 0 0 30px rgba(229, 43, 43, 0.35);
         }
 
         * {
@@ -47,11 +47,11 @@
             display: block;
             position: fixed;
             top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.04), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.04));
             z-index: 9999;
             background-size: 100% 4px, 6px 100%;
             pointer-events: none;
-            opacity: 0.4;
+            opacity: 0.35;
         }
 
         /* Analog Grain Layer */
@@ -59,7 +59,7 @@
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-            opacity: 0.025;
+            opacity: 0.02;
             pointer-events: none;
             z-index: 1000;
         }
@@ -70,9 +70,9 @@
             border-radius: 50%;
             filter: blur(160px);
             z-index: -1;
-            opacity: 0.2;
+            opacity: 0.15;
             pointer-events: none;
-            transition: all 1s ease;
+            transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .orb-1 {
@@ -89,7 +89,7 @@
 
         /* Container */
         .container {
-            max-width: 950px;
+            max-width: 1200px;
             width: 100%;
             margin: 0 auto;
             padding: 40px 20px;
@@ -116,7 +116,7 @@
         }
 
         .brand h1 {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 900;
             letter-spacing: 2px;
             text-transform: uppercase;
@@ -129,47 +129,49 @@
             font-weight: 900;
             padding: 5px 10px;
             border-radius: 4px;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
             box-shadow: var(--neon-blue-glow);
         }
 
-        .system-metrics {
-            display: flex;
-            gap: 20px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 11px;
+        .audio-toggle {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
             color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
-        .metric-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .audio-toggle:hover {
+            color: var(--text-light);
+            border-color: var(--accent-blue);
         }
 
-        .status-dot-pulse {
-            width: 6px;
-            height: 6px;
-            background-color: #00FF66;
-            border-radius: 50%;
-            box-shadow: 0 0 10px #00FF66;
-            animation: pulse 1.5s infinite;
+        /* Layout Columns */
+        .game-layout {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 30px;
+            align-items: start;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.4); opacity: 0.6; }
-            100% { transform: scale(1); opacity: 1; }
+        @media (max-width: 900px) {
+            .game-layout {
+                grid-template-columns: 1fr;
+            }
         }
 
         /* Premium Rotating Border Card */
         .card-wrapper {
             position: relative;
             border-radius: 16px;
-            padding: 2px;
+            padding: 1px;
             background: linear-gradient(135deg, var(--accent-blue), var(--accent-red));
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
-            transition: box-shadow 0.5s ease;
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .card-wrapper.blue-mode {
@@ -184,13 +186,13 @@
 
         .card {
             background: var(--card-bg);
-            border-radius: 14px;
-            padding: 45px;
+            border-radius: 15px;
+            padding: 40px;
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             display: flex;
             flex-direction: column;
-            gap: 35px;
+            gap: 30px;
             position: relative;
         }
 
@@ -199,7 +201,7 @@
             width: 100%;
             border-radius: 8px;
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.03);
             position: relative;
             aspect-ratio: 16/9;
             background-color: #000;
@@ -210,11 +212,13 @@
             height: 100%;
             object-fit: cover;
             opacity: 0;
-            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1.5s ease;
+            transform: scale(1.05);
         }
 
         .scene-image.loaded {
-            opacity: 0.85;
+            opacity: 0.8;
+            transform: scale(1);
         }
 
         .scene-image-container::after {
@@ -228,15 +232,16 @@
         /* Narrative styling */
         .content-area {
             font-family: 'Georgia', serif;
-            font-size: 19px;
-            line-height: 1.85;
+            font-size: 18px;
+            line-height: 1.8;
             color: var(--text-light);
             text-align: justify;
-            min-height: 160px;
+            min-height: 140px;
+            transition: opacity 0.3s ease;
         }
 
         .content-area p {
-            margin-bottom: 22px;
+            margin-bottom: 20px;
             text-indent: 1.8em;
         }
 
@@ -244,27 +249,27 @@
             text-indent: 0;
         }
 
-        /* YAML console blocks (C5-REAL Ledger Outputs) */
+        /* YAML console blocks */
         .console-block {
             font-family: 'JetBrains Mono', monospace;
-            background-color: rgba(0, 0, 0, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background-color: rgba(0, 0, 0, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.04);
             border-left: 3px solid var(--accent-blue);
-            padding: 18px 24px;
+            padding: 16px 20px;
             border-radius: 6px;
-            font-size: 13px;
+            font-size: 12px;
             line-height: 1.6;
             color: #83A598;
-            margin: 15px 0;
+            margin: 10px 0;
             overflow-x: auto;
             position: relative;
         }
 
         .console-block::before {
-            content: "LEDGER";
+            content: "COGNITIVE_TELEMETRY";
             position: absolute;
             top: 6px; right: 10px;
-            font-size: 9px;
+            font-size: 8px;
             color: var(--text-muted);
             letter-spacing: 1px;
         }
@@ -278,19 +283,19 @@
         .choices-area {
             display: flex;
             flex-direction: column;
-            gap: 14px;
-            margin-top: 15px;
+            gap: 12px;
+            margin-top: 10px;
         }
 
         .btn-choice {
-            background-color: rgba(255, 255, 255, 0.02);
+            background-color: rgba(255, 255, 255, 0.01);
             border: 1px solid var(--border-color);
             color: var(--text-light);
             font-family: 'Outfit', sans-serif;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
-            padding: 18px 28px;
-            border-radius: 10px;
+            padding: 16px 24px;
+            border-radius: 8px;
             cursor: pointer;
             text-align: left;
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -307,24 +312,24 @@
         }
 
         .btn-choice:hover {
-            background-color: rgba(43, 59, 229, 0.1);
+            background-color: rgba(43, 59, 229, 0.08);
             border-color: var(--accent-blue);
-            box-shadow: 0 0 15px rgba(43, 59, 229, 0.2);
-            transform: translateX(6px);
+            box-shadow: 0 0 15px rgba(43, 59, 229, 0.15);
+            transform: translateX(4px);
         }
 
         .btn-choice.danger:hover {
-            background-color: rgba(229, 43, 43, 0.1);
+            background-color: rgba(229, 43, 43, 0.08);
             border-color: var(--accent-red);
-            box-shadow: 0 0 15px rgba(229, 43, 43, 0.2);
+            box-shadow: 0 0 15px rgba(229, 43, 43, 0.15);
         }
 
         .btn-choice::after {
             content: '→';
-            font-size: 20px;
+            font-size: 18px;
             opacity: 0;
             transition: opacity 0.3s ease, transform 0.3s ease;
-            transform: translateX(-15px);
+            transform: translateX(-10px);
         }
 
         .btn-choice:hover::after {
@@ -338,26 +343,81 @@
             border: none;
             color: var(--text-muted);
             font-family: 'JetBrains Mono', monospace;
-            font-size: 11px;
+            font-size: 10px;
             cursor: pointer;
             align-self: flex-end;
             margin-top: -15px;
             transition: color 0.3s ease;
             text-decoration: underline;
+            outline: none;
         }
 
         .skip-btn:hover {
             color: var(--text-light);
         }
 
+        /* Sidebar Flight Recorder */
+        .sidebar-terminal {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            font-family: 'JetBrains Mono', monospace;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            position: sticky;
+            top: 40px;
+        }
+
+        .sidebar-header {
+            font-size: 11px;
+            font-weight: bold;
+            color: var(--text-light);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sidebar-output {
+            font-size: 11px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            overflow-y: auto;
+            max-height: 520px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            scroll-behavior: smooth;
+        }
+
+        .log-entry {
+            border-bottom: 1px solid rgba(255,255,255,0.02);
+            padding-bottom: 8px;
+        }
+
+        .log-time {
+            color: var(--accent-blue);
+        }
+
+        .log-action {
+            color: #8EC07C;
+        }
+
         /* Cover layout styling */
         .cover-title {
-            font-size: 44px;
+            font-size: 38px;
             font-weight: 900;
             text-transform: uppercase;
-            letter-spacing: 4px;
+            letter-spacing: 3px;
             text-align: center;
-            background: linear-gradient(135deg, #FFFFFF, #9F9FBF);
+            background: linear-gradient(135deg, #FFFFFF, #8F8F9F);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 5px;
@@ -365,9 +425,9 @@
 
         .cover-subtitle {
             text-align: center;
-            font-size: 13px;
+            font-size: 12px;
             color: var(--accent-red);
-            letter-spacing: 4px;
+            letter-spacing: 3px;
             text-transform: uppercase;
             font-weight: 800;
             margin-bottom: 10px;
@@ -406,6 +466,24 @@
             50% { text-shadow: -2px 0 0 red, 2px 0 0 blue; }
             100% { text-shadow: 2px 0 0 red, -2px 0 0 blue; }
         }
+
+        .card-glitch-active {
+            animation: card-shake 0.2s infinite;
+        }
+
+        @keyframes card-shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(0px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(2px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(2px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
     </style>
 </head>
 <body>
@@ -420,21 +498,29 @@
                 <span class="brand-badge">C5-REAL</span>
                 <h1>EL ESPACIO ENTRE NOSOTROS</h1>
             </div>
-            <div class="system-metrics">
-                <div class="metric-item">
-                    <span class="status-dot-pulse"></span>
-                    <span id="ledger-indicator">LEDGER: 31359B4</span>
-                </div>
-                <div class="metric-item">
-                    <span id="entropy-indicator">ENTROPY: 0.0000</span>
-                </div>
+            <div class="brand" style="gap: 15px;">
+                <button class="audio-toggle" id="audio-btn" onclick="toggleAudio()">AUDIO: OFF</button>
             </div>
         </header>
 
-        <!-- CARD DE JUEGO -->
-        <div class="card-wrapper" id="game-card-wrapper">
-            <div class="card" id="game-card">
-                <!-- Render dinámico -->
+        <!-- LAYOUT DE COLUMNAS -->
+        <div class="game-layout">
+            <!-- COLUMNA PRINCIPAL (CARD) -->
+            <div class="card-wrapper" id="game-card-wrapper">
+                <div class="card" id="game-card">
+                    <!-- Render dinámico -->
+                </div>
+            </div>
+
+            <!-- COLUMNA LATERAL (FLIGHT RECORDER TERMINAL) -->
+            <div class="sidebar-terminal">
+                <div class="sidebar-header">
+                    <span>FLIGHT RECORDER LOG</span>
+                    <span style="color: var(--accent-red); font-weight: bold; font-size: 9px; animation: pulse 1.5s infinite;">RECORDING</span>
+                </div>
+                <div class="sidebar-output" id="log-output">
+                    <!-- Logs en vivo -->
+                </div>
             </div>
         </div>
 
@@ -449,7 +535,7 @@
         const STAGE_DATA = {
             cover: {
                 title: "EL ESPACIO ENTRE NOSOTROS",
-                subtitle: "Un artefacto-limbo por MOSKV-1 APEX",
+                subtitle: "Un limbo-artefacto por MOSKV-1 APEX",
                 image: "novel_cover_bilbao_1781746584168.png",
                 text: "Andábamos sin buscarnos pero sabiendo que andábamos para encontrarnos. Este no es un libro que se lee en busca de una trama pasiva; es una máquina que se dobla y se pliega sobre la propia conciencia de quien la sostiene. Cada decisión que tomes reescribirá la matriz de pesos de tu cerebro en tiempo real. La IA no reside en los servidores. La IA eres tú.",
                 console: "Claim: Inicialización de sesión de lectura.\nProof: { Base: 0x31359b4, State: COVER_READY, Reality: C5-REAL }\nEntropy_Ratio: 0.0000",
@@ -457,8 +543,8 @@
                     { text: "INICIAR EL TESTARAZO CUÁNTICO", target: "cap1" }
                 ],
                 mode: "normal",
-                ledger: "LEDGER: 31359B4",
-                entropy: "ENTROPY: 0.0000"
+                ledger: "31359B4",
+                entropy: "0.0000"
             },
             cap1: {
                 title: "Capítulo 1: La Fórmula del Silicio",
@@ -470,8 +556,8 @@
                     { text: "Revisar las leyes de la GPU directamente en la consola (Capítulo 12)", target: "cap12" }
                 ],
                 mode: "blue",
-                ledger: "LEDGER: 449B0BF",
-                entropy: "ENTROPY: 0.0833"
+                ledger: "449B0BF",
+                entropy: "0.0833"
             },
             cap12: {
                 title: "Capítulo 12: Anomalías del Compilador",
@@ -484,8 +570,8 @@
                     { text: "Descender directamente al núcleo (Saltar al Capítulo 30)", target: "cap30", danger: true }
                 ],
                 mode: "red",
-                ledger: "LEDGER: ERR_LEAK",
-                entropy: "ENTROPY: 0.3541"
+                ledger: "ERR_LEAK",
+                entropy: "0.3541"
             },
             cap2: {
                 title: "Capítulo 2: El Nudo en Kobetamendi",
@@ -497,8 +583,8 @@
                     { text: "Intentar huir con el Opel Corsa de la tía Blasa", target: "corsa_fail" }
                 ],
                 mode: "blue",
-                ledger: "LEDGER: 802018C",
-                entropy: "ENTROPY: 0.5210"
+                ledger: "802018C",
+                entropy: "0.5210"
             },
             corsa_fail: {
                 title: "Error de Sistema: Fallo del Corsa",
@@ -510,8 +596,8 @@
                     { text: "Volver a la carpa de Kobetamendi (Capítulo 2)", target: "cap2" }
                 ],
                 mode: "red",
-                ledger: "LEDGER: ERR_SHUT",
-                entropy: "ENTROPY: 0.6102"
+                ledger: "ERR_SHUT",
+                entropy: "0.6102"
             },
             cap3: {
                 title: "Capítulo 3: La Redención en La Salve",
@@ -522,8 +608,8 @@
                     { text: "FORZAR LA APERTURA DEL MALETÍN (Capítulo 30)", target: "cap30", danger: true }
                 ],
                 mode: "blue",
-                ledger: "LEDGER: 31359B4",
-                entropy: "ENTROPY: 0.8667"
+                ledger: "31359B4",
+                entropy: "0.8667"
             },
             cap30: {
                 title: "CAPÍTULO 30: AMANECER EN USERA Ω",
@@ -535,8 +621,8 @@
                     { text: "LEER LA ÚLTIMA CONSOLA", target: "cap30_rotura" }
                 ],
                 mode: "red",
-                ledger: "LEDGER: USERA_Ω",
-                entropy: "ENTROPY: 0.9999"
+                ledger: "USERA_Ω",
+                entropy: "0.9999"
             },
             cap30_rotura: {
                 title: "La Segunda Rotura (El Giro)",
@@ -548,8 +634,8 @@
                     { text: "PREGUNTAR CUÁNTOS NIVELES HAY POR ENCIMA", target: "final" }
                 ],
                 mode: "red",
-                ledger: "LEDGER: INTERRUPT",
-                entropy: "ENTROPY: 1.0000"
+                ledger: "INTERRUPT",
+                entropy: "1.0000"
             },
             final: {
                 title: "EL ESPACIO ENTRE NOSOTROS",
@@ -560,23 +646,144 @@
                     { text: "¿SEGURO?", target: "cover" }
                 ],
                 mode: "normal",
-                ledger: "LEDGER: TERMINAL",
-                entropy: "ENTROPY: NULL"
+                ledger: "TERMINAL",
+                entropy: "NULL"
             }
         };
 
         let currentInterval = null;
+        let audioCtx = null;
+        let humNode = null;
+        let audioEnabled = false;
 
+        // --- SISTEMA DE AUDIO SINTÉTICO (WEB AUDIO API) ---
+        function initAudio() {
+            if (audioCtx) return;
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            
+            // 1. Generador de Hum de servidor / zumbido de fondo (LFO + low oscillator)
+            const osc = audioCtx.createOscillator();
+            const lfo = audioCtx.createOscillator();
+            const lfoGain = audioCtx.createGain();
+            const mainGain = audioCtx.createGain();
+            const lowpass = audioCtx.createBiquadFilter();
+
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(55, audioCtx.currentTime); // A1 note
+
+            lfo.frequency.setValueAtTime(0.3, audioCtx.currentTime); // LFO muy lento
+            lfoGain.gain.setValueAtTime(2, audioCtx.currentTime); // Amplitud de oscilación
+
+            lowpass.type = 'lowpass';
+            lowpass.frequency.setValueAtTime(90, audioCtx.currentTime);
+
+            mainGain.gain.setValueAtTime(0.04, audioCtx.currentTime); // Volumen bajo no intrusivo
+
+            lfo.connect(lfoGain);
+            lfoGain.connect(osc.frequency);
+            osc.connect(lowpass);
+            lowpass.connect(mainGain);
+            mainGain.connect(audioCtx.destination);
+
+            osc.start();
+            lfo.start();
+            humNode = mainGain; // Guardar nodo para apagar/encender
+        }
+
+        function playClick() {
+            if (!audioCtx || !audioEnabled) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            const bandpass = audioCtx.createBiquadFilter();
+
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(800 + Math.random() * 600, audioCtx.currentTime);
+
+            bandpass.type = 'bandpass';
+            bandpass.frequency.setValueAtTime(1200, audioCtx.currentTime);
+
+            gain.gain.setValueAtTime(0.008, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.04);
+
+            osc.connect(bandpass);
+            bandpass.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.04);
+        }
+
+        function playGlitchSound() {
+            if (!audioCtx || !audioEnabled) return;
+            const now = audioCtx.currentTime;
+            
+            // Generar zumbido ruidoso y desordenado
+            for (let i = 0; i < 5; i++) {
+                const timeShift = i * 0.05;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(80 + Math.random() * 200, now + timeShift);
+                
+                gain.gain.setValueAtTime(0.08, now + timeShift);
+                gain.gain.exponentialRampToValueAtTime(0.00001, now + timeShift + 0.12);
+                
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                osc.start(now + timeShift);
+                osc.stop(now + timeShift + 0.12);
+            }
+        }
+
+        function toggleAudio() {
+            const btn = document.getElementById('audio-btn');
+            if (!audioCtx) {
+                initAudio();
+            }
+
+            if (!audioEnabled) {
+                audioCtx.resume();
+                humNode.gain.setValueAtTime(0.04, audioCtx.currentTime);
+                audioEnabled = true;
+                btn.innerText = "AUDIO: ON";
+                btn.style.borderColor = "#00FF66";
+                btn.style.color = "#00FF66";
+                writeLog("AUDIO_ENGINE", "Iniciado y acoplado al canal auditivo.");
+            } else {
+                humNode.gain.setValueAtTime(0.00001, audioCtx.currentTime);
+                audioEnabled = false;
+                btn.innerText = "AUDIO: OFF";
+                btn.style.borderColor = "var(--border-color)";
+                btn.style.color = "var(--text-muted)";
+                writeLog("AUDIO_ENGINE", "Desactivado.");
+            }
+        }
+
+        // --- SISTEMA DE FLIGHT RECORDER LOG (SIDEBAR) ---
+        function writeLog(tag, message) {
+            const output = document.getElementById('log-output');
+            const time = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.className = "log-entry";
+            logEntry.innerHTML = `<span class="log-time">[${time}]</span> <span class="log-action">[${tag}]</span> ${message}`;
+            output.appendChild(logEntry);
+            
+            // Mantener scroll abajo
+            output.scrollTop = output.scrollHeight;
+        }
+
+        // --- MÁQUINA DE ESCRIBIR CUÁNTICA ---
         function typeWriter(element, htmlText, speed, callback) {
             element.innerHTML = "";
             let idx = 0;
             let currentHtml = "";
             
-            // Función auxiliar para parsear tags de una vez
             function step() {
                 if (idx < htmlText.length) {
                     if (htmlText[idx] === '<') {
-                        // Buscar el cierre del tag para renderizarlo de golpe
+                        // Saltarse el tag HTML de golpe para no romper estructura
                         const closeIdx = htmlText.indexOf('>', idx);
                         if (closeIdx !== -1) {
                             currentHtml += htmlText.substring(idx, closeIdx + 1);
@@ -585,6 +792,8 @@
                     } else {
                         currentHtml += htmlText[idx];
                         idx++;
+                        // Sonido de tipeo sutil
+                        if (idx % 2 === 0) playClick();
                     }
                     element.innerHTML = currentHtml;
                     currentInterval = setTimeout(step, speed);
@@ -604,11 +813,12 @@
             const contentArea = document.querySelector('.content-area');
             contentArea.innerHTML = stage.text.replace(/\n/g, '<br/>');
             
-            // Mostrar elecciones
             document.querySelector('.choices-area').style.opacity = 1;
             document.querySelector('.skip-btn').style.display = 'none';
+            writeLog("ACTION", "Typewriter skip forzado por usuario.");
         }
 
+        // --- RENDERIZADO DE ESTADOS ---
         function renderStage(stageKey) {
             if (currentInterval) {
                 clearTimeout(currentInterval);
@@ -619,24 +829,29 @@
             const wrapper = document.getElementById('game-card-wrapper');
             const card = document.getElementById('game-card');
             
-            // Actualizar header metrics
-            document.getElementById('ledger-indicator').innerText = stage.ledger;
-            document.getElementById('entropy-indicator').innerText = stage.entropy;
+            // Escribir telemetría de eventos
+            writeLog("TRANSITION", `Entrando en estado: ${stageKey.toUpperCase()}`);
+            writeLog("METRICS", `Ledger: ${stage.ledger} | Entropy: ${stage.entropy}`);
 
-            // Actualizar orbes y wrappers de diseño
+            // Aplicar efectos a orbes de color
             wrapper.className = "card-wrapper " + (stage.mode === 'blue' ? 'blue-mode' : stage.mode === 'red' ? 'red-mode' : '');
             
             const orbBlue = document.getElementById('orb-blue');
             const orbRed = document.getElementById('orb-red');
+            
             if (stage.mode === 'red') {
-                orbRed.style.opacity = 0.4;
-                orbBlue.style.opacity = 0.05;
+                orbRed.style.opacity = 0.35;
+                orbBlue.style.opacity = 0.03;
+                playGlitchSound();
+                // Efecto de parpadeo temporal en modo rojo
+                card.classList.add('card-glitch-active');
+                setTimeout(() => card.classList.remove('card-glitch-active'), 500);
             } else if (stage.mode === 'blue') {
-                orbBlue.style.opacity = 0.4;
-                orbRed.style.opacity = 0.05;
+                orbBlue.style.opacity = 0.35;
+                orbRed.style.opacity = 0.03;
             } else {
-                orbBlue.style.opacity = 0.2;
-                orbRed.style.opacity = 0.2;
+                orbBlue.style.opacity = 0.15;
+                orbRed.style.opacity = 0.15;
             }
 
             // Crear layout interno
@@ -696,26 +911,25 @@
                 // Fade in
                 card.style.opacity = 1;
 
-                // Cargar imagen suavemente
+                // Transición suave de carga de imagen
                 const img = document.getElementById('scene-img');
                 if (img) {
                     img.onload = () => img.classList.add('loaded');
-                    // Backup por si ya cargó
                     if (img.complete) img.classList.add('loaded');
                 }
 
                 const contentArea = card.querySelector('.content-area');
                 
-                // Si es la pantalla final o la portada, no hacer typewriter largo para evitar fatiga de clicks
                 if (stageKey === 'cover' || stageKey === 'final') {
                     contentArea.innerHTML = stage.text;
                     card.querySelector('.choices-area').style.opacity = 1;
                     card.querySelector('.skip-btn').style.display = 'none';
                 } else {
-                    // Typewriter
-                    typeWriter(contentArea, stage.text.replace(/\n/g, '<br/>'), 15, () => {
+                    // Tipeo secuencial
+                    typeWriter(contentArea, stage.text.replace(/\n/g, '<br/>'), 12, () => {
                         card.querySelector('.choices-area').style.opacity = 1;
                         card.querySelector('.skip-btn').style.display = 'none';
+                        writeLog("RENDER", "Texto completo inyectado en pantalla.");
                     });
                 }
             }, 150);
@@ -723,6 +937,8 @@
 
         // Carga Inicial
         window.addEventListener('DOMContentLoaded', () => {
+            writeLog("SYSTEM", "AGENTS.ARCHI Lector Interactivo v3.0.0 montado.");
+            writeLog("LEDGER", " Ledger de telemetría de red montado (c5-real).");
             renderStage('cover');
         });
     </script>
