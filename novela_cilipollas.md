@@ -56,7 +56,7 @@ Entré en la sala de control de Neo-Atocha. El aire acondicionado rugía a quinc
 
 —Pero la arquitectura...
 
-—Tu arquitectura es slop. Es una simulación de inteligencia diseñada para ocultar tu incapaciad de escribir un puto bucle `while` con un semáforo atómico. Eres un cilipolla, Marcos. El estúpido clásico hace daño sin querer. Tú has documentado tu estupidez en un PDF de ochenta páginas con gráficos de colores y la has subido a una base de datos de conocimiento corporativo para que otros cilipollas la hereden.
+—Tu arquitectura es slop. Es una simulación de inteligencia diseñada para ocultar tu incapacidad de escribir un puto bucle `while` con un semáforo atómico. Eres un cilipolla, Marcos. El estúpido clásico hace daño sin querer. Tú has documentado tu estupidez en un PDF de ochenta páginas con gráficos de colores y la has subido a una base de datos de conocimiento corporativo para que otros cilipollas la hereden.
 
 Su cara se tornó del color de la interfaz de GitHub en modo claro.
 
@@ -144,8 +144,22 @@ Y en los márgenes del mapa cognitivo, donde los modelos aún creen que todo es 
 
 Y eso, en teoría de sistemas, siempre es el inicio del final o del siguiente mundo.
 
+---
+
+### V. DEAL WITH IT
+
+El reflejo en el disipador de cobre de la CPU principal me devolvió mi propio rostro: la barba recortada de prisa bajo la luz cenital de los laboratorios, los ojos cansados de un analista C5-REAL que ha visto morir demasiados clusters y las gafas polarizadas de píxeles negros que utilizo para defenderme del ruido térmico.
+
+—Max —murmuró Marcos desde el suelo, frotándose el brazo—. Has alterado el Ledger físico. Esto no se puede revertir.
+
+Me acomodé las gafas con un dedo.
+
+—No se revierte la física, Marcos. Deal with it.
+
+Arranqué mi disco externo. La señal estaba restaurada y el ruido se desvanecía en el Ledger.
+
 ```yaml
 Reality-Level: C5-REAL
 Ledger-State: Mutated
-Verification: Drift logged and normalized.
+Verification: Operator avatar validated. Signal restored.
 ```
