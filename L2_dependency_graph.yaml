@@ -1,0 +1,27 @@
+Nodes:
+- id: src/moskv_1/graph_scanner.py
+  era: RUNTIME_ACTIVE
+  type: python_module
+Edges:
+- source: src/moskv_1/graph_scanner.py
+  target: os
+  relation: IMPORTS
+- source: src/moskv_1/graph_scanner.py
+  target: ast
+  relation: IMPORTS
+- source: src/moskv_1/graph_scanner.py
+  target: re
+  relation: IMPORTS
+- source: src/moskv_1/graph_scanner.py
+  target: yaml
+  relation: IMPORTS
+- source: src/moskv_1/graph_scanner.py
+  target: pathlib
+  relation: IMPORTS
+- source: src/moskv_1/graph_scanner.py
+  target: typing
+  relation: IMPORTS
+Anomalies:
+- type: CROSS_ERA_DEPENDENCY
+  source: src/moskv_1/graph_scanner.py
+  target: JavaScript Kernel (Runtime calling Legacy)
