@@ -31,3 +31,4 @@ apps/vector_zeta/leads_db.json
 .pytest_cache/
 .unlighthouse/
 .devcontainer/
+scratch/
