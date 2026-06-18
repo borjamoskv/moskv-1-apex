@@ -36,7 +36,9 @@ def init_memory_schema():
                 correlation_id TEXT NOT NULL,
                 actor TEXT,
                 narrative TEXT NOT NULL,
-                hmac_signature TEXT NOT NULL
+                hmac_signature TEXT NOT NULL,
+                layer TEXT DEFAULT 'session_memory',
+                expires_at TEXT
             );
         """)
         conn.execute("""

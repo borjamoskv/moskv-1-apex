@@ -34,6 +34,34 @@ class RetrievalIndex:
             return dict(row) if row else None
 
     @staticmethod
+    def recall(concept: str) -> list:
+        # Cognee-style semantic traversal (GAP 2)
+        # Navigates from semantic memory down to related episodic logs
+        with get_memory_db() as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT e.event_id, e.timestamp, e.narrative 
+                FROM episodic_memory e
+                WHERE e.narrative LIKE ?
+                ORDER BY e.timestamp DESC
+            """, (f'%{concept}%',))
+            return [dict(row) for row in cursor.fetchall()]
+
+    @staticmethod
+    def forget(node_id: str) -> bool:
+        # Cognee-style node amnesia (GAP 2)
+        # Deletes specific nodes from semantic or episodic layers to prevent semantic drift
+        with get_memory_db() as conn:
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM semantic_memory WHERE concept_id = ?", (node_id,))
+            rows_affected = cursor.rowcount
+            if rows_affected == 0:
+                cursor.execute("DELETE FROM episodic_memory WHERE event_id = ?", (node_id,))
+                rows_affected = cursor.rowcount
+            conn.commit()
+            return rows_affected > 0
+
+    @staticmethod
     def get_procedural_failure_pattern(aggregate_type: str) -> list:
         with get_memory_db() as conn:
             cursor = conn.cursor()

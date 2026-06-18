@@ -41,6 +41,14 @@ TASKS = {
         "lock_file": "/tmp/cronos_board_of_directors.lock",
         "timeout_seconds": 3600,
         "description": "Swarm executive orchestration"
+    },
+    "reddit_traffic_engine": {
+        "command": apply_resource_limits(["python3", os.path.join(ROOT_DIR, "..", "apps", "moskv_reddit_engine", "traffic_orchestrator.py")], profile="worker_network"),
+        "base_interval": 21600,
+        "type": "interval",
+        "lock_file": "/tmp/cronos_reddit_traffic.lock",
+        "timeout_seconds": 600,
+        "description": "ZEO-GTM Lead Generation & Payload Syndication"
     }
 }
 
