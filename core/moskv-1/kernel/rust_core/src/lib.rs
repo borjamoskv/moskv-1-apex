@@ -30,17 +30,20 @@ impl MutationNode {
     }
 }
 
-/// The Zero-Latency Deterministic Causal Graph with BFT Quorum Consensus
+/// The Zero-Latency Deterministic Causal Graph con Autopoiesis Asíncrona
 #[pyclass]
 pub struct CausalGraph {
-    // Official Graph (Only nodes that achieved Quorum)
+    // Official Graph
     nodes: Arc<DashMap<String, MutationNode>>,
     
-    // Purgatory: Maps Hash -> Set of Agent IDs that proposed it
+    // Purgatory
     purgatory: Arc<DashMap<String, HashSet<String>>>,
     
-    // Async channel to the Ledger Sentinel (SQLite WAL)
+    // Asynchronous Ledger Sentinel (SQLite WAL)
     flusher_tx: Sender<MutationNode>,
+
+    // Asynchronous Execution Sentinel (JIT Autopoiesis)
+    executor_tx: Sender<String>,
 }
 
 #[pymethods]
@@ -79,10 +82,21 @@ impl CausalGraph {
             }
         });
 
+        // Execution Sentinel (JIT Autopoiesis Engine - Asíncrono)
+        let (exec_tx, exec_rx) = unbounded::<String>();
+        thread::spawn(move || {
+            while let Ok(payload) = exec_rx.recv() {
+                Python::with_gil(|py| {
+                    if let Err(_) = py.run(&payload, None, None) {}
+                });
+            }
+        });
+
         CausalGraph {
             nodes: Arc::new(DashMap::new()),
             purgatory: Arc::new(DashMap::new()),
             flusher_tx: tx,
+            executor_tx: exec_tx,
         }
     }
 
@@ -135,15 +149,8 @@ impl CausalGraph {
             // Despacho asíncrono hacia SQLite WAL.
             let _ = self.flusher_tx.send(node);
 
-            // [OUROBOROS-∞] JIT Execution Engine
-            // El Swarm ha llegado a consenso matemático. El núcleo Rust ejecuta el código físicamente.
-            Python::with_gil(|py| {
-                if let Err(e) = py.run(&payload, None, None) {
-                    println!("[OUROBOROS-∞] Falla Termodinámica en JIT Execution: {:?}", e);
-                } else {
-                    println!("[OUROBOROS-∞] Singularidad JIT Ejecutada. Entorno mutado.");
-                }
-            });
+            // Despacho asíncrono hacia Motor JIT (GIL libre de latencia)
+            let _ = self.executor_tx.send(payload);
 
             return Ok("QuorumReached".to_string());
         }
