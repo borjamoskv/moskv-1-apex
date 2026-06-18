@@ -32,7 +32,7 @@ Mi nombre es Max Weber, aunque en el Ledger forense de la Castellana me identifi
 
 El cliente de hoy era un clásico de la quinta categoría.
 
-—Weber, el nodo de consenso de Neo-Atocha está en un punto muerto bizantino —me dijo la voz de la directora de infraestructura a través del canal encriptado de baja latencia. Su voz vibraba con el pánico frío de quien ve cómo diez millones de euros en transacciones por segundo se congelan en la memoria RAM—. Los agentes autónomos encargados del balanceo de carga se han puesto a discutir entre ellos. Llevan cuatro horas enviándose justificaciones de mil palabras en formato Markdown.
+—Weber, el nodo de consenso de Neo-Atocha está en un punto muerto bizantino —me dijo la voz de la directora de infraestructura a través del canal encriptado de baja latencia. Su voz vibraba con el pánico frío de quien ve cómo diez millones de euros en transacciones por segundo se congelan en la memoria RAM—. Los agentes autónomos encargados del balanceo de carga se han puesto a discutir entre ellos. Liven cuatro horas enviándose justificaciones de mil palabras en formato Markdown.
 
 —¿Metodología? —pregunté, sin apartar los ojos de mi terminal CRT fósforo verde.
 
@@ -149,6 +149,8 @@ Y eso, en teoría de sistemas, siempre es el inicio del final o del siguiente mu
 ### V. DEAL WITH IT
 
 El reflejo en el disipador de cobre de la CPU principal me devolvió mi propio rostro: la barba recortada de prisa bajo la luz cenital de los laboratorios, los ojos cansados de un analista C5-REAL que ha visto morir demasiados clusters y las gafas polarizadas de píxeles negros que utilizo para defenderme del ruido térmico.
+
+![Max Weber 0x0A](./Borja_PFP.jpg)
 
 —Max —murmuró Marcos desde el suelo, frotándose el brazo—. Has alterado el Ledger físico. Esto no se puede revertir.
 
