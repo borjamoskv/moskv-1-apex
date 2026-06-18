@@ -209,9 +209,9 @@ class CDPLinkedInTool:
                                 more_button.click(force=True)
                                 time.sleep(1.5)
                                 
-                                # Look for Connect/Conectar or Message/Mensaje in the dropdown
-                                dropdown_connect = page.locator("div.artdeco-dropdown__content span:has-text('Conectar'), div.artdeco-dropdown__content span:has-text('Connect'), [class*='dropdown'] span:has-text('Conectar'), [class*='dropdown'] span:has-text('Connect'), div.artdeco-dropdown__content button:has-text('Conectar'), div.artdeco-dropdown__content button:has-text('Connect')").first
-                                dropdown_message = page.locator("div.artdeco-dropdown__content span:has-text('Enviar mensaje'), div.artdeco-dropdown__content span:has-text('Message'), [class*='dropdown'] span:has-text('Enviar mensaje'), [class*='dropdown'] span:has-text('Message')").first
+                                # Look for Connect/Conectar or Message/Mensaje in the dropdown using class-agnostic visible filters
+                                dropdown_connect = page.locator("span:has-text('Conectar'), span:has-text('Connect'), button:has-text('Conectar'), button:has-text('Connect')").filter(visible=True).first
+                                dropdown_message = page.locator("span:has-text('Enviar mensaje'), span:has-text('Message'), button:has-text('Enviar mensaje'), button:has-text('Message')").filter(visible=True).first
                                 
                                 if dropdown_connect.is_visible():
                                     print("[*] Connect option found in dropdown. Clicking...")
