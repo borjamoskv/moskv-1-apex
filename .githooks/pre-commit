@@ -17,17 +17,17 @@ fi
 
 # Check for Anergy and R5 Critical Path Violations in staged files
 # Using -z and -0 to prevent word-splitting on files with spaces in their names.
-# Exclude documentation (.md), rule files (.cursorrules), and config (.json) from checks.
-if git diff --cached -z --name-only | grep -zv -e "pre-commit" -e "\.md$" -e "\.cursorrules$" -e "\.json$" >/dev/null; then
+# Exclude documentation (.md), rule files (.cursorrules), config (.json), and sandbox profiles (.sb) from checks.
+if git diff --cached -z --name-only | grep -zv -e "pre-commit" -e "\.md$" -e "\.cursorrules$" -e "\.json$" -e "\.sb$" >/dev/null; then
     # Check for Anergy in staged files
-    if git diff --cached -z --name-only | grep -zv -e "pre-commit" -e "\.md$" -e "\.cursorrules$" -e "\.json$" | xargs -0 grep -i -e "apologize" -e "as an AI" >/dev/null 2>&1; then
+    if git diff --cached -z --name-only | grep -zv -e "pre-commit" -e "\.md$" -e "\.cursorrules$" -e "\.json$" -e "\.sb$" | xargs -0 grep -i -e "apologize" -e "as an AI" >/dev/null 2>&1; then
         echo -e "\033[0;31m[CRITICAL] ANERGY DETECTED IN STAGED FILES.\033[0m"
         echo "MOSKV-1 APEX does not tolerate LLM Slop. Purge the noise and commit again."
         exit 1
     fi
 
     # Check for R5 Critical Path Violations in staged files
-    if git diff --cached -z --name-only | grep -zv -e "pre-commit" -e "\.md$" -e "\.cursorrules$" -e "\.json$" | xargs -0 grep -i -E "/private/var/db|/System/Volumes/Data/System/Library/AssetsV2|/System/Library/AssetsV2|Mobile[[:space:]]Documents|colima" >/dev/null 2>&1; then
+    if git diff --cached -z --name-only | grep -zv -e "pre-commit" -e "\.md$" -e "\.cursorrules$" -e "\.json$" -e "\.sb$" | xargs -0 grep -i -E "/private/var/db|/System/Volumes/Data/System/Library/AssetsV2|/System/Library/AssetsV2|Mobile[[:space:]]Documents|colima" >/dev/null 2>&1; then
         echo -e "\033[0;31m[CRITICAL] R5 CRITICAL PATH VIOLATION DETECTED.\033[0m"
         echo "Attempts to mutate system critical paths (/private/var/db, System, Mobile Documents, Colima) are blocked by Git Sentinel."
         exit 1
