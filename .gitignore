@@ -12,4 +12,5 @@ __pycache__/
 *.ndjson
 *ledger.json
 syndication_outbox.md
-
+*.sqlite
+*.db
