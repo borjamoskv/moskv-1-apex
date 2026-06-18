@@ -1,8 +1,8 @@
 import os
 import yaml
-from vector_zeta.cdp_publisher import CDPPublisher
-from vector_zeta.linkedin_scraper import LinkedInScraper
-from vector_zeta.outreach_injector import OutreachInjector
+from cdp_publisher import CDPPublisher
+from linkedin_scraper import LinkedInScraper
+from outreach_injector import OutreachInjector
 
 class ZetaOrchestrator:
     def __init__(self, campaign_file=None):

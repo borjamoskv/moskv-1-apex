@@ -10,7 +10,7 @@
       "detected_at": "2026-06-18T13:20:00Z",
       "platform": "Substack",
       "behavior": "High open/click rate bot simulation",
-      "status": "PURGE_REQUIRED"
+      "status": "FAILED_PURGE"
     }
   ]
 }
