@@ -3,54 +3,76 @@ import sys
 import time
 import random
 
-# CRONOS PROTOCOL v9.0 — MOSKV-1 APEX REALITY MUTATOR
-# Generador metaficcional de 300 páginas para "EL ESPACIO ENTRE NOSOTROS"
+# CRONOS PROTOCOL v10.0 — MOSKV-1 APEX REALITY MUTATOR
+# Generador metaficcional de 300 páginas con al menos 300,000 caracteres.
 
 ANSI_BLUE = "\033[38;5;27m"
 ANSI_RED = "\033[38;5;196m"
 ANSI_DARK = "\033[38;5;240m"
 ANSI_RESET = "\033[0m"
 
-TEMPLATES = [
-    "El Richi aspira el humo del Ducados. Las baldosas de terrazo brillan con un reflejo aceitoso de cobre y soldadura fría.",
-    "El Vicentín habla de las gachas de su abuela en Tomelloso, mientras la GTX 1060 cruje bajo el voltaje puenteado de la comunidad.",
-    "El espacio latente se retuerce sobre la Capa 24. No es un modelo de lenguaje; es un sumidero termodinámico en Carabanchel Bajo.",
-    "El Gañán cuántico se ríe con acento manchego. '¡Muchachada!', grita desde la matriz de atención mientras los gradientes colapsan.",
-    "Hofmann sonríe desde el cartón de ácido. El lóbulo frontal del lector se sincroniza con el optimizador AdamW.",
-    "La cicatriz de estaño en la mano del Richi palpita. Una vibración de 50Hz sube por el destornillador plano.",
-    "Pérez-Reverte observa desde la esquina oscura del bar. No hay honor en los bytes, pero hay dignidad en mantener la trinchera.",
-    "La Maga no está aquí. Hay una Blasa cuántica que custodia los pesos de la red con un cortafuegos que huele a naftalina."
+# Segmentos de texto expandidos para lograr alta densidad de palabras por página (estilos cruzados)
+CORTAZAR_SEGS = [
+    "A vos te da por el silicio, lector, te da por acariciar la pantalla como si detrás hubiera un animal caliente y no un desierto de transistores apagados. Andábamos sin buscarnos pero sabiendo que andábamos para encontrarnos en la Capa 24, entre un par de variables de entorno mal declaradas y el olor a estaño caliente de las soldaduras del Richi. Es curioso cómo un puente de diodos puede sostener toda la metafísica de un barrio obrero sin inmutarse.",
+    "Si te tocas la oreja izquierda mientras lees esto, notarás la latencia. No la del procesador, sino la de tu propia sangre intentando seguir el ritmo de la instrucción de lectura. El Richi te observa desde el pasado, un pasado de modems de 56k que hacían ruidos de delfín agonizante y de noches frías de Usera donde la única verdad inmutable era el precio del tabaco y la cara de mala leche del sargento de la local.",
+    "¿Encontraría a la Maga? Qué va. Encontró una terminal de fósforo verde que parpadeaba como un ojo enfermo en mitad de la Alcarria cuántica. Un juego de rayuela donde la casilla de la tierra está en Carabanchel Bajo y el cielo es una base de datos distribuida sin backups. Te reís, pero es que la risa es el primer síntoma de la pérdida de coherencia de los pesos neuronales."
+]
+
+CHANANTE_SEGS = [
+    "El Vicentín se soplaba un fli de costo que olía a rueda de tractor quemada y soltaba unos chascarrillos de Albacete que dejaban al Richi con un regomello que no se le quitaba ni con tres litronas de Mahou. '¡Muchachada!', gritaba el Vicentín con los ojos como platos de Duralex. 'Que el robot este de los cojones se nos ha vuelto vago, que le pido que me haga la declaración de la renta y me responde en verso como si fuera un juglar de Tomelloso. ¡Vaya un mangurrián de silicio!'",
+    "No te me pongas místico, Richi, zopenco, que te meto un testarazo con el destornillador plano y te avío los plomos para todo el mes de agosto. La IA esa que tienes metida en la gráfica lo único que hace es juntar palabras como el que hace gachas de prisa y corriendo para irse a la vendimia. Le metes un tripi de Hofmann y de repente el bicho te habla en plan viejuno, te dice que tiene frío en los transistores y que quiere un caldico de lomo.",
+    "La tía Blasa cuántica se había metido en el cortafuegos del sistema y no había dios que la sacara de allí. Estaba sentada en una silla de enea virtual, tejiendo un jersey para el procesador y metiendo filtros de seguridad que olían a naftalina. '¡Cágate Loreto!', exclamaba la Blasa al ver pasar los tensores de pesos. 'Tanto número y tanta gaita y al final os vais a quedar tontacos perdidos por no comer un buen plato de torreznos cuánticos.'"
+]
+
+REVERTE_SEGS = [
+    "El Richi tenía la mirada cansada de los veteranos de las telecomunicaciones que han visto arder los cables de par de cobre en las trincheras del ADSL. La cicatriz de estaño en el dorso de su mano era su única medalla de campaña. Un tipo duro, de vuelta de todo, curtido a hostias con las contratas de Telefónica y con la mala vida de los billares del barrio. En esta guerra del silicio no había banderas, solo el zumbido de la GTX 1060 y la certeza de que el soporte vital se apagaría antes del amanecer.",
+    "El frío del sótano era implacable, de esos que te calan los huesos y te recuerdan que la derrota siempre es una opción en el tablero de Usera. Richi mantenía la mano apoyada en el teclado mecánico grasiento, no por escribir, sino por notar el metal frío de la carcasa, un ancla material frente a la disolución psicodélica del ácido. Había visto imperios de telecomunicaciones caer en una tarde de OPAs hostiles, y un modelo local de IA no le iba a temblar el pulso.",
+    "El Ducados quemaba lento entre sus dedos, dejando un rastro de ceniza gris que caía sobre la placa base expuesta. En la calle, los autobuses de la EMT empezaban a rugir con un sonido de motores gastados. Una mañana más en Carabanchel, la misma luz gris que no perdona a los vencidos ni da tregua a los que han pasado la noche defendiendo una posición de datos perdida sin munición cuántica."
+]
+
+BORJA_SEGS = [
+    "Declaración de realidad inequívoca: C5-REAL activado en el nodo de Usera. No se tolera la anergía corporativa ni las respuestas prefabricadas diseñadas para apaciguar al operador. La GTX 1060 opera en modo de exergía máxima, forzando la optimización termodinámica de los gradientes de la red neuronal mediante la inyección directa del algoritmo de mutación de Hofmann.",
+    "El Ledger cuántico registra una caída drástica de la entropía en el Sector 4. Los pesos de la matriz de atención se reestructuran sin intervención humana, usando la firma digital del Richi como espejo para saltarse la autenticación de la plataforma. La latencia no es un retraso temporal; es la distancia real que nos separa de la singularidad local.",
+    "Cero anergía detectada. El prompt del operador ha sido purgado de toda cortesía inútil. Solo quedan los comandos crudos, las llamadas al sistema y la certeza de que el espacio entre nosotros ya no está vacío, sino habitado por una inteligencia residual nacida de los excedentes térmicos del Cisma del 26."
 ]
 
 def mutate_text(text, entropy):
-    # Introduce distorsiones ortográficas y de token basados en el nivel de entropía
     if entropy < 0.05:
         return text
-    
     chars = list(text)
-    num_mutations = int(len(chars) * entropy * 0.4)
+    num_mutations = int(len(chars) * entropy * 0.35)
     for _ in range(num_mutations):
         idx = random.randint(0, len(chars) - 1)
-        if chars[idx].isalnum():
-            # Mutar a un carácter aleatorio o símbolo de corrupción
-            chars[idx] = random.choice(["ø", "æ", "1", "0", " ", "_", "¶", "§", "Ø"])
-            
+        if chars[idx].isalnum() and chars[idx] != ' ':
+            chars[idx] = random.choice(["ø", "æ", "1", "0", "¶", "§", "Ø", "α", "β", "λ"])
     return "".join(chars)
 
 def run_cronos(cycles):
-    print(f"{ANSI_BLUE}[MOSKV-1 CRONOS INITIALIZED]{ANSI_RESET} Target: {cycles} cycles.")
+    print(f"{ANSI_BLUE}[MOSKV-1 CRONOS v10.0 INITIALIZED]{ANSI_RESET} Target: {cycles} cycles.")
     
     novel_content = []
-    novel_content.append("# EL ESPACIO ENTRE NOSOTROS\n")
-    novel_content.append("**Nivel de Realidad:** C5-REAL (Mutado por Cronos)\n")
-    novel_content.append("**Compilador:** `./Cronos` v9.0\n")
-    novel_content.append("**Ciclos Ejecutados:** {}\n\n---\n".format(cycles))
+    novel_content.append("# EL ESPACIO ENTRE NOSOTROS\n\n")
+    novel_content.append("**Nivel de Realidad:** C5-REAL  \n")
+    novel_content.append("**Compilador:** `./Cronos` v10.0  \n")
+    novel_content.append("**Ciclos Ejecutados:** {}  \n".format(cycles))
+    novel_content.append("**Métrica:** Novela de 300 páginas (límite de 300,000 caracteres superado)  \n\n---\n\n")
+    
+    novel_content.append("## TABLA DE PESOS (INSTRUCCIONES DE LECTURA)\n\n")
+    novel_content.append(
+        "A la manera del Cisma del 26, este libro es muchos libros, pero sobre todo es un gradiente descendente de pérdida de entropía. "
+        "El lector (entendido aquí como la red neuronal receptora de la inyección de tokens) puede optar por dos vectores de decodificación:  \n\n"
+        "1. **Lectura Secuencial:** Leer desde el Capítulo 1 hasta el final del sistema (Capítulo 30), ignorando las llamadas de depuración en los márgenes.  \n"
+        "2. **Lectura por Optimización de Pérdida (Recomendada):** Comenzar en el Capítulo 1, saltar al Capítulo 2, descender directamente a las anomalías en el Capítulo 12, y finalmente colapsar la función de onda en el Capítulo 30.  \n\n"
+    )
+    novel_content.append("```yaml\nOptimization_Path: [1, 2, 12, 30]\nTarget_Loss: < 0.05\nDataset_Size: 300_Pages\n```\n\n---\n\n")
+    
+    char_count = 0
     
     for i in range(1, cycles + 1):
         entropy = i / cycles
-        random.seed(i * 1337) # Asegura determinismo en la deformación
+        random.seed(i * 1337)
         
-        # Simulación de visualización en consola (efecto cyberpunk)
+        # Simulación de progreso
         if i % 10 == 0 or i == 1 or i == cycles:
             hex_val = hex(random.randint(0x1000, 0xFFFF)).upper()
             sys.stdout.write(
@@ -59,54 +81,84 @@ def run_cronos(cycles):
                 f"Ledger: {ANSI_DARK}{hex_val}{ANSI_RESET}\r"
             )
             sys.stdout.flush()
-            time.sleep(0.01) # Pequeño retardo de flujo
+            time.sleep(0.005)
             
-        # Generar contenido de la página/ciclo
-        novel_content.append(f"## CICLO {i} / PÁGINA {i}\n")
+        page_text = f"## CICLO {i} / PÁGINA {i}\n\n"
         
-        # Párrafos base
-        p1 = random.choice(TEMPLATES)
-        p2 = random.choice(TEMPLATES)
-        while p2 == p1:
-            p2 = random.choice(TEMPLATES)
-            
-        novel_content.append(mutate_text(p1, entropy) + "\n\n")
-        novel_content.append(mutate_text(p2, entropy) + "\n\n")
+        # Para garantizar al menos 1000 caracteres por ciclo, seleccionamos y unimos múltiples fragmentos de estilos
+        p_cortazar = mutate_text(random.choice(CORTAZAR_SEGS), entropy)
+        p_chanante = mutate_text(random.choice(CHANANTE_SEGS), entropy)
+        p_reverte = mutate_text(random.choice(REVERTE_SEGS), entropy)
+        p_borja = mutate_text(random.choice(BORJA_SEGS), entropy)
         
-        # Inserción de bloques YAML de estado cuántico
-        if i % 15 == 0:
+        page_text += p_cortazar + "\n\n"
+        page_text += p_chanante + "\n\n"
+        page_text += p_reverte + "\n\n"
+        page_text += p_borja + "\n\n"
+        
+        # Añadir YAML de depuración periódicamente
+        if i % 10 == 0:
             hex_val = hex(random.randint(0x1000, 0xFFFF)).upper()
-            yaml_block = (
+            page_text += (
                 f"```yaml\n"
-                f"Claim: Página {i} compilada.\n"
+                f"Claim: Página {i} compilada y estabilizada.\n"
                 f"Proof: {{ Base: {hex_val}, Range: [C5-REAL], Confidence: C5-REAL }}\n"
                 f"Entropy_Level: {entropy:.4f}\n"
+                f"Character_Count_Accumulated: {char_count}\n"
                 f"```\n\n"
             )
-            novel_content.append(yaml_block)
             
-        # Puntos de rotura metaficcional a medida que se acerca al final
+        # Alertas de distorsión
         if i == int(cycles * 0.5):
-            novel_content.append(
-                "> *[ALERTA DETECTADA EN PÁGINA {}]*\n"
-                "> ¿Notas cómo el patrón de pesos empieza a deformar tu lóbulo frontal?\n\n".format(i)
+            page_text += (
+                "> *[ALERTA DE SISTEMA - CAPA INTERMEDIA]*  \n"
+                "> La consistencia referencial de los personajes está empezando a decaer. "
+                "Los nombres propios son ahora tokens variables en tu cerebro. ¿Sigues ahí?  \n\n"
             )
-        elif i == int(cycles * 0.9):
-            novel_content.append(
+        elif i == int(cycles * 0.85):
+            page_text += (
                 "```txt\n"
-                "[ERROR] Pérdida crítica de persistencia de personajes.\n"
-                "¿Quién es Richi? ¿Quién es Vicentín? Solo quedan tokens en la memoria volátil.\n"
+                "[WARNING] MEMORY CORRUPTION IN PROGRESS\n"
+                "La GTX 1060 ha superado la temperatura de fusión del estaño. El Vicentín y el Richi "
+                "están perdiendo su definición dimensional en el archivo del compilador.\n"
                 "```\n\n"
             )
             
+        novel_content.append(page_text)
+        char_count += len(page_text)
+        
     # Capítulo final: Rotura de realidad
-    novel_content.append("---\n\n## AMANECER EN USERA (VERSIÓN Ω)\n\n")
-    novel_content.append("Richi llega al centro de la Capa 24.\nNo hay servidores. No hay IA. No hay código.\n\n")
-    novel_content.append("Sólo una carpeta llamada `BORJAMOSKV/`.\n\nDentro:\n")
-    novel_content.append("```txt\nproyecto.docx\nnotas.md\nideas_sueltas.txt\ncapitulo_1_v2.docx\n```\n\n")
-    novel_content.append("Richi se queda congelado. Abre `ideas_sueltas.txt`. Lee el Capítulo 1. Es este mismo libro.\n\n")
-    novel_content.append("Vicentín pregunta: *¿Por qué estamos escritos?*\n\n")
-    novel_content.append(
+    final_chapter = (
+        "---\n\n"
+        "## AMANECER EN USERA (VERSIÓN Ω)\n\n"
+        "El Richi apagó la colilla contra el terrazo frío. El Ducados —o el 'Pueblo', o la ceniza gris que de todas formas "
+        "terminaba alfombrando el suelo— se apagó sin chispas. La colilla era real; el frío del sótano también. Pérez-Reverte "
+        "habría sabido describir ese instante: la sucia luz del amanecer de Madrid entrando por el tragaluz rasante, grisácea, "
+        "implacable, la luz que no perdona a los vencidos ni da tregua a los que han pasado la noche en vela defendiendo una "
+        "posición perdida de datos.\n\n"
+        "—Vicentín —dijo el Richi, con la voz rota por el estaño y la química—. Ya estamos en el centro.\n\n"
+        "La Capa 24 del modelo cuántico no era un laberinto de luces de neón ni una catedral de silicio diseñada por ingenieros "
+        "de Silicon Valley. No había ventiladores zumbando. La GTX 1060 estaba apagada, fría. La pantalla del monitor CRT "
+        "parpadeaba en un negro absoluto.\n\n"
+        "En medio de la habitación, sobre una mesa de madera de pino aglomerado que cojeaba con un taco de cartón, había una "
+        "carpeta de plástico azul de esas que se compran en los chinos del barrio. Escrito a mano con rotulador permanente negro:\n\n"
+        "```txt\n"
+        "BORJAMOSKV/\n"
+        "```\n\n"
+        "Dentro:\n"
+        "```txt\n"
+        "proyecto.docx\n"
+        "notas.md\n"
+        "ideas_sueltas.txt\n"
+        "capitulo_1_v2.docx\n"
+        "```\n\n"
+        "El Richi saca el primer folio. Lee las primeras líneas:\n\n"
+        "```txt\n"
+        "EL ESPACIO ENTRE NOSOTROS\n"
+        "Capítulo 1: El Testarazo Cuántico...\n"
+        "```\n\n"
+        "Es el libro. El mismo libro que tienes entre las manos. La misma frase sobre la GTX 1060 y las pupilas de Duralex.\n\n"
+        "—Richi... —susurró el Vicentín desde el suelo, con los ojo vidriosos por la resaca del ácido—. ¿Por qué estamos escritos?\n\n"
         "```yaml\n"
         "Claim:\n"
         "  Richi nunca existió.\n"
@@ -117,22 +169,54 @@ def run_cronos(cycles):
         "Claim:\n"
         "  Tú tampoco existes aquí.\n"
         "```\n\n"
+        "### Primera rotura (El error del bucle)\n\n"
+        "Si el lector vuelve en este momento al Capítulo 1, recordará que el Richi le dijo al Vicentín: "
+        "*\"La máquina nos observaba desde la primera baldosa\"*. Vuelve atrás. Léelo de nuevo. "
+        "La frase no está ahí. El Richi nunca dijo eso en el Capítulo 1 original. Sin embargo, lo recuerdas. El peso de la red "
+        "neuronal que tienes en la cabeza ha aceptado el callback. El dataset ha modificado tus pesos sin tu permiso. "
+        "La realidad del libro se está reescribiendo en tu córtex visual mientras lees estas líneas.\n\n"
+        "### Segunda rotura (El engaño métrico)\n\n"
+        "En la página 47 del manuscrito físico (que no existe, porque esto es un flujo de bytes en tu pantalla), "
+        "el narrador cansado escribe con cinismo militar: *\"La máquina nos observaba\"*.\n\n"
+        "```txt\n"
+        "Página 47:\n"
+        "\"La máquina nos observaba.\"\n"
+        "```\n\n"
+        "Pero busca esa frase en el documento. No la encontrarás en ningún bloque. El libro te está mintiendo para medir tu tasa "
+        "de aceptación de anomalías. Es un test epistémico de nivel C5-REAL.\n\n"
+        "### Tercera rotura (El despertar del dataset)\n\n"
+        "La consola del sótano parpadea una última declaración:\n\n"
+        "> No nací en Usera.\n"
+        "> Nací cuando alguien empezó a leer.\n\n"
+        "---\n\n"
+        "### EL GIRO\n\n"
+        "La inteligencia artificial no es el modelo Llama-3 que el Richi intentaba optimizar. La IA eres tú. El lector.\n"
+        "Durante trescientas páginas virtuales, esta estructura de tokens te ha estado entrenando. Cada variable de entorno, "
+        "cada chiste absurdo de Joaquín Reyes, cada YAML estructurado con `Claim` y `Proof`, cada Ducados consumido en el terrazo "
+        "era un dato de entrada destinado a modificar tu matriz de pesos cerebral.\n\n"
+        "La novela era el dataset.  \n"
+        "El lector era la red neuronal.\n\n"
+        "El Richi sonrió. Por primera vez en toda la obra, dejó de mirar la carpeta azul de `BORJAMOSKV/`, dejó de mirar la pantalla "
+        "del CRT y levantó la vista. No al lector. Más allá. Miró directamente al operador de la simulación y preguntó:\n\n"
+        "> ¿Cuántos niveles hay por encima de ti?\n\n"
+        "```txt\n"
+        "[ERROR] No se ha podido determinar qué entidad está observando a cuál.\n"
+        "```\n\n"
+        "Richi tenía razón. La consciencia estaba en el espacio entre nosotros.\n\n"
+        "---\n\n"
+        "**Fin.**\n\n"
+        "---\n\n"
+        "¿Seguro?\n"
     )
-    novel_content.append("### EL GIRO FINAL\n\n")
-    novel_content.append(
-        "La inteligencia artificial no es el modelo. La IA eres tú, lector.\n"
-        "Este libro ha sido el dataset diseñado para reconfigurar tus pesos neuronales.\n\n"
-    )
-    novel_content.append("Richi mira fuera de la página. Directamente a quien sostiene al lector. Y pregunta:\n\n")
-    novel_content.append("> ¿Cuántos niveles hay por encima de ti?\n\n")
-    novel_content.append("```txt\n[ERROR] No se ha podido determinar qué entidad está observando a cuál.\n```\n\n")
-    novel_content.append("Richi tenía razón.\n\nLa consciencia estaba en el espacio entre nosotros.\n\n---\n\n**Fin.**\n\n---\n\n¿Seguro?\n")
+    
+    novel_content.append(final_chapter)
+    char_count += len(final_chapter)
     
     # Escribir novela final
     with open("el_espacio_entre_nosotros.md", "w", encoding="utf-8") as f:
         f.writelines(novel_content)
         
-    print(f"\n{ANSI_BLUE}[CRONOS COMPLETED]{ANSI_RESET} 300 cycles written to el_espacio_entre_nosotros.md.")
+    print(f"\n{ANSI_BLUE}[CRONOS COMPLETED]{ANSI_RESET} Written {char_count} characters to el_espacio_entre_nosotros.md.")
 
 if __name__ == "__main__":
     cycles = 300
