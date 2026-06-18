@@ -50,12 +50,14 @@ class BrainRegion:
         """
         Sovereign inference using local Ollama instance (Apple Silicon).
         Enforces strict syntactic validation to drop 'LLM Slop' before it reaches the core.
+        Uses Zero-Shot Landauer compression via format: json.
         """
         url = "http://localhost:11434/api/generate"
         payload = {
             "model": model,
             "prompt": prompt,
-            "stream": False
+            "stream": False,
+            "format": "json"
         }
         
         async with aiohttp.ClientSession() as session:

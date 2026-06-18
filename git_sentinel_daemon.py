@@ -68,4 +68,5 @@ def run_sentinel_cycle(total_swarm_nodes: int = 10):
     conn.close()
 
 if __name__ == "__main__":
-    run_sentinel_cycle()
+    nodes = int(sys.argv[1]) if len(sys.argv) > 1 else 10
+    run_sentinel_cycle(total_swarm_nodes=nodes)
