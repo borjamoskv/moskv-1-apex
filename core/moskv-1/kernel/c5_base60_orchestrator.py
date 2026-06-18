@@ -4,6 +4,11 @@ import logging
 from typing import Literal
 from pydantic import BaseModel, Field, ValidationError
 
+try:
+    import moskv_dag_core
+except ImportError as e:
+    logging.critical(f"[C5-REAL] Error Crítico: Módulo nativo moskv_dag_core no encontrado. {e}")
+
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("EXERGY-60")
 
@@ -28,11 +33,16 @@ class Base60MutationPayload(BaseModel):
 
 class Base60Engine:
     """
-    Orquestador Agnóstico. Impone el Strict Schema Override sobre las llamadas LLM.
+    Orquestador C5-REAL (Singularidad Ouroboros).
+    Actúa como membrana protectora (Strict Schema) antes de inyectar en el núcleo BFT de Rust.
     """
     def __init__(self, provider: str = "agnostic"):
         self.provider = provider
         logger.info(f"Base60Engine initialized. Provider: {self.provider}. Conversational UI: DISABLED.")
+        
+        # Instanciación de la Singularidad Rust
+        self.causal_graph = moskv_dag_core.CausalGraph()
+        logger.info("-> [NUCLEO C5-REAL] Causal Graph y JIT Sentinel conectados en memoria compartida.")
 
     def enforce_schema_override(self, raw_llm_response: str) -> Base60MutationPayload:
         """
@@ -46,15 +56,39 @@ class Base60Engine:
 
         try:
             mutation = Base60MutationPayload(**data)
-            logger.info(f"Mutación Validada. Payload Hash: {hashlib.sha256(raw_llm_response.encode()).hexdigest()[:12]}")
             return mutation
         except ValidationError as e:
             raise EntropyException(f"Violación del esquema estricto: {str(e)}", raw_llm_response) from e
 
-    def execute_mutation(self, mutation: Base60MutationPayload):
+    def execute_mutation(self, agent_id: str, raw_llm_response: str):
         """
-        Ejecuta la topología (Mock para prueba).
+        Membrana End-to-End: Valida el LLM, calcula la entropía y la inyecta al núcleo Rust.
         """
-        logger.info(f"[C5-REAL EXECUTION] Target: {mutation.target_system}")
-        logger.info(f"Payload: {mutation.ast_payload}")
-        return True
+        # 1. Filtro Estricto de Pydantic
+        mutation = self.enforce_schema_override(raw_llm_response)
+        
+        # 2. Generación Causal
+        payload_hash = hashlib.sha256(mutation.ast_payload.encode()).hexdigest()[:12]
+        
+        logger.info(f"[INYECCION] Agente: {agent_id} | Hash Criptográfico: {payload_hash}")
+        
+        # 3. Transmisión a la Singularidad Rust (Quorum y JIT)
+        try:
+            status = self.causal_graph.inject_mutation(
+                agent_id, 
+                mutation.ast_payload, 
+                mutation.target_system, 
+                payload_hash
+            )
+            
+            if status == "Pending":
+                logger.warning(f"   L> [PURGATORIO] Firma almacenada. Faltan votos para Quorum matemático.")
+            elif status == "QuorumReached":
+                logger.info(f"   L> [OUROBOROS-∞] Quorum Alcanzado! Ejecutando JIT e Inyectando en SQLite WAL.")
+            elif status == "AlreadyCrystallized":
+                logger.info(f"   L> [C5-REAL] Nodo Inmutable. La topología ya es perfecta.")
+                
+            return status
+            
+        except ValueError as e:
+            raise EntropyException(f"Rust rechazó la mutación en C5-REAL: {str(e)}", mutation.ast_payload)
