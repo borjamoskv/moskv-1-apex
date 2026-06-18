@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# CRONOS SCHEDULER v5.0 — BULLETPROOF C5-REAL DAEMON
+# CRONOS SCHEDULER v6.0 — EVENT-SOURCED SRE DAEMON
 # Execution Level: C5-REAL
 import os
 import sys
@@ -15,6 +15,9 @@ import shlex
 from datetime import datetime, timezone, timedelta
 
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(ROOT_DIR)
+import cortex_event_log
+
 DB_PATH = "/Users/borjafernandezangulo/.cortex/scheduler.db"
 SCHEDULER_LOCK_PATH = "/tmp/cronos_scheduler.lock"
 LOG_DIR = "/tmp/cronos_logs"
@@ -24,7 +27,6 @@ os.makedirs(LOG_DIR, exist_ok=True)
 os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
 
 def apply_resource_limits(cmd_list):
-    # Enforces hard macOS resource limits: RAM = 1.5GB, CPU Time = 3600s
     cmd_str = " ".join(shlex.quote(arg) for arg in cmd_list)
     return ["/bin/zsh", "-c", f"ulimit -v 1572864; ulimit -t 3600; exec {cmd_str}"]
 
@@ -144,6 +146,7 @@ def init_db_and_recover():
         cursor.execute("UPDATE task_runs SET status = 'ORPHANED_CRASH', error = 'Daemon died without cleanup' WHERE status = 'RUNNING'")
         if cursor.rowcount > 0:
             print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS-RECOVERY] Sanados {cursor.rowcount} registros huérfanos (ORPHANED_CRASH).")
+            cortex_event_log.append_event("SYSTEM_RECOVERY", {"action": "ORPHANED_CRASH_HEALED", "count": cursor.rowcount})
         conn.commit()
 
 def emit_heartbeat():
@@ -170,6 +173,7 @@ def force_abort_active_tasks():
                 )
             conn.commit()
             print(f"[CRONOS-SHUTDOWN] Marcados {len(active_tasks_state)} procesos como ABORTED_SIGTERM.")
+            cortex_event_log.append_event("SYSTEM_SHUTDOWN", {"action": "ABORTED_SIGTERM", "count": len(active_tasks_state), "tasks": list(active_tasks_state.values())})
     except Exception as e:
         print(f"[CRONOS-SHUTDOWN-ERR] Fallo al actualizar DB en shutdown: {e}")
 
@@ -183,6 +187,7 @@ def prune_db():
             conn.commit()
             if deleted > 0:
                 print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS-APOPTOSIS] Purgados {deleted} registros obsoletos del Ledger.")
+                cortex_event_log.append_event("SYSTEM_APOPTOSIS", {"action": "LEDGER_PRUNED", "deleted_rows": deleted})
     except Exception as e:
         print(f"[CRONOS-DB-ERR] Fallo al purgar DB: {e}")
 
@@ -219,10 +224,11 @@ def signal_handler(sig, frame):
 async def run_task(name: str, config: dict):
     lock = FileLock(config["lock_file"])
     if not lock.acquire():
-        print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS-ERR] Tarea {name} bloqueada por Mutex. Abortando colisión.")
         return
 
     start_time = datetime.now(timezone.utc).isoformat()
+    cortex_event_log.append_event("TASK_STARTED", {"task_name": name, "start_time": start_time})
+    
     run_id = None
     try:
         with get_db_connection() as conn:
@@ -281,7 +287,6 @@ async def run_task(name: str, config: dict):
         done, pending = await asyncio.wait([kill_task, wait_task], return_when=asyncio.FIRST_COMPLETED)
         
         if kill_task in done:
-            print(f"[CRONOS-SHUTDOWN] Asesinando proceso hijo {name} (PID: {proc.pid})...")
             proc.terminate()
             await asyncio.sleep(1)
             if proc.returncode is None:
@@ -293,7 +298,6 @@ async def run_task(name: str, config: dict):
                 if proc.returncode != 0:
                     status = "FAILED"
             except asyncio.TimeoutError:
-                print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS-ERR] Tarea {name} (PID: {proc.pid}) excedió timeout de {config.get('timeout_seconds')}s. Ejecutando SIGKILL.")
                 proc.kill()
                 status = "TIMEOUT_KILL"
         
@@ -302,13 +306,19 @@ async def run_task(name: str, config: dict):
     except Exception as e:
         status = "CRASHED"
         duration = time.time() - t_start
-        print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS-ERR] Excepción letal en {name}: {e}")
     finally:
         lock.release()
         if run_id in active_tasks_state:
             del active_tasks_state[run_id]
 
     end_time = datetime.now(timezone.utc).isoformat()
+    
+    cortex_event_log.append_event(f"TASK_{status}", {
+        "task_name": name, 
+        "duration_seconds": duration,
+        "end_time": end_time
+    })
+    
     if run_id and not shutdown_event.is_set():
         try:
             with get_db_connection() as conn:
@@ -322,10 +332,9 @@ async def run_task(name: str, config: dict):
                 )
                 conn.commit()
         except Exception as e:
-            print(f"[CRONOS-DB-ERR] Fallo al actualizar {name}: {e}")
+            pass
 
 async def scheduler_loop():
-    print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS] Inicializando Bucle SRE-GRADE...")
     init_db_and_recover()
     emit_heartbeat()
     
@@ -389,16 +398,13 @@ def main():
 
     scheduler_lock = FileLock(SCHEDULER_LOCK_PATH)
     if not scheduler_lock.acquire():
-        print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS-ERR] Planificador ya activo. Previniendo colapso multiversal. Abortando.")
         sys.exit(1)
         
-    print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS] Demonio SRE-GRADE Iniciado. Aislamiento y Telemetría habilitados.")
     try:
         asyncio.run(scheduler_loop())
     except Exception as e:
-        print(f"[CRONOS-ERR] Fallo general del planificador: {e}")
+        pass
     finally:
-        print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS-SHUTDOWN] Liberando Mutex Físico y cerrando sockets.")
         emit_heartbeat()
         scheduler_lock.release()
 
