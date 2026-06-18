@@ -17,4 +17,5 @@ syndication_outbox.md
 docs/vercel_cloudflare_status.md
 docs/vercel_cloudflare_status.html
 sprol_audits/
-rtl/generated/
+.DS_Store
+**/.DS_Store
