@@ -1,0 +1,25 @@
+{
+  "protocol": "BABYLON-60-C5-REAL",
+  "ledger_hash": "ba8b2326eb0ff23d414372b85b04111122223333",
+  "f60_precision": true,
+  "causal_trace": [
+    {
+      "opcode": "FORK",
+      "timestamp": 1718728990,
+      "f60_register": [3600, 1],
+      "blowup_detected": false
+    },
+    {
+      "opcode": "AWAIT",
+      "timestamp": 1718728991,
+      "f60_register": [7200, 1],
+      "blowup_detected": false
+    },
+    {
+      "opcode": "ASSERT_F60",
+      "timestamp": 1718728992,
+      "f60_register": [216000, 1],
+      "blowup_detected": true
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TheoremProverPayload",
+  "description": "Cryptographically valid causal trace for Navier-Stokes finite-time blowup detection via F60 rational tuples.",
+  "type": "object",
+  "properties": {
+    "protocol": {
+      "type": "string",
+      "const": "BABYLON-60-C5-REAL"
+    },
+    "ledger_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{40}$"
+    },
+    "f60_precision": {
+      "type": "boolean",
+      "const": true
+    },
+    "causal_trace": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "opcode": {
+            "type": "string",
+            "enum": ["FORK", "AWAIT", "AFTER", "YIELD", "ASSERT_F60"]
+          },
+          "timestamp": {
+            "type": "integer"
+          },
+          "f60_register": {
+            "type": "array",
+            "items": {"type": "integer"},
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "blowup_detected": {
+            "type": "boolean"
+          }
+        },
+        "required": ["opcode", "timestamp", "f60_register"]
+      }
+    }
+  },
+  "required": ["protocol", "ledger_hash", "f60_precision", "causal_trace"]
+}
