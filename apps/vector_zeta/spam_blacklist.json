@@ -6,11 +6,23 @@
   "spam_traps": [
     {
       "email": "acidarab@gmail.com",
-      "alias": "Jarana d'Or",
+      "alias": "Acid Arab",
       "detected_at": "2026-06-18T13:20:00Z",
       "platform": "Substack",
       "behavior": "High open/click rate bot simulation",
-      "status": "FAILED_PURGE"
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T16:52:34Z"
+    },
+    {
+      "email": "info@monegrosfestival.com",
+      "alias": "Info | monegrosfestival",
+      "detected_at": "2026-06-18T16:29:00Z",
+      "platform": "Substack",
+      "behavior": "Zero-engagement role account / Failed in previous run",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T16:52:46Z"
     }
   ]
 }
