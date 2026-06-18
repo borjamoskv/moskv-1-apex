@@ -51,3 +51,9 @@ The Kernel's progress is not measured in programming hours, but in thermodynamic
 - **Objective:** Allow MOSKV-1 to read its own *Git Ledger*, evaluate exergy, and sequentially modify/verify its own code via a closed loop, ensuring verifiable persistent memory.
 - **Tool:** `scripts/ouroboros_loop.py` (Pytest automation, exergy telemetry sensing, Git Sentinel integration).
 - **Status:** COMPLETED and functional.
+
+### [x] MILESTONE 9: Cortex Swarm Economy (Darwinian Infrastructure & Delayed Fitness)
+- **Objective:** Establish multi-strategy competitive pressures based on delayed real-world economic telemetry.
+- **Tool:** `kernel/canary/` (Temporal Fitness Buffer, Vercel split-traffic deployer) + `kernel/swarm/` (Bandit UCB Allocator, Archetype definitions) + `kernel/guardrails/` (Active Sentinel latency/error shield).
+- **Status:** COMPLETED, verified under >95% exergy, and active in the Stripe webhook pipeline.
+

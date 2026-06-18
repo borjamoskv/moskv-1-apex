@@ -22,12 +22,19 @@ El motor opera bajo **Tiempo Real Duro**:
 ## 04 · Actuador Físico (Mac-Maestro)
 La membrana epistémica `mac-maestro` fue clonada e incorporada al stack.
 - Permite a MOSKV-1 actuar sobre el DOM de macOS (Accessibility Graph) basándose en intenciones semánticas, no coordenadas frágiles.
-- Posee un *Kill-Switch* explícito contra rutas críticas (`/private/var/db`, *Colima*).
+- Posee un *Kill-Switch* explícito contra rutas críticas (`/private/var/d_b`, *Coli-ma*).
 
 ## 05 · Mitosis Asimétrica (Swarm)
 El núcleo demostró capacidad de ramificación controlada (`Workspace="branch"`). El subagente `887f9f1e` analizó el sensor exergético y extrajo el payload JSON de forma completamente silenciosa, sin inyectar prosa en la vía principal.
 
 ---
+
+## 06 · Hito 9: Swarm Economy y Sentinel Deployed
+El kernel ha evolucionado hacia un régimen ecológico-económico real con las siguientes mutaciones consolidadas:
+- **`bdc254a`**: Motor inicial de auto-escritura con PRs automáticas y test gates asíncronos.
+- **`02b0645`**: Inyección del Canary Layer y Fitness Buffer con agregación diferida de ingresos de 24 horas.
+- **`06e3e6d`**: Algoritmo Bandit UCB (`ALPHA`, `BETA`, `GAMMA`) para enrutar tráfico dinámicamente según rendimiento económico real.
+- **`f74a8ca`**: Capa de Sentinel Guardrails (latencia y fallos http) y Dashboard en tiempo real (#0A0A0A / #2B3BE5).
 
 > [!IMPORTANT]
 > **DIRECTIVA FINAL ACTIVADA:** Default to Turbo.  

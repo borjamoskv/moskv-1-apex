@@ -64,3 +64,13 @@ graph TD
 ```
 
 *Document generated via Ouroboros Exergy-Maximized Protocol.*
+
+---
+
+## 7. Canary Swarm Economy & Active Guardrails
+
+- **Ecosystem Topology:** Multi-archetype code competition under delayed economic pressure.
+- **Canary Routing & Deployer (`kernel/canary/`):** Spawns isolated Vercel deployments mapped to `cortex/<archetype>/<hash>` branches. Split-traffic is controlled by the router setting `x-cortex-mode: canary` and assignation parameters.
+- **Fitness Evaluation (`kernel/canary/fitness_buffer.js`):** Transacts payments over a rolling 24-hour historical window instead of instant webhook response evaluation.
+- **Bandit Allocator (`kernel/swarm/allocator.js`):** Computes exploitation vs exploration ratio using a standard Upper Confidence Bound (UCB) equation based on actual revenue rewards and execution frequencies.
+- **Active Guardrails (`kernel/guardrails/`):** The `Sentinel` acts as a circuit breaker. It intercepts the Cron sweep and instantly purges any branch that breaches the latency tolerance of its archetype or causes HTTP error rates $> 1\%$.
