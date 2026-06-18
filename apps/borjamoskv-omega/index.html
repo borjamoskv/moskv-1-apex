@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>BORJA MOSKV — Música · Vídeo · Diario</title>
+  <meta name="description" content="Borja Moskv — Música, Vídeo y Ensayos de Vanguardia. Síntesis C5-REAL, Colapso Termodinámico y Auditoría del Silicio.">
+  <link rel="stylesheet" href="./style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- WebGL Canvas for background noise/kinetic effect -->
+  <canvas id="gl-canvas"></canvas>
+  
+  <div class="hud-overlay">
+    <div class="hud-top-left">BM-Ω // C5-REAL SYSTEM</div>
+    <div class="hud-top-right" id="entropy-monitor">ENTROPY: 0.00</div>
+    <div class="hud-bottom-left" id="telemetry-coords">X:0 Y:0</div>
+    <div class="hud-bottom-right">YInMn 2026</div>
+  </div>
+
+  <main id="app-content">
+    <header id="hero-section">
+      <h1 class="glitch-text" data-text="BORJA MOSKV">BORJA MOSKV</h1>
+      <p class="subtitle">SÍNTESIS C5-REAL. VIBRACIONES INERCIALES EN PRIMER PLANO. COLAPSO TERMODINÁMICO DE FONDO.</p>
+      
+      <nav class="nav-links">
+        <a href="#musica" class="nav-btn">MÚSICA</a>
+        <a href="#video" class="nav-btn">VÍDEO</a>
+        <a href="#diario" class="nav-btn">DIARIO</a>
+        <a href="#manifiesto" class="nav-btn">MANIFIESTO</a>
+      </nav>
+    </header>
+
+    <section id="musica" class="content-section">
+      <h2>// MÚSICA</h2>
+      <ul class="track-list">
+        <li><a href="https://www.youtube.com/watch?v=NYhOQTcNLkA" target="_blank" rel="noopener">Ecos del Cosmos <span class="tag">Ambient / Sci-Fi [4K]</span></a></li>
+        <li><a href="https://www.youtube.com/watch?v=x8E9HInpzE4" target="_blank" rel="noopener">Glitch in the Mirror <span class="tag">Experimental [4K]</span></a></li>
+        <li><a href="https://www.youtube.com/watch?v=hY0G0Zxf_uo" target="_blank" rel="noopener">32 Y Pico <span class="tag">Electronic [4K]</span></a></li>
+        <li><a href="https://www.youtube.com/watch?v=NJqC3Xf6RzE" target="_blank" rel="noopener">Patadas <span class="tag">Electronic</span></a></li>
+        <li><a href="https://www.youtube.com/watch?v=LDzdKd4WxvI" target="_blank" rel="noopener">4 Drogas <span class="tag">Techno</span></a></li>
+        <li><a href="https://www.youtube.com/watch?v=hsdOCzJpUMg" target="_blank" rel="noopener">Antes de las Guerras <span class="tag">Ambient</span></a></li>
+        <li><a href="https://www.youtube.com/watch?v=EP5s0yKZUKk" target="_blank" rel="noopener">Void Cascade <span class="tag">Ambient [4K]</span></a></li>
+        <li><a href="https://www.youtube.com/watch?v=tMorCDfedf8" target="_blank" rel="noopener">Jar to the System <span class="tag">Electronic</span></a></li>
+      </ul>
+    </section>
+
+    <section id="video" class="content-section">
+      <h2>// VÍDEO</h2>
+      <ul class="track-list">
+        <li><a href="https://www.youtube.com/watch?v=rmzKC8AYkVw" target="_blank" rel="noopener">32 Electronic Music Visual Tracks <span class="tag">Visual Compilation [4K]</span></a></li>
+        <li><a href="https://www.youtube.com/watch?v=eIrt6Uw-SEo" target="_blank" rel="noopener">En el Prisma del Xokas <span class="tag">Experimental</span></a></li>
+        <li><a href="https://www.youtube.com/watch?v=Zc8QEQ8y1f8" target="_blank" rel="noopener">Retratos Naroa Gutiérrez Gil <span class="tag">Visual · Photography [4K]</span></a></li>
+        <li><a href="https://www.youtube.com/watch?v=zzHETLKSeT4" target="_blank" rel="noopener">Metafashion <span class="tag">Experimental</span></a></li>
+        <li><a href="https://www.youtube.com/watch?v=4Cb-Iu8DnJM" target="_blank" rel="noopener">BLAC <span class="tag">Electronic [4K]</span></a></li>
+      </ul>
+    </section>
+
+    <section id="diario" class="content-section">
+      <h2>// DIARIO / TRANSMISIONES</h2>
+      <article class="log-entry">
+        <h3><a href="https://borjamoskv.com/blog/la-economia-invisible-sincronizacion-substack" target="_blank" rel="noopener">La economía invisible de la sincronización en Substack</a></h3>
+        <p>Lo que se presenta como una revolución de la escritura independiente es un sistema de coordinación social envuelto en la estética de la literatura.</p>
+        <span class="date">2026.06.06</span>
+      </article>
+      <article class="log-entry">
+        <h3><a href="https://borjamoskv.com/blog/substack-mafia-autopsia-estructural" target="_blank" rel="noopener">Substack Mafia: Autopsia Estructural</a></h3>
+        <p>Análisis forense de la arquitectura comercial y validación algorítmica coordinada en un ecosistema privado.</p>
+        <span class="date">2026.06.01</span>
+      </article>
+      <article class="log-entry">
+        <h3><a href="https://borjamoskv.com/blog/ultramap-substrate" target="_blank" rel="noopener">ULTRAMAP-Ω: Autopsia del Sustrato</a></h3>
+        <p>Análisis de la memoria física lock-free y la orquestación del enjambre K-0 bajo la física del silicio.</p>
+        <span class="date">2026.06.01</span>
+      </article>
+    </section>
+
+    <section id="manifiesto" class="content-section">
+      <h2>// MANIFIESTO C5-REAL</h2>
+      <p class="manifesto-text">
+        Borja Moskv es un productor de música electrónica, artista visual y ensayista. Su trabajo explora las colisiones físicas entre la tecnología digital, la degradación de la atención humana y los sustratos inerciales del sonido modular.
+      </p>
+      <p class="manifesto-text highlight">
+        Este portal es un prototipo interactivo diseñado bajo los principios del Brutalismo Cinético. No busca ser una experiencia dócil ni cómoda; busca la fricción directa con los límites del navegador mediante alucinaciones léxicas, persistencia del hardware y destrucción interactiva del DOM.
+      </p>
+      <p class="manifesto-text">
+        La síntesis no es solo producción de audio: es una auditoría innegociable de la realidad física.
+      </p>
+    </section>
+  </main>
+
+  <div id="theremin-ui" class="theremin-panel">
+    <div class="theremin-label">THEREMIN INJECTOR (DRAG TO MODULATE)</div>
+    <div id="theremin-pad"></div>
+  </div>
+
+  <script src="./main.js"></script>
+</body>
+</html>
