@@ -14,10 +14,24 @@ class AutopoiesisEngine extends BrainRegion {
             this.driver = neo4j.driver(
                 process.env.NEO4J_URI || 'bolt://localhost:7687',
                 neo4j.auth.basic(process.env.NEO4J_USER || 'neo4j', process.env.NEO4J_PASS || 'password'),
-                { maxConnectionPoolSize: 50, connectionAcquisitionTimeout: 20000 }
+                { 
+                    maxConnectionPoolSize: 50, 
+                    connectionAcquisitionTimeout: 20000,
+                    connectionTimeout: 5000,
+                    maxTransactionRetryTime: 5000 
+                }
             );
             await this.driver.verifyConnectivity();
-            console.log('[Autopoiesis] Neo4j Driver connected. Graph mutation active.');
+            
+            // Create unique constraint on MemoryNode(id) to optimize MERGE queries
+            const session = this.driver.session();
+            try {
+                await session.executeWrite(tx => tx.run('CREATE CONSTRAINT memory_node_id IF NOT EXISTS FOR (n:MemoryNode) REQUIRE n.id IS UNIQUE'));
+            } finally {
+                await session.close();
+            }
+            
+            console.log('[Autopoiesis] Neo4j Driver connected. Graph mutation active and constraint initialized.');
             this.isInMemory = false;
         } catch (error) {
             console.log('[Autopoiesis] Using in-memory graph store fallback (Neo4j driver offline).');
