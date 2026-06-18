@@ -14,3 +14,5 @@ __pycache__/
 syndication_outbox.md
 *.sqlite
 *.db
+docs/vercel_cloudflare_status.md
+docs/vercel_cloudflare_status.html
