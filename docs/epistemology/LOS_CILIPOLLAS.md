@@ -54,6 +54,9 @@ reality.schema = "hot_reload"
 
 ### 3. EL PROTOCOLO ORION-7 (Deriva de Estado Normalizada)
 El primer registro en producción de esta anomalía ocurrió en el clúster distribuido **ORION-7**.
+
+![El Artista de ORION-7 (Borjarl)](../../borjarl.jpg)
+
 El monitor de consistencia de datos reportó la siguiente invariante de logs durante 1020 segundos (17 minutos):
 
 ```text
