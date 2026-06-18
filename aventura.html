@@ -1607,7 +1607,7 @@
             }
             const stage = STAGE_DATA[stageKey];
             const contentArea = document.querySelector('.content-area');
-            contentArea.innerHTML = stage.text.replace(/\n/g, '<br/>');
+            contentArea.innerHTML = injectGlitches(stage.text).replace(/\n/g, '<br/>');
             
             document.querySelector('.choices-area').style.opacity = 1;
             document.querySelector('.skip-btn').style.display = 'none';
@@ -2017,6 +2017,7 @@
                 } else if (cmd === 'purge_anergy') {
                     currentEntropy = Math.max(0.0, currentEntropy - 0.2);
                     currentCoreTemp = Math.max(37.0, currentCoreTemp - 5.0);
+                    document.getElementById('emergency-overlay').classList.remove('active');
                     writeLog("SYS", "Purga de anergía completada. Entropía disipada.");
                     updateTelemetryUI();
                 } else if (cmd !== '') {
@@ -2025,15 +2026,14 @@
             }
         }
 
-        // 3. Degradación Termodinámica (Idle & Mouse Movement)
-        let lastMouseTime = Date.now();
+        let lastMouseMove = Date.now();
         document.addEventListener('mousemove', () => {
             const now = Date.now();
-            if (now - lastMouseTime < 50) { // Movimiento rápido
-                currentEntropy = Math.min(1.0, currentEntropy + 0.0005);
+            if (now - lastMouseMove > 150) { // Throttled natural degradation
+                lastMouseMove = now;
+                currentEntropy = Math.min(1.0, currentEntropy + 0.001);
                 currentCoreTemp = Math.min(100.0, currentCoreTemp + 0.05);
             }
-            lastMouseTime = now;
         });
 
         setInterval(() => {
