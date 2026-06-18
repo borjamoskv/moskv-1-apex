@@ -206,31 +206,34 @@ class MemoryStore:
             return []
             
         if routing_decision == MemoryRoutingDecision.LEDGER:
-            try:
+            def _write_ledger():
                 with open(self.ledger_path, "a") as f:
                     f.write(json.dumps({"hash": event.hash, "timestamp": time.time(), "payload": payload}) + "\n")
+            try:
+                await asyncio.to_thread(_write_ledger)
             except Exception as e:
                 print(f"[MemoryStore] Failed to write to Ledger: {e}")
             return []
 
         if routing_decision == MemoryRoutingDecision.PROCEDURAL and self.procedural_store:
-            # L3 Procedural Execution
             skill_name = payload.get("skill_name", f"skill_{node_id}")
             intent = payload.get("intent", content_str)
-            self.procedural_store.crystallize_skill(skill_name, content_str, intent, node_id)
+            await asyncio.to_thread(self.procedural_store.crystallize_skill, skill_name, content_str, intent, node_id)
             return []
 
         if routing_decision == MemoryRoutingDecision.EPISODIC and self.lancedb_db is not None:
             try:
                 data = [{"id": node_id, "vector": [0.0]*128, "content": content_str, "entropy": float(entropy)}]
-                if self.l1_table is None:
-                    if "episodic" in self.lancedb_db.table_names():
-                        self.l1_table = self.lancedb_db.open_table("episodic")
-                        self.l1_table.add(data)
+                def _write_lancedb():
+                    if self.l1_table is None:
+                        if "episodic" in self.lancedb_db.table_names():
+                            self.l1_table = self.lancedb_db.open_table("episodic")
+                            self.l1_table.add(data)
+                        else:
+                            self.l1_table = self.lancedb_db.create_table("episodic", data=data)
                     else:
-                        self.l1_table = self.lancedb_db.create_table("episodic", data=data)
-                else:
-                    self.l1_table.add(data)
+                        self.l1_table.add(data)
+                await asyncio.to_thread(_write_lancedb)
             except Exception as e:
                 print(f"[MemoryStore] LanceDB L1 routing error: {e}")
 
@@ -371,10 +374,10 @@ class MemoryStore:
         else:
             now_ms = time.time() * 1000.0
             cutoff = now_ms - 86400000.0  # 24 hours in ms
-            to_prune = []
-            for node_id, props in list(self._nodes.items()):
-                if props["entropy"] > entropy_threshold and props["lastUpdated"] < cutoff:
-                    to_prune.append(node_id)
+            to_prune = [
+                node_id for node_id, props in self._nodes.items()
+                if props["entropy"] > entropy_threshold and props["lastUpdated"] < cutoff
+            ]
 
             for node_id in to_prune:
                 if node_id in self._nodes:
