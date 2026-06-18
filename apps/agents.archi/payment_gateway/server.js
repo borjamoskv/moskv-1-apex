@@ -1,5 +1,21 @@
 const path = require('path');
-require('dotenv').config({ path: path.join(__dirname, '.env') });
+const { execSync } = require('child_process');
+try { require('dotenv').config({ path: path.join(__dirname, '.env') }); } catch (e) {}
+
+// C5-REAL: macOS Keychain Escrow Integration
+function getSecret(serviceName, envKey) {
+    if (process.env.NODE_ENV === 'production' || process.env[envKey]) return process.env[envKey];
+    try {
+        const secret = execSync(`security find-generic-password -s "${serviceName}" -w`, { encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'] }).trim();
+        process.env[envKey] = secret;
+        return secret;
+    } catch (e) { return undefined; }
+}
+
+getSecret('MOSKV-Stripe-Publishable', 'STRIPE_PUBLISHABLE_KEY');
+getSecret('MOSKV-Stripe-Secret', 'STRIPE_SECRET_KEY');
+getSecret('MOSKV-Stripe-Webhook', 'STRIPE_WEBHOOK_SECRET');
+
 const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
