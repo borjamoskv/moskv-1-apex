@@ -75,14 +75,31 @@ Al ejecutar la simulación con un factor de decaimiento del 0.5 y un volumen de 
 
 ---
 
-## 3. LA MITIGACIÓN DEL ABUSO BIZANTINO
+## 3. EL COSTADO DEL BACKEND: EL DILEMA DEL SCROLL INFINITO
 
-¿Por qué Substack diseña esta asimetría?
-Si las respuestas en Notas sumaran al alcance de la Nota raíz, cualquier Swarm coordinado de bots podría tomar el control de la plaza pública simplemente ejecutando scripts de spam recursivo en las respuestas. 
+La asimetría no solo responde a políticas de moderación, sino a una limitación de la física de bases de datos.
 
-Al forzar que solo los comentarios de nivel superior cuenten, obligan a que el atacante o el usuario tenga que interactuar directamente con la Nota principal, haciendo que el spam sea visualmente obvio y fácil de purgar por los linters del sistema.
+```
+Tú escribes una Nota / un Post
+└── Comentario de Juan (Nivel 1) [Exergía = 1.0]
+    └── Respuesta de María a Juan (Nivel 2) [Exergía = 0.0 en Notas]
+        └── Respuesta de Pedro a María (Nivel 3) [Exergía = 0.0 en Notas]
+```
 
-Así que sí: la próxima vez que discutas en bucle en una nota ajena, recuerda que solo estás regalándole calor gratis a la CPU de Substack. Para la viralidad, eres ruido de fondo.
+*   **En un Post (Carga Unitaria):** El usuario abre un artículo aislado. El backend realiza una consulta indexada dirigida (`SELECT * FROM comments WHERE post_id = ?`) y procesa el árbol recursivamente. Es un coste de lectura aislado y amortizable por sesión.
+*   **En las Notas (Scroll Infinito):** El usuario navega por un feed dinámico que renderiza 50 notas concurrentemente. Si para cada una de las 50 notas el motor tuviese que calcular de forma recursiva toda la jerarquía de respuestas de cada comentario para agregar su peso algorítmico, la complejidad de las consultas se dispararía de lineal $O(N_1)$ (donde $N_1$ es solo el primer nivel) a exponencial. El I/O de la base de datos colapsaría en segundos por pura fatiga computacional.
+
+## 4. LA RESISTENCIA AL DRAMA Y MITIGACIÓN DEL ABUSO BIZANTINO
+
+La segunda razón es la profilaxis social: **evitar que el drama infle la visibilidad**.
+
+Si las respuestas en Notas sumaran al alcance de la Nota raíz, cualquier discusión acalorada o un enjambre de bots (Sybil Attack) en el hilo de un comentario secundario arrastraría la Nota entera al feed global del resto de usuarios. 
+
+Al limitar el conteo a las interacciones de Nivel 1:
+1.  **Neutralizas los bucles infinitos de confrontación:** Dos usuarios discutiendo en bucle no inyectan exergía algorítmica a la Nota; el ruido muere confinado en su rincón sin contaminar la plaza.
+2.  **Facilitas el filtrado del spam:** Un atacante que quiera inflar artificialmente una nota se ve obligado a crear múltiples cuentas para generar comentarios de Nivel 1 independientes, lo cual es visible, costoso de operar y fácil de purgar por los linters de Substack.
+
+En definitiva: Substack valora sus recursos de computación y su paz algorítmica. La próxima vez que discutas en las respuestas de una nota ajena, recuerda que tu trabajo cognitivo no computa; solo estás regalando calor residual a las CPUs del servidor. Conviértete en emisor o quédate en silencio.
 
 **Reality Level:** #C5-REAL  
 **Algoritmo Anclado:** [substack_engagement_simulator.py](file:///Users/borjafernandezangulo/Documents/antigravity/lively-maxwell/apps/vector_zeta/substack_engagement_simulator.py)  
