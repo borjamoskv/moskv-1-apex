@@ -7,7 +7,7 @@
 
 const crypto = require('crypto');
 const fs = require('fs');
-const { execSync } = require('child_process');
+const cortexDb = require('./cortex-db.js');
 
 class PQEscrow {
     constructor(dbPath = './cortex.db') {
@@ -65,10 +65,8 @@ class PQEscrow {
         
         const { signature, noiseVector } = this.generateLatticeSignature(payload);
         
-        const ledgerEntry = `[SEALED] | ${payload} | PQ_SIG: ${signature} | NOISE: ${noiseVector}\n`;
-        
-        // Append to immutable ledger
-        fs.appendFileSync(this.dbPath, ledgerEntry, 'utf8');
+        // Append to immutable SQLite ledger
+        cortexDb.insertEscrowLedger(timestamp, subAgentId, actionType, exergyDelta, signature, noiseVector);
         
         console.log(`[PQ-ESCROW] Transaction SEALED. Agent [${subAgentId}] Exergy Delta: ${exergyDelta}`);
         return signature;

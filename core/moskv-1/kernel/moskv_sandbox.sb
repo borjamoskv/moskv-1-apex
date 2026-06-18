@@ -1,0 +1,9 @@
+(version 1)
+(allow default)
+
+; Rule R5: Explicitly deny read/write to protected paths
+(deny file-read* file-write*
+    (subpath "/private/var/db")
+    (subpath "/System/Volumes/Data")
+    (subpath "/Users/borjafernandezangulo/Library/Mobile Documents")
+)

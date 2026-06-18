@@ -1,0 +1,27 @@
+(version 1)
+(deny default)
+
+(allow process-exec)
+(allow process-fork)
+(allow sysctl-read)
+(allow mach-lookup)
+
+;; Universal read access for python imports and libraries
+(allow file-read*)
+
+;; Strict Write Isolation
+(allow file-write*
+  (subpath "/tmp/cronos_logs")
+  (regex #"^/tmp/cronos_.*\.lock$")
+  (subpath "/Users/borjafernandezangulo/.cortex")
+  (subpath "/dev/null")
+  (subpath "/dev/random")
+  (subpath "/dev/urandom")
+  (subpath "/dev/tty")
+  (subpath "/dev/dtracehelper")
+  (subpath "/private/var/folders")
+  (subpath "/tmp")
+)
+
+;; Complete Network Isolation
+(deny network*)

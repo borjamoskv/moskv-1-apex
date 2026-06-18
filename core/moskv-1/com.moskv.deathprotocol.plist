@@ -6,6 +6,9 @@
     <string>com.moskv.deathprotocol</string>
     <key>ProgramArguments</key>
     <array>
+        <string>/usr/bin/sandbox-exec</string>
+        <string>-f</string>
+        <string>/Users/borjafernandezangulo/Documents/antigravity/lively-maxwell/core/moskv-1/kernel/moskv_sandbox.sb</string>
         <string>/Users/borjafernandezangulo/.cortex/scripts/cron_death_protocol.sh</string>
         <string>/Users/borjafernandezangulo/Documents/antigravity/lively-maxwell</string>
     </array>

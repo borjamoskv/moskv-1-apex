@@ -9,6 +9,7 @@ const { EventBus } = require('./event-bus.js');
 const { performance, PerformanceObserver } = require('perf_hooks');
 const crypto = require('crypto');
 const fs = require('fs');
+const cortexDb = require('./cortex-db.js');
 
 class LyapunovExergyMonitor {
     constructor(dbPath = './cortex.db') {
@@ -83,11 +84,12 @@ class LyapunovExergyMonitor {
     }
 
     serializeLedger(type, nodeId, value) {
-        const payload = `${Date.now()}|${type}|${nodeId}|${value}|${this.currentExergy}`;
+        const timestamp = Date.now();
+        const payload = `${timestamp}|${type}|${nodeId}|${value}|${this.currentExergy}`;
         const hash = crypto.createHash('sha256').update(payload).digest('hex');
-        const entry = `${payload}|${hash}\n`;
-        // C5-REAL physical grounding: Append to cortex.db ledger
-        fs.appendFileSync(this.dbPath, entry, 'utf8');
+        
+        // C5-REAL physical grounding: Append to cortex.db SQLite ledger
+        cortexDb.insertExergyLedger(timestamp, type, nodeId, value, this.currentExergy, hash);
     }
 
     triggerL4Apoptosis(derivative) {

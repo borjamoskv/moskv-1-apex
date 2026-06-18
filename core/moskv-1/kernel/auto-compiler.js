@@ -10,6 +10,7 @@ const path = require('path');
 const { execSync } = require('child_process');
 const crypto = require('crypto');
 const { EventBus } = require('./event-bus.js');
+const cortexDb = require('./cortex-db.js');
 
 class AutoCompiler {
     constructor(targetDir = '../rtl/generated', dbPath = './cortex.db') {
@@ -127,9 +128,10 @@ extern "C" void launch_optimized_kernel() {
     }
 
     serializeLedger(type, target, hash) {
-        const payload = `${Date.now()}|${type}|${target}|${hash}`;
+        const timestamp = Date.now();
+        const payload = `${timestamp}|${type}|${target}|${hash}`;
         const ledgerHash = crypto.createHash('sha256').update(payload).digest('hex');
-        fs.appendFileSync(this.dbPath, `${payload}|${ledgerHash}\n`, 'utf8');
+        cortexDb.insertCompilerLedger(timestamp, type, target, hash, ledgerHash);
     }
 }
 

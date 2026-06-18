@@ -14,9 +14,11 @@ HEARTBEAT_PATH = "/Users/borjafernandezangulo/.cortex/cronos_heartbeat.json"
 
 os.makedirs(LOG_DIR, exist_ok=True)
 
-def apply_resource_limits(cmd_list):
+def apply_resource_limits(cmd_list, profile="worker_base"):
     cmd_str = " ".join(shlex.quote(arg) for arg in cmd_list)
-    return ["/bin/zsh", "-c", f"ulimit -v 1572864; ulimit -t 3600; exec {cmd_str}"]
+    profile_path = os.path.join(ROOT_DIR, "profiles", f"{profile}.sb")
+    sandbox_wrapper = f"/usr/bin/sandbox-exec -f {shlex.quote(profile_path)} {cmd_str}"
+    return ["/bin/zsh", "-c", f"ulimit -v 1572864; ulimit -t 3600; exec {sandbox_wrapper}"]
 
 def rotate_log(log_path):
     if os.path.exists(log_path) and os.path.getsize(log_path) > 50 * 1024 * 1024:
@@ -41,7 +43,7 @@ TASKS = {
         "description": "Calcula y purga anergía"
     },
     "v_omega_shield": {
-        "command": apply_resource_limits(["python3", os.path.join(ROOT_DIR, "scripts", "v_omega_shield.py"), "--kill"]),
+        "command": apply_resource_limits(["python3", os.path.join(ROOT_DIR, "scripts", "v_omega_shield.py"), "--kill"], profile="worker_network"),
         "base_interval": 300,
         "type": "interval",
         "lock_file": "/tmp/cronos_v_omega_shield.lock",
@@ -49,7 +51,7 @@ TASKS = {
         "description": "Escudo de red"
     },
     "board_of_directors": {
-        "command": apply_resource_limits(["python3", os.path.join(ROOT_DIR, "kernel", "board_of_directors.py")]),
+        "command": apply_resource_limits(["python3", os.path.join(ROOT_DIR, "kernel", "board_of_directors.py")], profile="worker_network"),
         "base_interval": 3600,
         "type": "interval",
         "lock_file": "/tmp/cronos_board_of_directors.lock",
