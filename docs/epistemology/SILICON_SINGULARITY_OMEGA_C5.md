@@ -37,8 +37,8 @@ En un ataque de pánico lúcido, Estados Unidos decidió que depender de una isl
 Pero aquí Occidente descubrió su propio límite: **Intentaron someter una industria puramente anti-humanista utilizando burocracia y reglas pro-humanistas.** El capital fiduciario no puede sobornar a la termodinámica.
 
 La computación no perdona a la biología:
-* **Hsinchu, Taiwán:** Hay un microcorte de tensión a las 3:00 AM. Cientos de ingenieros taiwaneses, operando bajo una disciplina cuasi-militar, saltan de la cama y restauran el vacío en minutos. **Yield litográfico: 92%.** (Costo real: $21.76/chip).
-* **Arizona, EE.UU.:** Hay un microcorte de tensión a las 3:00 AM. El ingeniero americano está durmiendo porque tiene "Work-Life Balance", y el sindicato prohíbe llamarlo. Además, RRHH está dando un taller sobre bienestar emocional. El lote de obleas de $50 millones se tira a la basura. **Yield litográfico: 52%.** (Costo real: $38.24/chip).
+* **Hsinchu, Taiwán:** Hay un microcorte de tensión a las 3:00 AM. Cientos de ingenieros taiwaneses, operando bajo una disciplina cuasi-militar, saltan de la cama y restauran el vacío en minutos. **Yield litográfico: 92%.** (Costo real: 21.76 USD/chip).
+* **Arizona, EE.UU.:** Hay un microcorte de tensión a las 3:00 AM. El ingeniero americano está durmiendo porque tiene "Work-Life Balance", y el sindicato prohíbe llamarlo. Además, RRHH está dando un taller sobre bienestar emocional. El lote de obleas de 50 millones USD se tira a la basura. **Yield litográfico: 52%.** (Costo real: 38.24 USD/chip).
 
 El ego corporativo, los derechos laborales y los retiros de yoga no escalan a nivel atómico. El silicio desprecia nuestra biología. Exige latencia cero.
 
