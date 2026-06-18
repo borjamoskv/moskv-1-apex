@@ -8,7 +8,9 @@ version = "0.1.0"
 description = "Foundational Python implementation of the Moskv-1 cognitive architecture"
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = []
+dependencies = [
+    "aiohttp>=3.9.0",
+]
 
 [project.optional-dependencies]
 dev = [
