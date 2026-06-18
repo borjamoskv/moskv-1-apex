@@ -2,26 +2,43 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>BRT_KERNEL // ZERO_ENTROPY</title>
+  <title>BRT_KERNEL // THE WEATHERALL DUB</title>
   <style>
-    * { margin: 0; padding: 0; overflow: hidden; background: #000; cursor: crosshair; user-select: none; }
-    canvas { display: block; width: 100vw; height: 100vh; mix-blend-mode: screen; }
+    * { margin: 0; padding: 0; overflow: hidden; background: #050508; cursor: crosshair; user-select: none; }
+    canvas { display: block; width: 100vw; height: 100vh; mix-blend-mode: screen; filter: contrast(1.2) sepia(0.3) hue-rotate(180deg); }
     #hud {
       position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-      font-family: "Impact", sans-serif; font-size: 5rem; font-weight: 900;
-      color: transparent; -webkit-text-stroke: 2px #e52b2b; text-align: center;
-      line-height: 0.8; letter-spacing: -0.05em; pointer-events: none; mix-blend-mode: exclusion;
+      font-family: "Helvetica Neue", sans-serif; font-size: 4rem; font-weight: 300;
+      color: rgba(255, 255, 255, 0.8); text-align: center;
+      line-height: 1; letter-spacing: 0.1em; pointer-events: none; mix-blend-mode: overlay;
     }
     #boot {
       position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-      color: #fff; font-family: monospace; font-size: 1.2rem; letter-spacing: 0.3em; z-index: 100;
+      color: #7a8b99; font-family: monospace; font-size: 1rem; letter-spacing: 0.4em; z-index: 100;
     }
+    #tattoo {
+      position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+      color: #445; font-family: serif; font-style: italic; font-size: 1.2rem; letter-spacing: 0.2em;
+    }
+    .portrait {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      height: 120vh; object-fit: cover;
+      mix-blend-mode: overlay;
+      filter: contrast(1.5) grayscale(1) sepia(1) hue-rotate(180deg) brightness(0.8);
+      opacity: 0; transition: opacity 0.1s ease-out;
+      pointer-events: none;
+    }
+    #rosalia { z-index: 50; }
+    #tangana { z-index: 51; mix-blend-mode: difference; }
   </style>
 </head>
 <body>
-  <div id="boot">CLICK TO DESTROY EXTERNAL ASSETS</div>
+  <div id="boot">INITIATE WEATHERALL DUB MIX [110 BPM]</div>
   <canvas id="gl"></canvas>
+  <img id="rosalia" class="portrait" src="https://upload.wikimedia.org/wikipedia/commons/4/4e/2023-11-16_Gala_de_los_Latin_Grammy%2C_27_%28cropped%29.jpg" crossorigin="anonymous">
+  <img id="tangana" class="portrait" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Goyas_2025_-_C_Tangana_%28cropped%29.jpg/1280px-Goyas_2025_-_C_Tangana_%28cropped%29.jpg" crossorigin="anonymous">
   <div id="hud"></div>
+  <div id="tattoo">Fail We May, Sail We Must</div>
 
   <script>
     const canvas = document.getElementById('gl');
@@ -29,13 +46,12 @@
     const boot = document.getElementById('boot');
     const hud = document.getElementById('hud');
 
-    // Shader de Vértices
     const vsSource = `
       attribute vec4 position;
       void main() { gl_Position = position; }
     `;
 
-    // Shader de Fragmentos: Procedural Brutalism (Zero Dependencies)
+    // Acid Dub Hypnotic Shader
     const fsSource = `
       precision highp float;
       uniform vec2 u_resolution;
@@ -43,10 +59,7 @@
       uniform vec2 u_mouse;
       uniform float u_kick;
       
-      // Función de ruido pseudoaleatorio
       float hash(vec2 p) { return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
-      
-      // Matriz de rotación
       mat2 rot(float a) { float s=sin(a), c=cos(a); return mat2(c, -s, s, c); }
 
       void main() {
@@ -54,25 +67,26 @@
         uv = uv * 2.0 - 1.0;
         uv.x *= u_resolution.x / u_resolution.y;
         
-        // Fricción del ratón y latido
         vec2 m = u_mouse * 2.0 - 1.0;
-        uv *= rot(u_time * 0.2 + m.x * 2.0);
         
-        // Generación de Cruz Fractal (Rosalía / Tangana)
-        vec2 q = abs(uv) - vec2(0.1 + u_kick * 0.5, 0.8 - u_kick * 0.2);
-        float d1 = max(q.x, q.y);
-        vec2 q2 = abs(uv) - vec2(0.8 - u_kick * 0.2, 0.1 + u_kick * 0.5);
-        float d2 = max(q2.x, q2.y);
-        float d = min(d1, d2);
+        // Slow hypnotic acid rotation
+        uv *= rot(u_time * 0.05 + length(uv) * 0.5 - m.x);
         
-        // Aberración Cromática y Ruido (Berghain)
-        float noise = hash(uv * 10.0 + u_time);
-        float r = smoothstep(0.05, 0.0, d + noise * 0.2 * u_kick * m.y);
-        float g = smoothstep(0.05, 0.0, d + noise * 0.5 * u_kick);
-        float b = smoothstep(0.05, 0.0, d + noise * 0.8 * u_kick * m.x);
+        // Liquid Dub Waves
+        float f = sin(uv.x * 5.0 + u_time) * cos(uv.y * 3.0 - u_time * 0.8) * 0.5;
+        vec2 q = uv + vec2(f, -f);
         
-        // Color Sangre en el Kick
-        vec3 col = vec3(r + u_kick, g * 0.1, b * 0.1);
+        // Deep geometry (Sabres of Paradise)
+        float d = length(q) - 0.5 - u_kick * 0.1;
+        float ring = abs(sin(d * 10.0 - u_time * 2.0));
+        
+        // Tape Delay Visual Artifacts
+        float tapeNoise = hash(uv * 5.0 + u_time * 0.1) * 0.1;
+        
+        // Deep indigo, cyan, and slow red pulsing
+        vec3 col = vec3(0.05, 0.1 + ring * 0.2, 0.3 + ring * 0.5);
+        col += vec3(u_kick * 0.2, u_kick * 0.4, u_kick * 0.6) * (1.0 - ring);
+        col += tapeNoise;
         
         gl_FragColor = vec4(col, 1.0);
       }
@@ -102,34 +116,79 @@
     const uMouse = gl.getUniformLocation(program, "u_mouse");
     const uKick = gl.getUniformLocation(program, "u_kick");
 
-    let audioCtx, distortionNode, gainNode;
+    let audioCtx, delayNode, feedbackNode, filterNode;
     let mx = 0.5, my = 0.5;
     let isPlaying = false;
     let currentKick = 0;
     
-    function makeDistortionCurve(amount) {
-      const k = amount; const n = 44100; const curve = new Float32Array(n); const deg = Math.PI/180;
-      for (let i=0; i<n; ++i) { let x = i*2/n-1; curve[i] = (3+k)*x*20*deg / (Math.PI+k*Math.abs(x)); }
-      return curve;
-    }
+    // Substack SEO Alignment: 140 BPM
+    const BPM = 140;
+    const interval = 60 / BPM;
 
     document.addEventListener('mousemove', e => {
       mx = e.clientX / window.innerWidth;
       my = e.clientY / window.innerHeight;
-      if (distortionNode) distortionNode.curve = makeDistortionCurve(Math.abs(mx-0.5)*200);
+      if (filterNode) filterNode.frequency.value = 200 + (1.0 - my) * 2000; // Acid cutoff
+      if (feedbackNode) feedbackNode.gain.value = 0.4 + mx * 0.4; // Space Echo feedback
     });
 
-    function playKick(time) {
-      const osc = audioCtx.createOscillator();
-      const kGain = audioCtx.createGain();
-      osc.connect(distortionNode); distortionNode.connect(kGain); kGain.connect(audioCtx.destination);
-      osc.frequency.setValueAtTime(150, time); osc.frequency.exponentialRampToValueAtTime(0.01, time + 0.4);
-      kGain.gain.setValueAtTime(1, time); kGain.gain.exponentialRampToValueAtTime(0.01, time + 0.4);
-      osc.start(time); osc.stop(time + 0.4);
+    function playDubSub(time) {
+      // 1. Kick (Deep, less attack)
+      const kickOsc = audioCtx.createOscillator();
+      const kickGain = audioCtx.createGain();
+      kickOsc.connect(kickGain);
+      kickGain.connect(audioCtx.destination);
+      
+      kickOsc.frequency.setValueAtTime(80, time);
+      kickOsc.frequency.exponentialRampToValueAtTime(0.01, time + 0.6);
+      kickGain.gain.setValueAtTime(0.8, time);
+      kickGain.gain.exponentialRampToValueAtTime(0.01, time + 0.6);
+      
+      kickOsc.start(time);
+      kickOsc.stop(time + 0.6);
 
+      // 2. Off-beat Dub Bass / Chord
+      if (Math.random() > 0.3) {
+        const chordOsc = audioCtx.createOscillator();
+        const chordGain = audioCtx.createGain();
+        chordOsc.type = 'sawtooth';
+        
+        chordOsc.connect(filterNode);
+        filterNode.connect(chordGain);
+        chordGain.connect(delayNode); // Send to Space Echo
+        chordGain.connect(audioCtx.destination);
+        
+        chordOsc.frequency.setValueAtTime(55 * (Math.random() > 0.5 ? 1 : 1.5), time + interval/2);
+        chordGain.gain.setValueAtTime(0, time + interval/2);
+        chordGain.gain.linearRampToValueAtTime(0.3, time + interval/2 + 0.1);
+        chordGain.gain.exponentialRampToValueAtTime(0.01, time + interval/2 + 0.5);
+        
+        chordOsc.start(time + interval/2);
+        chordOsc.stop(time + interval/2 + 0.5);
+      }
+
+      // Visual Glitch & Image Strobe
       setTimeout(() => {
         currentKick = 1.0;
-        hud.innerHTML = Math.random() > 0.5 ? "DEMASIADAS<br/>MUJERES" : "RELIQUIA<br/>SANTA";
+        const ros = document.getElementById('rosalia');
+        const tan = document.getElementById('tangana');
+        
+        // Alternar entre las entidades
+        if (Math.random() > 0.5) {
+            ros.style.opacity = Math.random() * 0.8 + 0.2;
+            tan.style.opacity = 0;
+            ros.style.transform = `translate(-50%, -50%) scale(${1.0 + Math.random()*0.1}) rotate(${(Math.random()-0.5)*5}deg)`;
+        } else {
+            tan.style.opacity = Math.random() * 0.8 + 0.2;
+            ros.style.opacity = 0;
+            tan.style.transform = `translate(-50%, -50%) scale(${1.0 + Math.random()*0.1}) rotate(${(Math.random()-0.5)*5}deg)`;
+        }
+        
+        // Decay
+        setTimeout(() => {
+            ros.style.opacity = 0;
+            tan.style.opacity = 0;
+        }, 300);
       }, (time - audioCtx.currentTime) * 1000);
     }
 
@@ -140,7 +199,7 @@
       gl.uniform1f(uTime, time * 0.001);
       gl.uniform2f(uMouse, mx, my);
       
-      currentKick = Math.max(0, currentKick - 0.05); // Decay del shader
+      currentKick = Math.max(0, currentKick - 0.02); // Slower decay for Dub
       gl.uniform1f(uKick, currentKick);
       
       gl.drawArrays(gl.TRIANGLES, 0, 6);
@@ -150,15 +209,30 @@
     document.addEventListener('click', () => {
       if (!isPlaying) {
         boot.style.display = 'none';
+        hud.innerHTML = "CONCRETO Y MANTILLA<br/>(THE WEATHERALL DUB)";
+        
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        distortionNode = audioCtx.createWaveShaper();
-        distortionNode.curve = makeDistortionCurve(0);
-        distortionNode.oversample = '4x';
+        
+        // Roland RE-201 Space Echo emulation
+        delayNode = audioCtx.createDelay();
+        delayNode.delayTime.value = interval * 0.75; // Dotted eighth note delay
+        feedbackNode = audioCtx.createGain();
+        feedbackNode.gain.value = 0.6;
+        delayNode.connect(feedbackNode);
+        feedbackNode.connect(delayNode);
+        delayNode.connect(audioCtx.destination);
+
+        // Acid Filter (TB-303 style)
+        filterNode = audioCtx.createBiquadFilter();
+        filterNode.type = 'lowpass';
+        filterNode.frequency.value = 800;
+        filterNode.Q.value = 10;
         
         let nextTime = audioCtx.currentTime + 0.05;
         setInterval(() => {
           while (nextTime < audioCtx.currentTime + 0.1) {
-            playKick(nextTime); nextTime += 60/130; // 130 BPM
+            playDubSub(nextTime); 
+            nextTime += interval;
           }
         }, 25);
         
