@@ -57,7 +57,13 @@ class BrainRegion:
             "model": model,
             "prompt": prompt,
             "stream": False,
-            "format": "json"
+            "format": "json",
+            "options": {
+                "temperature": 0.0,
+                "seed": 42,
+                "top_k": 1,
+                "top_p": 0.1
+            }
         }
         
         async with aiohttp.ClientSession() as session:
