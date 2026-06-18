@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# CRONOS SCHEDULER v1.0 — ULTIMATE UNIFIED PLANNER FOR MOSKV-1 APEX
+# CRONOS SCHEDULER v2.0 — ANTI-ENTROPIC BRUTALIST DAEMON
 # Execution Level: C5-REAL
 import os
 import sys
@@ -9,13 +9,16 @@ import asyncio
 import subprocess
 import fcntl
 import re
-from datetime import datetime, timezone
+import signal
+from datetime import datetime, timezone, timedelta
 
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DB_PATH = "/Users/borjafernandezangulo/.cortex/scheduler.db"
 SCHEDULER_LOCK_PATH = "/tmp/cronos_scheduler.lock"
+LOG_DIR = "/tmp/cronos_logs"
 
-# Configuración base de tareas
+os.makedirs(LOG_DIR, exist_ok=True)
+
 TASKS = {
     "exergy_monitor": {
         "command": ["/bin/zsh", "/Users/borjafernandezangulo/.cortex/scripts/cron_exergy_monitor.sh"],
@@ -105,11 +108,21 @@ def init_db():
         """)
         conn.commit()
 
+def prune_db():
+    """Apoptosis del Ledger: Evita el crecimiento infinito eliminando registros de más de 7 días."""
+    try:
+        with get_db_connection() as conn:
+            limit_date = (datetime.now(timezone.utc) - timedelta(days=7)).isoformat()
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM task_runs WHERE start_time < ?", (limit_date,))
+            deleted = cursor.rowcount
+            conn.commit()
+            if deleted > 0:
+                print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS-APOPTOSIS] Purgados {deleted} registros obsoletos del Ledger.")
+    except Exception as e:
+        print(f"[CRONOS-DB-ERR] Fallo al purgar DB: {e}")
+
 async def get_exergy_scaling_factor() -> float:
-    """
-    Lee o calcula dinámicamente el factor de escala de exergía del sistema.
-    Si el índice de exergía es < 75%, aumentamos el intervalo de tareas no críticas.
-    """
     try:
         cmd = ["python3", os.path.join(ROOT_DIR, "exergy_sensor.py"), "--workspace"]
         proc = await asyncio.create_subprocess_exec(
@@ -125,22 +138,26 @@ async def get_exergy_scaling_factor() -> float:
         if match:
             idx = float(match.group(1))
             if idx < 65.0:
-                return 2.0  # Duplica intervalos de tareas pesadas
+                return 2.0
             elif idx < 75.0:
-                return 1.5  # Incrementa un 50%
+                return 1.5
         return 1.0
-    except Exception as e:
+    except Exception:
         return 1.0
+
+shutdown_event = asyncio.Event()
+
+def signal_handler(sig, frame):
+    print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS-SHUTDOWN] Señal {sig} recibida. Iniciando muerte controlada...")
+    shutdown_event.set()
 
 async def run_task(name: str, config: dict):
     lock = FileLock(config["lock_file"])
     if not lock.acquire():
-        print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS-ERR] Tarea {name} ya en ejecución. Evitando superposición.")
+        print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS-ERR] Tarea {name} bloqueada por Mutex físico. Abortando colisión.")
         return
 
     start_time = datetime.now(timezone.utc).isoformat()
-    print(f"[{start_time}] [CRONOS] Iniciando tarea: {name} ({config['description']})")
-    
     run_id = None
     try:
         with get_db_connection() as conn:
@@ -152,37 +169,46 @@ async def run_task(name: str, config: dict):
             conn.commit()
             run_id = cursor.lastrowid
     except Exception as e:
-        print(f"[CRONOS-DB-ERR] Fallo al insertar inicio de tarea {name}: {e}")
+        print(f"[CRONOS-DB-ERR] Fallo al insertar {name}: {e}")
 
     proc = None
-    output = ""
-    error_msg = ""
     status = "SUCCESS"
     t_start = time.time()
     
+    out_log_path = os.path.join(LOG_DIR, f"{name}.out")
+    err_log_path = os.path.join(LOG_DIR, f"{name}.err")
+
     try:
-        proc = await asyncio.create_subprocess_exec(
-            *config["command"],
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE,
-            cwd=ROOT_DIR
-        )
-        stdout, stderr = await proc.communicate()
-        duration = time.time() - t_start
-        output = stdout.decode("utf-8", errors="ignore")
-        error_msg = stderr.decode("utf-8", errors="ignore")
-        
-        if proc.returncode != 0:
-            status = "FAILED"
-            print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS-ERR] Tarea {name} falló con código {proc.returncode}")
-        else:
-            print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS] Tarea {name} completada con éxito en {duration:.2f}s")
+        with open(out_log_path, "w") as out_fd, open(err_log_path, "w") as err_fd:
+            proc = await asyncio.create_subprocess_exec(
+                *config["command"],
+                stdout=out_fd,
+                stderr=err_fd,
+                cwd=ROOT_DIR
+            )
             
-    except Exception as e:
-        status = "FAILED"
+            # Wait for either process to finish or shutdown signal
+            kill_task = asyncio.create_task(shutdown_event.wait())
+            wait_task = asyncio.create_task(proc.wait())
+            
+            done, pending = await asyncio.wait([kill_task, wait_task], return_when=asyncio.FIRST_COMPLETED)
+            
+            if kill_task in done:
+                print(f"[CRONOS-SHUTDOWN] Asesinando proceso hijo {name} (PID: {proc.pid})...")
+                proc.terminate()
+                await asyncio.sleep(1)
+                if proc.returncode is None:
+                    proc.kill()
+                status = "KILLED_BY_SIGNAL"
+            else:
+                if proc.returncode != 0:
+                    status = "FAILED"
+            
         duration = time.time() - t_start
-        error_msg = str(e)
-        print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS-ERR] Excepción ejecutando {name}: {e}")
+    except Exception as e:
+        status = "CRASHED"
+        duration = time.time() - t_start
+        print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS-ERR] Excepción letal en {name}: {e}")
     finally:
         lock.release()
 
@@ -196,14 +222,14 @@ async def run_task(name: str, config: dict):
                     SET end_time = ?, duration_seconds = ?, status = ?, output = ?, error = ?
                     WHERE id = ?
                     """,
-                    (end_time, duration, status, output, error_msg, run_id)
+                    (end_time, duration, status, f"Log: {out_log_path}", f"Log: {err_log_path}", run_id)
                 )
                 conn.commit()
         except Exception as e:
-            print(f"[CRONOS-DB-ERR] Fallo al actualizar tarea {name}: {e}")
+            print(f"[CRONOS-DB-ERR] Fallo al actualizar {name}: {e}")
 
 async def scheduler_loop():
-    print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS] Inicializando Bucle Principal del Planificador...")
+    print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS] Inicializando Bucle C5-REAL...")
     init_db()
     
     last_run_times = {}
@@ -212,7 +238,7 @@ async def scheduler_loop():
     scaling_factor = 1.0
     last_exergy_check = 0.0
 
-    while True:
+    while not shutdown_event.is_set():
         now_ts = time.time()
         now_dt = datetime.now(timezone.utc)
         current_date_str = now_dt.strftime("%Y-%m-%d")
@@ -221,7 +247,7 @@ async def scheduler_loop():
         if now_ts - last_exergy_check >= 3600:
             scaling_factor = await get_exergy_scaling_factor()
             last_exergy_check = now_ts
-            print(f"[{now_dt.isoformat()}] [CRONOS] Factor de escala exergético actualizado: {scaling_factor:.2f}x")
+            prune_db() # Apoptosis periódica
             try:
                 with get_db_connection() as conn:
                     conn.execute(
@@ -250,20 +276,29 @@ async def scheduler_loop():
                     daily_completed_date[name] = current_date_str
                     asyncio.create_task(run_task(name, config))
                     
-        await asyncio.sleep(1)
+        try:
+            await asyncio.wait_for(shutdown_event.wait(), timeout=1.0)
+        except asyncio.TimeoutError:
+            pass
+
+    print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS-SHUTDOWN] Bucle finalizado limpiamente.")
 
 def main():
+    signal.signal(signal.SIGTERM, signal_handler)
+    signal.signal(signal.SIGINT, signal_handler)
+
     scheduler_lock = FileLock(SCHEDULER_LOCK_PATH)
     if not scheduler_lock.acquire():
-        print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS-ERR] Ya hay una instancia de Cronos Scheduler activa. Abortando.")
+        print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS-ERR] Planificador ya activo. Previniendo colapso multiversal. Abortando.")
         sys.exit(1)
         
-    print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS] Demonio Cronos Iniciado en Realidad C5-REAL.")
+    print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS] Demonio Brutalista Iniciado.")
     try:
         asyncio.run(scheduler_loop())
     except KeyboardInterrupt:
-        print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS] Demonio detenido por señal de interrupción.")
+        pass
     finally:
+        print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS-SHUTDOWN] Liberando Mutex Físico.")
         scheduler_lock.release()
 
 if __name__ == "__main__":
