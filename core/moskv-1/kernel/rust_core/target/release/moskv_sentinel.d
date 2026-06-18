@@ -1,0 +1,1 @@
+/Users/borjafernandezangulo/Documents/antigravity/lively-maxwell/core/moskv-1/kernel/rust_core/target/release/moskv_sentinel: /Users/borjafernandezangulo/Documents/antigravity/lively-maxwell/core/moskv-1/kernel/rust_core/src/main.rs

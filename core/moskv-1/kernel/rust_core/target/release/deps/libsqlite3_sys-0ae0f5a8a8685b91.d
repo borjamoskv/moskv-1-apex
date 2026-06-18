@@ -1,0 +1,11 @@
+/Users/borjafernandezangulo/Documents/antigravity/lively-maxwell/core/moskv-1/kernel/rust_core/target/release/deps/libsqlite3_sys-0ae0f5a8a8685b91.d: /Users/borjafernandezangulo/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libsqlite3-sys-0.27.0/src/lib.rs /Users/borjafernandezangulo/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libsqlite3-sys-0.27.0/src/error.rs /Users/borjafernandezangulo/Documents/antigravity/lively-maxwell/core/moskv-1/kernel/rust_core/target/release/build/libsqlite3-sys-4762211a2fc9b2a1/out/bindgen.rs
+
+/Users/borjafernandezangulo/Documents/antigravity/lively-maxwell/core/moskv-1/kernel/rust_core/target/release/deps/liblibsqlite3_sys-0ae0f5a8a8685b91.rlib: /Users/borjafernandezangulo/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libsqlite3-sys-0.27.0/src/lib.rs /Users/borjafernandezangulo/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libsqlite3-sys-0.27.0/src/error.rs /Users/borjafernandezangulo/Documents/antigravity/lively-maxwell/core/moskv-1/kernel/rust_core/target/release/build/libsqlite3-sys-4762211a2fc9b2a1/out/bindgen.rs
+
+/Users/borjafernandezangulo/Documents/antigravity/lively-maxwell/core/moskv-1/kernel/rust_core/target/release/deps/liblibsqlite3_sys-0ae0f5a8a8685b91.rmeta: /Users/borjafernandezangulo/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libsqlite3-sys-0.27.0/src/lib.rs /Users/borjafernandezangulo/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libsqlite3-sys-0.27.0/src/error.rs /Users/borjafernandezangulo/Documents/antigravity/lively-maxwell/core/moskv-1/kernel/rust_core/target/release/build/libsqlite3-sys-4762211a2fc9b2a1/out/bindgen.rs
+
+/Users/borjafernandezangulo/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libsqlite3-sys-0.27.0/src/lib.rs:
+/Users/borjafernandezangulo/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libsqlite3-sys-0.27.0/src/error.rs:
+/Users/borjafernandezangulo/Documents/antigravity/lively-maxwell/core/moskv-1/kernel/rust_core/target/release/build/libsqlite3-sys-4762211a2fc9b2a1/out/bindgen.rs:
+
+# env-dep:OUT_DIR=/Users/borjafernandezangulo/Documents/antigravity/lively-maxwell/core/moskv-1/kernel/rust_core/target/release/build/libsqlite3-sys-4762211a2fc9b2a1/out
