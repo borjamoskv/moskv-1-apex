@@ -2,9 +2,18 @@ const { selectMutationDelayed } = require("../evolution/selector.js");
 const { execSync } = require("child_process");
 const { updateArchetype } = require("../swarm/allocator.js");
 const { computeReward } = require("../swarm/fitness.js");
+const { verifyGuardrails } = require("../guardrails/sentinel.js");
 function runEvolutionSweep(branches) {
   branches.forEach(branch => {
-    const result = selectMutationDelayed(branch);
+    const parts = branch.split("/");
+    const archetypeKey = (parts[1] || "").toUpperCase();
+    const ok = verifyGuardrails(branch, archetypeKey);
+    let result = "die";
+    if (ok) {
+      result = selectMutationDelayed(branch);
+    } else {
+      console.warn(`[GUARDRAIL-DIE] Branch ${branch} killed by Sentinel.`);
+    }
     if (result === "die") {
       try {
         execSync(`git branch -D ${branch}`);

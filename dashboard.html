@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CORTEX // SWARM CONTROL PANEL</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; margin-top: 40px; }
+    .archetype-card { background: var(--surface-glass); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 30px; transition: var(--transition-smooth); position: relative; overflow: hidden; }
+    .archetype-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; }
+    .archetype-alpha::before { background: #ff4a4a; }
+    .archetype-beta::before { background: #3b82f6; }
+    .archetype-gamma::before { background: #10b981; }
+    .metric-value { font-family: var(--font-mono); font-size: 2rem; font-weight: 700; margin-top: 10px; }
+    .pulse-indicator { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 8px; animation: pulse 2s infinite; }
+    .pulse-alpha { background: #ff4a4a; box-shadow: 0 0 10px #ff4a4a; }
+    .pulse-beta { background: #3b82f6; box-shadow: 0 0 10px #3b82f6; }
+    .pulse-gamma { background: #10b981; box-shadow: 0 0 10px #10b981; }
+    @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
+  </style>
+</head>
+<body>
+  <div class="analog-grain"></div>
+  <div class="glow-orb orb-1"></div>
+  <div class="glow-orb orb-2"></div>
+  <div class="container" style="padding: 60px 20px;">
+    <header style="border-bottom: 1px solid var(--border-glass); padding-bottom: 30px; margin-bottom: 40px;">
+      <h1 style="font-size: 3rem; font-weight: 800; letter-spacing: -2px; color: var(--yinmn-light);">CORTEX // SWARM CONTROL</h1>
+      <p style="color: var(--text-muted); font-family: var(--font-mono); font-size: 0.9rem; margin-top: 10px;">REAL-TIME DARWINIAN INFRASTRUCTURE ORCHESTRATOR</p>
+    </header>
+    <div class="dashboard-grid">
+      <div class="archetype-card archetype-alpha">
+        <h2 style="font-size: 1.5rem; font-weight: 600;"><span class="pulse-indicator pulse-alpha"></span>ALPHA</h2>
+        <p style="color: var(--text-muted); font-size: 0.85rem; font-family: var(--font-mono); margin-top: 5px;">Aggressive Revenue Predator</p>
+        <div class="metric-value" id="alpha-reward">0.00</div>
+        <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 15px;">Pulls: <span id="alpha-pulls" style="color: white; font-family: var(--font-mono);">0</span></p>
+        <p style="color: var(--text-muted); font-size: 0.8rem;">Latency: <span id="alpha-latency" style="color: white; font-family: var(--font-mono);">0ms</span></p>
+        <p style="color: var(--text-muted); font-size: 0.8rem;">Errors: <span id="alpha-errors" style="color: white; font-family: var(--font-mono);">0%</span></p>
+      </div>
+      <div class="archetype-card archetype-beta">
+        <h2 style="font-size: 1.5rem; font-weight: 600;"><span class="pulse-indicator pulse-beta"></span>BETA</h2>
+        <p style="color: var(--text-muted); font-size: 0.85rem; font-family: var(--font-mono); margin-top: 5px;">Homeostatic Stability Sentinel</p>
+        <div class="metric-value" id="beta-reward">0.00</div>
+        <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 15px;">Pulls: <span id="beta-pulls" style="color: white; font-family: var(--font-mono);">0</span></p>
+        <p style="color: var(--text-muted); font-size: 0.8rem;">Latency: <span id="beta-latency" style="color: white; font-family: var(--font-mono);">0ms</span></p>
+        <p style="color: var(--text-muted); font-size: 0.8rem;">Errors: <span id="beta-errors" style="color: white; font-family: var(--font-mono);">0%</span></p>
+      </div>
+      <div class="archetype-card archetype-gamma">
+        <h2 style="font-size: 1.5rem; font-weight: 600;"><span class="pulse-indicator pulse-gamma"></span>GAMMA</h2>
+        <p style="color: var(--text-muted); font-size: 0.85rem; font-family: var(--font-mono); margin-top: 5px;">Entropy Path Explorer</p>
+        <div class="metric-value" id="gamma-reward">0.00</div>
+        <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 15px;">Pulls: <span id="gamma-pulls" style="color: white; font-family: var(--font-mono);">0</span></p>
+        <p style="color: var(--text-muted); font-size: 0.8rem;">Latency: <span id="gamma-latency" style="color: white; font-family: var(--font-mono);">0ms</span></p>
+        <p style="color: var(--text-muted); font-size: 0.8rem;">Errors: <span id="gamma-errors" style="color: white; font-family: var(--font-mono);">0%</span></p>
+      </div>
+    </div>
+  </div>
+  <script>
+    async function updateDashboard() {
+      try {
+        const res = await fetch('/api/swarm-status');
+        const data = await res.json();
+        ['ALPHA', 'BETA', 'GAMMA'].forEach(key => {
+          const lower = key.toLowerCase();
+          document.getElementById(`${lower}-reward`).innerText = data[key].reward.toFixed(2);
+          document.getElementById(`${lower}-pulls`).innerText = data[key].pulls;
+          document.getElementById(`${lower}-latency`).innerText = `${data[key].metrics.latency.toFixed(1)}ms`;
+          document.getElementById(`${lower}-errors`).innerText = `${(data[key].metrics.errorRate * 100).toFixed(2)}%`;
+        });
+      } catch (err) {
+        console.error("Dashboard update failed:", err);
+      }
+    }
+    setInterval(updateDashboard, 3000);
+    updateDashboard();
+  </script>
+</body>
+</html>

@@ -12,9 +12,20 @@ const { selectMutation } = require('../kernel/evolution/selector.js');
 const { deployCanary } = require('../kernel/canary/deployer.js');
 const { recordEvent } = require('../kernel/canary/fitness_buffer.js');
 const { selectArchetype } = require('../kernel/swarm/allocator.js');
+const { recordRequest } = require('../kernel/guardrails/telemetry.js');
 
 const app = express();
 app.use(cors());
+
+app.use((req, res, next) => {
+    const start = Date.now();
+    res.on('finish', () => {
+        const duration = Date.now() - start;
+        const archetype = req.headers['x-cortex-archetype'] || 'BETA';
+        recordRequest(archetype, duration, res.statusCode);
+    });
+    next();
+});
 
 // Webhook requires raw body parsing for Stripe signature verification
 app.post('/stripe-webhook', express.raw({ type: 'application/json' }), (req, res) => {
@@ -181,6 +192,25 @@ app.post('/create-checkout-session', async (req, res) => {
     } catch (e) {
         res.status(500).json({ error: e.message });
     }
+});
+
+app.get('/api/swarm-status', (req, res) => {
+    const { stats } = require('../kernel/swarm/allocator.js');
+    const { getMetrics } = require('../kernel/guardrails/telemetry.js');
+    res.json({
+        ALPHA: {
+            ...stats.ALPHA,
+            metrics: getMetrics('ALPHA')
+        },
+        BETA: {
+            ...stats.BETA,
+            metrics: getMetrics('BETA')
+        },
+        GAMMA: {
+            ...stats.GAMMA,
+            metrics: getMetrics('GAMMA')
+        }
+    });
 });
 
 const PORT = process.env.PORT || 4242;
