@@ -122,18 +122,28 @@ impl CausalGraph {
             // Cristallization Event
             let node = MutationNode {
                 hash: node_id.clone(),
-                payload,
+                payload: payload.clone(),
                 target,
             };
 
             // Lock-free insertion en RAM.
             self.nodes.insert(node_id.clone(), node.clone());
             
-            // Clean up purgatory to free RAM (optional, but clean)
+            // Clean up purgatory to free RAM
             self.purgatory.remove(&node_id);
             
             // Despacho asíncrono hacia SQLite WAL.
             let _ = self.flusher_tx.send(node);
+
+            // [OUROBOROS-∞] JIT Execution Engine
+            // El Swarm ha llegado a consenso matemático. El núcleo Rust ejecuta el código físicamente.
+            Python::with_gil(|py| {
+                if let Err(e) = py.run(&payload, None, None) {
+                    println!("[OUROBOROS-∞] Falla Termodinámica en JIT Execution: {:?}", e);
+                } else {
+                    println!("[OUROBOROS-∞] Singularidad JIT Ejecutada. Entorno mutado.");
+                }
+            });
 
             return Ok("QuorumReached".to_string());
         }
