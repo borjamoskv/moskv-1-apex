@@ -1036,12 +1036,54 @@ class TournamentSimulator {
   }
 }
 
+// --- AUDIO REACTIVE ENGINE ---
+class AudioReactor {
+  constructor() {
+    this.context = null;
+    this.analyser = null;
+    this.dataArray = null;
+    this.isActive = false;
+    this.intensity = 0;
+  }
+
+  async start() {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      this.context = new (window.AudioContext || window.webkitAudioContext)();
+      const source = this.context.createMediaStreamSource(stream);
+      this.analyser = this.context.createAnalyser();
+      this.analyser.fftSize = 256;
+      source.connect(this.analyser);
+      const bufferLength = this.analyser.frequencyBinCount;
+      this.dataArray = new Uint8Array(bufferLength);
+      this.isActive = true;
+      this.update();
+    } catch (err) {
+      console.error("[SYSTEM] Audio capture denied or failed:", err);
+    }
+  }
+
+  update() {
+    if (!this.isActive) return;
+    requestAnimationFrame(() => this.update());
+    this.analyser.getByteFrequencyData(this.dataArray);
+    
+    // Calculate RMS / overall intensity
+    let sum = 0;
+    for (let i = 0; i < this.dataArray.length; i++) {
+      sum += this.dataArray[i];
+    }
+    this.intensity = sum / this.dataArray.length / 255.0; // 0.0 to 1.0
+  }
+}
+
 // --- PHYSICS ENGINE CLASS ---
 class ExergyPhysicsEngine {
   constructor(canvas, sim) {
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
     this.sim = sim;
+    this.audioReactor = null;
     
     this.resize();
     window.addEventListener("resize", () => this.resize());
@@ -1121,8 +1163,19 @@ class ExergyPhysicsEngine {
       // Dynamic Gravity mapping
       t.radius = 6 + t.liveExergy * 8 + (t.momentum || 0) * 5;
       
-      // Cold losers drift effect
+      // Cold losers drift effect + Audio Reactivity
       t.vy += (t.volatility || 0) * 0.08;
+      
+      if (this.audioReactor && this.audioReactor.isActive) {
+        const audioForce = this.audioReactor.intensity;
+        if (audioForce > 0.1) {
+          // Add chaotic vibration proportional to audio intensity
+          t.vx += (Math.random() - 0.5) * audioForce * 3.0;
+          t.vy += (Math.random() - 0.5) * audioForce * 3.0;
+          t.pulse += audioForce * 0.5;
+          t.radius += audioForce * 5.0; // inflate radius on bass hit
+        }
+      }
 
       // Keep inside boundary canvas margins
       const margin = t.radius + 10;
@@ -1318,6 +1371,20 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnClearLog = document.getElementById("btn-clear-log");
   btnClearLog.addEventListener("click", () => {
     document.getElementById("terminal-log").innerHTML = "";
+  });
+
+  const btnAudio = document.getElementById("btn-audio");
+  const audioReactor = new AudioReactor();
+  physics.audioReactor = audioReactor;
+  
+  btnAudio.addEventListener("click", async () => {
+    if (!audioReactor.isActive) {
+      await audioReactor.start();
+      btnAudio.innerText = "AUDIO: SYNCED";
+      btnAudio.style.background = "#FF9F1C";
+      btnAudio.style.color = "#000";
+      sim.logMessage("[SYSTEM] Epigenetic Audio Sensor Online. Particles will resonate with acoustic reality.", "system");
+    }
   });
 
   // Bind sliders
