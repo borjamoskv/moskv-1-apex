@@ -1,0 +1,31 @@
+# M12-B: Enterprise Blueprint (Air-Gapped Node)
+# Base Image
+FROM python:3.11-slim
+
+# Enforce secure environment
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+ENV EXECUTION_LEVEL C5-REAL
+
+WORKDIR /app
+
+# System dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install dependencies (assuming requirements.txt exists)
+# COPY requirements.txt .
+# RUN pip install --no-cache-dir -r requirements.txt
+# Since we are air-gapped, we assume base python + sqlite/postgres packages
+RUN pip install --no-cache-dir psycopg2-binary asyncio
+
+# Copy MOSKV-1 Kernel
+COPY . /app/core/moskv-1
+
+# Setup audit trails
+RUN mkdir -p /var/log/moskv_audit
+
+# Start the Kernel (Placeholder command)
+CMD ["python", "/app/core/moskv-1/kernel/event_bus.py"]

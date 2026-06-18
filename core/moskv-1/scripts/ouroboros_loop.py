@@ -76,11 +76,32 @@ def ouroboros_cycle():
     tests_passed, stdout, stderr = run_test_suite()
     if not tests_passed:
         print("[Ouroboros-∞] CRITICAL: System test suite failed. Initiating self-healing sequence...")
-        print(stdout)
-        print(stderr)
-        # In a fully closed loop, we would auto-diagnose and correct imports or syntax here.
-        # For now, we flag the exergy degradation and return failure.
-        sys.exit(1)
+        
+        # Invoke error_sensor.py
+        sensor_script = Path(__file__).parent / "error_sensor.py"
+        try:
+            print("[Ouroboros-∞] Passing thermodynamic context to Error Sensor...")
+            result = subprocess.run(
+                [sys.executable, str(sensor_script)],
+                input=stdout + "\n" + stderr,
+                capture_output=True,
+                text=True
+            )
+            print(result.stdout)
+            if result.returncode == 0:
+                print("[Ouroboros-∞] Auto-curación completada. Re-evaluando Gate 3...")
+                tests_passed_2, stdout_2, stderr_2 = run_test_suite()
+                if tests_passed_2:
+                    print("[Ouroboros-∞] ✓ Test suite verification passed successfully after self-healing.")
+                else:
+                    print("[Ouroboros-∞] Entropía persistente tras la auto-curación. Abortando.")
+                    sys.exit(1)
+            else:
+                print("[Ouroboros-∞] Error Sensor no pudo curar la entropía. Abortando.")
+                sys.exit(1)
+        except Exception as e:
+            print(f"[Ouroboros-∞] Fallo crítico en el motor de curación: {e}")
+            sys.exit(1)
     else:
         print("[Ouroboros-∞] ✓ Test suite verification passed successfully.")
         

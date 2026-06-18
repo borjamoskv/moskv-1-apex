@@ -1,3 +1,6 @@
+
+import sys, os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import pytest
 import asyncio
 from unittest.mock import AsyncMock, MagicMock, patch

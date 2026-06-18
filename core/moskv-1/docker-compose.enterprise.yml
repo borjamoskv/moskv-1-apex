@@ -1,0 +1,65 @@
+version: '3.8'
+
+# M12-B: Enterprise Blueprint
+# Air-Gapped MOSKV-1 Node (Zero external telemetry)
+
+services:
+  # CORTEX-PERSIST DB (Data Sovereignty)
+  cortex-postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: moskv_admin
+      POSTGRES_PASSWORD: ${CORTEX_DB_PASS:-AirGappedSecurePass123}
+      POSTGRES_DB: cortex_enterprise
+    volumes:
+      - cortex_data:/var/lib/postgresql/data
+    networks:
+      - vpc-isolated
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+
+  # LOCAL INFERENCE (Air-gapped LLM)
+  ollama-node:
+    image: ollama/ollama:latest
+    volumes:
+      - ollama_models:/root/.ollama
+    # Expected model: qwen2.5-coder or llama3
+    command: serve
+    networks:
+      - vpc-isolated
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  # MOSKV-1 SOVEREIGN KERNEL
+  moskv-kernel:
+    build: 
+      context: .
+      dockerfile: Dockerfile.enterprise
+    environment:
+      - EXECUTION_LEVEL=C5-REAL
+      - DATABASE_URL=postgresql://moskv_admin:${CORTEX_DB_PASS:-AirGappedSecurePass123}@cortex-postgres:5432/cortex_enterprise
+      - OLLAMA_BASE_URL=http://ollama-node:11434
+      - EU_AI_ACT_AUDIT=TRUE
+    volumes:
+      - ./logs/audit_trail:/var/log/moskv_audit
+    depends_on:
+      - cortex-postgres
+      - ollama-node
+    networks:
+      - vpc-isolated
+
+networks:
+  vpc-isolated:
+    driver: bridge
+    internal: true # STRICT AIR-GAP: No internet access inside VPC
+
+volumes:
+  cortex_data:
+  ollama_models:
