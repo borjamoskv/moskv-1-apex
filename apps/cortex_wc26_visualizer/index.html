@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MOSKV-1 // World Cup 2026 Exergy Singularity</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  <!-- Grit Texture Overlay -->
+  <div class="grit-overlay"></div>
+
+  <div class="app-container">
+    <!-- Header with Telemetry -->
+    <header class="telemetry-header">
+      <div class="header-logo">
+        <span class="logo-accent">MOSKV-1</span>
+        <span class="logo-sub">// APEX WC26 ENGINE</span>
+      </div>
+      <div class="telemetry-grid">
+        <div class="telemetry-item">
+          <span class="label">STATE</span>
+          <span id="tel-state" class="value state-idle">IDLE</span>
+        </div>
+        <div class="telemetry-item">
+          <span class="label">PHASE</span>
+          <span id="tel-phase" class="value">INITIALIZED</span>
+        </div>
+        <div class="telemetry-item">
+          <span class="label">ENTROPY</span>
+          <span id="tel-entropy" class="value">0.73</span>
+        </div>
+        <div class="telemetry-item">
+          <span class="label">ACTIVE NODES</span>
+          <span id="tel-nodes" class="value">48 / 48</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Workspace Grid -->
+    <main class="workspace-grid">
+      <!-- Column 1: Ecosystem & Controls -->
+      <section class="workspace-panel panel-left">
+        <div class="panel-header">
+          <h3>1. ECOSYSTEM PARTICLE FIELD</h3>
+          <span class="header-desc">Floating exergy vectors</span>
+        </div>
+        <div class="canvas-container">
+          <canvas id="ecosystem-canvas"></canvas>
+          <div id="canvas-overlay" class="canvas-overlay">
+            <div id="overlay-match-details" class="overlay-match"></div>
+          </div>
+        </div>
+        <div class="controls-container">
+          <div class="control-group">
+            <button id="btn-play" class="btn btn-primary">PLAY SIM</button>
+            <button id="btn-step" class="btn btn-secondary">STEP MATCH</button>
+            <button id="btn-reset" class="btn btn-danger">RESET ENGINE</button>
+          </div>
+          <div class="slider-grid">
+            <div class="slider-item">
+              <div class="slider-label">
+                <span>VOLATILITY (CHAOS)</span>
+                <span id="val-volatility">0.08</span>
+              </div>
+              <input type="range" id="slide-volatility" min="0.01" max="0.30" step="0.01" value="0.08">
+            </div>
+            <div class="slider-item">
+              <div class="slider-label">
+                <span>LEARNING RATE (RL DRIFT)</span>
+                <span id="val-lr">0.05</span>
+              </div>
+              <input type="range" id="slide-lr" min="0.01" max="0.15" step="0.01" value="0.05">
+            </div>
+            <div class="slider-item">
+              <div class="slider-label">
+                <span>UPSET PRESSURE</span>
+                <span id="val-upset">0.10</span>
+              </div>
+              <input type="range" id="slide-upset" min="0.01" max="0.25" step="0.01" value="0.10">
+            </div>
+            <div class="slider-item">
+              <div class="slider-label">
+                <span>SIMULATION SPEED</span>
+                <span id="val-speed">500ms</span>
+              </div>
+              <input type="range" id="slide-speed" min="50" max="2000" step="50" value="500">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Column 2: DAG Bracket Explorer -->
+      <section class="workspace-panel panel-center">
+        <div class="panel-header">
+          <h3>2. TOURNAMENT GRAPH (DAG)</h3>
+          <span class="header-desc">Phase node collapses</span>
+        </div>
+        <div class="bracket-scroller">
+          <div class="bracket-container" id="bracket-view">
+            <!-- Bracket stages will be populated dynamically -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Column 3: Telemetry Leaderboard & Raw Console -->
+      <section class="workspace-panel panel-right">
+        <div class="panel-header">
+          <h3>3. CONVERGENCE LEDGER</h3>
+          <span class="header-desc">Real-time state matrices</span>
+        </div>
+        <div class="leaderboard-container">
+          <table class="leaderboard-table">
+            <thead>
+              <tr>
+                <th align="left">NODE (TEAM)</th>
+                <th align="right">EXERGY</th>
+                <th align="right">ENTROPY</th>
+                <th align="center">STATUS</th>
+              </tr>
+            </thead>
+            <tbody id="leaderboard-body">
+              <!-- Sorted dynamic rows -->
+            </tbody>
+          </table>
+        </div>
+        <div class="terminal-container">
+          <div class="terminal-header">
+            <span>CORE TELEMETRY LOG</span>
+            <button id="btn-clear-log">CLEAR</button>
+          </div>
+          <div class="terminal-body" id="terminal-log">
+            <div class="log-line system-line">[SYSTEM] APEX Kernel online. Ready to simulate.</div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
