@@ -36,3 +36,4 @@
 | 7 | M7. Dynamic Sandbox | Hashing-based deterministic OSINT mockup telemetry engine | M6 | DONE |
 | 8 | M8. Manifesto Modal UX | Copy-to-clipboard button overlays in technical code blocks | M7 | DONE |
 | 9 | M9. Telemetry Injection Bridge | Real-time C5-REAL SSE telemetry bridge (FastAPI) | M8 | DONE |
+| 10 | M10. Sovereign Freeze Contract | Architectural freeze of OS contracts, lifecycles, and paths | M9 | DONE |
