@@ -37,7 +37,7 @@ class CDPPurgeBot:
             context = browser.new_context(**context_opts)
             page = context.new_page()
 
-            page.goto("https://substack.com/dashboard/subscribers", wait_until="networkidle")
+            page.goto("https://substack.com/dashboard/subscribers", wait_until="domcontentloaded")
             time.sleep(random.uniform(2.0, 4.0))
 
             for target in targets:
