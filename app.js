@@ -807,4 +807,34 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     });
+
+    // ----------------------------------------------------
+    // 7. C5-REAL Sovereign Telemetry Bridge (SSE)
+    // ----------------------------------------------------
+    const sseUrl = "http://127.0.0.1:8000/api/v1/stream";
+    try {
+        const evtSource = new EventSource(sseUrl);
+        evtSource.onmessage = (event) => {
+            try {
+                const data = JSON.parse(event.data);
+                const payload = data.payload || {};
+                const topic = payload.topic || "cortex.stream";
+                const content = typeof payload.content === 'object' ? JSON.stringify(payload.content) : (payload.content || "N/A");
+                
+                logToConsole(`[C5-REAL] Evento de telemetría vivo recibido: Topic [${topic}] - Hash: ${data.hash.substring(0,8)}...`);
+                logToConsole(`[+] Content: ${content}`);
+            } catch (e) {
+                console.warn("[SSE] Error parsing event data", e);
+            }
+        };
+
+        evtSource.onerror = (err) => {
+            console.warn("[SSE] EventSource connection failed. Validating if local Python kernel is running on port 8000.", err);
+            // Non-blocking, will auto-reconnect if server comes up.
+        };
+
+        logToConsole(`[+] Inyectando canal de Telemetría Soberana (SSE) hacia ${sseUrl}...`);
+    } catch (e) {
+        console.error("[SSE] Cannot create EventSource:", e);
+    }
 });
