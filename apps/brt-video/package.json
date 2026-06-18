@@ -1,0 +1,14 @@
+{
+  "name": "brt-video",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "remotion preview src/index.ts",
+    "build": "remotion render src/index.ts BRTVideo out/video.mp4"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.481",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "remotion": "^4.0.0"
+  }
+}
