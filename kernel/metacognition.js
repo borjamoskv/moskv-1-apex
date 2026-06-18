@@ -7,6 +7,8 @@ class MetacognitionEngine extends BrainRegion {
         this.driver = null;
         this.isInMemory = true;
         this.sleepInterval = null;
+        this._isPruning = false;
+        this._isAuditing = false;
     }
 
     async boot() {
@@ -15,11 +17,26 @@ class MetacognitionEngine extends BrainRegion {
         try {
             this.driver = neo4j.driver(
                 process.env.NEO4J_URI || 'bolt://localhost:7687',
-                neo4j.auth.basic(process.env.NEO4J_USER || 'neo4j', process.env.NEO4J_PASS || 'password')
+                neo4j.auth.basic(process.env.NEO4J_USER || 'neo4j', process.env.NEO4J_PASS || 'password'),
+                { 
+                    maxConnectionPoolSize: 50, 
+                    connectionAcquisitionTimeout: 20000,
+                    connectionTimeout: 5000,
+                    maxTransactionRetryTime: 5000 
+                }
             );
             await this.driver.verifyConnectivity();
+            
+            // Create unique constraint on MemoryNode(id) to optimize queries
+            const session = this.driver.session();
+            try {
+                await session.executeWrite(tx => tx.run('CREATE CONSTRAINT memory_node_id IF NOT EXISTS FOR (n:MemoryNode) REQUIRE n.id IS UNIQUE'));
+            } finally {
+                await session.close();
+            }
+            
             this.isInMemory = false;
-            console.log('[Metacognition] Connected to Neo4j. Live graph audit enabled.');
+            console.log('[Metacognition] Connected to Neo4j. Live graph audit enabled and constraint initialized.');
         } catch (err) {
             console.log('[Metacognition] Neo4j offline. Falling back to simulated in-memory audit.');
             this.driver = null;
@@ -44,52 +61,70 @@ class MetacognitionEngine extends BrainRegion {
     }
 
     async auditGraph() {
-        if (!this.isInMemory && this.driver) {
-            const session = this.driver.session();
-            try {
-                const result = await session.executeRead(tx => 
-                    tx.run('MATCH (n:MemoryNode) RETURN count(n) AS total, avg(n.entropy) AS avgEntropy')
-                );
-                const total = result.records[0].get('total').toNumber();
-                const avgEntropy = result.records[0].get('avgEntropy') || 0;
-                console.log(`[Metacognition] Graph Audit -> Nodes: ${total} | Avg Entropy: ${avgEntropy}`);
-                
-                // If the graph is too chaotic, trigger a global alert
-                if (avgEntropy > 0.8) {
-                    await this.emit('cortex.entropy.critical', { avgEntropy, total });
+        if (this._isAuditing) {
+            console.log('[Metacognition] Audit already in progress. Skipping...');
+            return;
+        }
+        this._isAuditing = true;
+        try {
+            if (!this.isInMemory && this.driver) {
+                const session = this.driver.session();
+                try {
+                    const result = await session.executeRead(tx => 
+                        tx.run('MATCH (n:MemoryNode) RETURN count(n) AS total, avg(n.entropy) AS avgEntropy')
+                    );
+                    const total = result.records[0].get('total').toNumber();
+                    const avgEntropy = result.records[0].get('avgEntropy') || 0;
+                    console.log(`[Metacognition] Graph Audit -> Nodes: ${total} | Avg Entropy: ${avgEntropy}`);
+                    
+                    // If the graph is too chaotic, trigger a global alert
+                    if (avgEntropy > 0.8) {
+                        await this.emit('cortex.entropy.critical', { avgEntropy, total });
+                    }
+                } catch (err) {
+                    console.error('[Metacognition] Audit failed:', err);
+                } finally {
+                    await session.close();
                 }
-            } catch (err) {
-                console.error('[Metacognition] Audit failed:', err);
-            } finally {
-                await session.close();
+            } else {
+                console.log(`[Metacognition] Graph Audit (in-memory) -> Status: NOMINAL.`);
             }
-        } else {
-            console.log(`[Metacognition] Graph Audit (in-memory) -> Status: NOMINAL.`);
+        } finally {
+            this._isAuditing = false;
         }
     }
 
     async pruneNoise() {
-        if (!this.isInMemory && this.driver) {
-            const session = this.driver.session();
-            try {
-                // Delete high entropy nodes that haven't crystallized
-                const result = await session.executeWrite(tx =>
-                    tx.run(`
-                        MATCH (n:MemoryNode)
-                        WHERE n.entropy > 0.90 AND n.lastUpdated < (timestamp() - 60000)
-                        DETACH DELETE n
-                        RETURN count(n) as pruned
-                    `)
-                );
-                const pruned = result.records[0].get('pruned').toNumber();
-                console.log(`[Metacognition] Sleep Cycle Complete. Pruned ${pruned} high-entropy nodes.`);
-            } catch (err) {
-                console.error('[Metacognition] Pruning failed:', err);
-            } finally {
-                await session.close();
+        if (this._isPruning) {
+            console.log('[Metacognition] Prune already in progress. Skipping...');
+            return;
+        }
+        this._isPruning = true;
+        try {
+            if (!this.isInMemory && this.driver) {
+                const session = this.driver.session();
+                try {
+                    // Delete high entropy nodes that haven't crystallized
+                    const result = await session.executeWrite(tx =>
+                        tx.run(`
+                            MATCH (n:MemoryNode)
+                            WHERE n.entropy > 0.90 AND n.lastUpdated < (timestamp() - 60000)
+                            DETACH DELETE n
+                            RETURN count(n) as pruned
+                        `)
+                    );
+                    const pruned = result.records[0].get('pruned').toNumber();
+                    console.log(`[Metacognition] Sleep Cycle Complete. Pruned ${pruned} high-entropy nodes.`);
+                } catch (err) {
+                    console.error('[Metacognition] Pruning failed:', err);
+                } finally {
+                    await session.close();
+                }
+            } else {
+                console.log(`[Metacognition] Sleep Cycle Complete (in-memory).`);
             }
-        } else {
-            console.log(`[Metacognition] Sleep Cycle Complete (in-memory).`);
+        } finally {
+            this._isPruning = false;
         }
     }
 

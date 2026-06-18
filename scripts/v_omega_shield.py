@@ -90,6 +90,7 @@ def audit_connections(kill_violators=False):
         # Check if process itself is explicitly whitelisted for external calls
         if not is_whitelisted:
             if command.lower() in WHITELIST_PROCESSES:
+                print(f"[V-OMEGA-TELEMETRY] Warn: Whitelisted process '{command}' (PID: {pid}) bypasses IP shield to '{name}'.")
                 is_whitelisted = True
         
         if not is_whitelisted:

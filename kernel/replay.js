@@ -9,7 +9,13 @@ async function replay(fromHash, toHash) {
     // to avoid corrupting the live topology.
     const sandboxDriver = neo4j.driver(
         process.env.SANDBOX_NEO4J_URI || 'bolt://localhost:7688', // Notice the different port
-        neo4j.auth.basic('neo4j', 'password')
+        neo4j.auth.basic('neo4j', 'password'),
+        { 
+            maxConnectionPoolSize: 50, 
+            connectionAcquisitionTimeout: 20000,
+            connectionTimeout: 5000,
+            maxTransactionRetryTime: 5000 
+        }
     );
 
     console.log(`[Replay Engine] Starting Projection Sandbox... Replaying from ${fromHash} to ${toHash}`);
