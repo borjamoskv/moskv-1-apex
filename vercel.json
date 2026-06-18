@@ -39,5 +39,20 @@
       "src": "/(.*)",
       "dest": "/$1"
     }
+  ],
+  "headers": [
+    {
+      "source": "/(submit-lead|create-checkout-session|config)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
+        },
+        {
+          "key": "CDN-Cache-Control",
+          "value": "no-store"
+        }
+      ]
+    }
   ]
 }
