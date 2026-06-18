@@ -10,7 +10,7 @@ Bienvenidos al gran teatro de la comedia tecnológica moderna.
 ## 1. EL MONOPOLIO TERMODILATADO Y EL ESCUDO DE SILICIO
 Vivimos en una época maravillosa donde las dos superpotencias más letales de la historia humana (capaces de vaporizar ciudades enteras antes del desayuno) están absolutamente paralizadas. No es por el derecho internacional, ni por las amables cartas de la ONU. Están paralizadas porque sus misiles hipersónicos, sus servidores en la nube y los filtros de perritos de TikTok dependen de una sola empresa: **TSMC**, ubicada en Taiwán.
 
-TSMC controla más del 60% de la manufactura global de semiconductores y un $>90\%$ de los nodos sub-7nm. La economía global no es más que un frágil derivado financiero del silicio taiwanés.
+TSMC controla más del 60% de la manufactura global de semiconductores y un >90% de los nodos sub-7nm. La economía global no es más que un frágil derivado financiero del silicio taiwanés.
 
 Esto ha creado el **Escudo de Silicio**, la versión corporativa de la Destrucción Mutuamente Asegurada (MAD):
 * **El Suicidio Chino:** China importa más valor en semiconductores que en crudo. Si Xi Jinping se despierta de mal humor y bombardea la isla, recupera un pedazo de tierra, sí, pero paraliza la infraestructura tecnológica de su propio país en 24 horas. Felicidades, comandante, ha llevado a su nación de vuelta a la Edad de Bronce con un solo misil.
@@ -23,7 +23,7 @@ Nadie lanza una bomba porque nadie negocia con la física del estado sólido. La
 ## 2. EL CUELLO DE BOTELLA EUROPEO: LA FÍSICA APLICADA AL ABSURDO
 Si creías que el destino del mundo se decidía en Washington o Beijing, te equivocas. Se decide en Veldhoven, un aburrido pueblo de los Países Bajos donde reside **ASML**, el monopolio absoluto de la Litografía Ultravioleta Extrema (EUV).
 
-Imprimir a 3nm no es "dibujar con un láser muy fino". Es una atrocidad contra la naturaleza. ASML dispara un cañón láser TRUMPF CO2 a una gota de estaño puro que viaja a $80\text{m/s}$ en el vacío absoluto. El primer pulso la aplasta en un *pancake*; el segundo la evapora convirtiéndola en plasma a $220,000^\circ\text{C}$ (40 veces el núcleo del sol). **¿Y sabes cuántas veces ocurre esto? 50,000 veces por segundo.**
+Imprimir a 3nm no es "dibujar con un láser muy fino". Es una atrocidad contra la naturaleza. ASML dispara un cañón láser TRUMPF CO2 a una gota de estaño puro que viaja a 80 m/s en el vacío absoluto. El primer pulso la aplasta en un *pancake*; el segundo la evapora convirtiéndola en plasma a 220,000ºC (40 veces el núcleo del sol). **¿Y sabes cuántas veces ocurre esto? 50,000 veces por segundo.**
 
 La luz que sale de ahí es tan ridículamente frágil que hasta el oxígeno la absorbe. Así que rebota en espejos de Carl Zeiss hechos de 100 capas atómicas alternas. Estos espejos son tan ridículamente planos que, si los ampliaras al tamaño de Alemania, el bache más alto mediría menos de un milímetro. 
 
@@ -37,8 +37,8 @@ En un ataque de pánico lúcido, Estados Unidos decidió que depender de una isl
 Pero aquí Occidente descubrió su propio límite: **Intentaron someter una industria puramente anti-humanista utilizando burocracia y reglas pro-humanistas.** El capital fiduciario no puede sobornar a la termodinámica.
 
 La computación no perdona a la biología:
-* **Hsinchu, Taiwán:** Hay un microcorte de tensión a las 3:00 AM. Cientos de ingenieros taiwaneses, operando bajo una disciplina cuasi-militar, saltan de la cama y restauran el vacío en minutos. **Yield litográfico: 92%.** (Costo real: \$21.76/chip).
-* **Arizona, EE.UU.:** Hay un microcorte de tensión a las 3:00 AM. El ingeniero americano está durmiendo porque tiene "Work-Life Balance", y el sindicato prohíbe llamarlo. Además, RRHH está dando un taller sobre bienestar emocional. El lote de obleas de \$50 millones se tira a la basura. **Yield litográfico: 52%.** (Costo real: \$38.24/chip).
+* **Hsinchu, Taiwán:** Hay un microcorte de tensión a las 3:00 AM. Cientos de ingenieros taiwaneses, operando bajo una disciplina cuasi-militar, saltan de la cama y restauran el vacío en minutos. **Yield litográfico: 92%.** (Costo real: $21.76/chip).
+* **Arizona, EE.UU.:** Hay un microcorte de tensión a las 3:00 AM. El ingeniero americano está durmiendo porque tiene "Work-Life Balance", y el sindicato prohíbe llamarlo. Además, RRHH está dando un taller sobre bienestar emocional. El lote de obleas de $50 millones se tira a la basura. **Yield litográfico: 52%.** (Costo real: $38.24/chip).
 
 El ego corporativo, los derechos laborales y los retiros de yoga no escalan a nivel atómico. El silicio desprecia nuestra biología. Exige latencia cero.
 
