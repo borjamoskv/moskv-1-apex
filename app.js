@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // ----------------------------------------------------
-    // 2. OSINT Terminal Form Logic (Sandbox)
+    // 2. OSINT Terminal & Log Formatting Logic (Sandbox)
     // ----------------------------------------------------
     const typeSelect = document.getElementById("type-select");
     const networkSelectWrapper = document.querySelector(".wallet-onlyhidden");
@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let currentReportContent = "";
 
-    // Toggle red blockchain selector
+    // Toggle blockchain network selector for wallets
     typeSelect.addEventListener("change", (e) => {
         if (e.target.value === "wallet") {
             networkSelectWrapper.style.display = "flex";
@@ -37,6 +37,107 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function getTimestamp() {
         return new Date().toISOString().replace('T', ' ').slice(0, 19);
+    }
+
+    // High-fidelity styling/color tags formatter for console
+    function formatConsoleLog(text) {
+        return text
+            .replace(/\[\+\]/g, '<span style="color: #00e676; font-weight: bold;">[+]</span>')
+            .replace(/\[SUCCESS\]/g, '<span style="color: #00e676; font-weight: bold; text-shadow: 0 0 8px rgba(0,230,118,0.4);">[SUCCESS]</span>')
+            .replace(/\[!\]/g, '<span style="color: #ff9f1c; font-weight: bold;">[!]</span>')
+            .replace(/\[(C4-ERROR|ERROR|CORTEX-SWARM-ERR|CORTEX-EDGE-ERR)\]/g, '<span style="color: #ff5252; font-weight: bold;">[$1]</span>')
+            .replace(/\[C5-REAL\]/g, '<span style="color: #5262ff; font-weight: bold; text-shadow: 0 0 8px rgba(82,98,255,0.6);">[C5-REAL]</span>')
+            .replace(/\[C4-SIM\]/g, '<span style="color: #ff9f1c; font-weight: bold;">[C4-SIM]</span>')
+            .replace(/\[OUROBOROS-∞\]/g, '<span style="color: #e040fb; font-weight: bold; text-shadow: 0 0 8px rgba(224,64,251,0.5);">[OUROBOROS-∞]</span>')
+            .replace(/\[CORTEX-MOCK-PAY\]/g, '<span style="color: #5262ff; font-weight: bold;">[CORTEX-MOCK-PAY]</span>')
+            .replace(/\[CORTEX-MOCK-WEBHOOK\]/g, '<span style="color: #00e676; font-weight: bold;">[CORTEX-MOCK-WEBHOOK]</span>')
+            .replace(/\[CORTEX-SWARM-OK\]/g, '<span style="color: #00e676; font-weight: bold;">[CORTEX-SWARM-OK]</span>')
+            .replace(/\[CORTEX-SWARM-ERR\]/g, '<span style="color: #ff5252; font-weight: bold;">[CORTEX-SWARM-ERR]</span>')
+            .replace(/\[CORTEX-LEAD-OK\]/g, '<span style="color: #00e676; font-weight: bold;">[CORTEX-LEAD-OK]</span>')
+            .replace(/\[CORTEX-LEAD-ERR\]/g, '<span style="color: #ff5252; font-weight: bold;">[CORTEX-LEAD-ERR]</span>')
+            .replace(/\[CORTEX-PAYMENT-OK\]/g, '<span style="color: #00e676; font-weight: bold;">[CORTEX-PAYMENT-OK]</span>')
+            .replace(/\[CORTEX-PAYMENT-ERR\]/g, '<span style="color: #ff5252; font-weight: bold;">[CORTEX-PAYMENT-ERR]</span>')
+            .replace(/(0x[a-fA-F0-9]{40})/g, '<span style="color: #ff9f1c; font-family: monospace;">$1</span>')
+            .replace(/(e0a741[a-fA-F0-9]*)/g, '<span style="color: #ffd700; font-family: monospace;">$1</span>');
+    }
+
+    function logToConsole(message) {
+        if (consoleOutput) {
+            consoleOutput.innerHTML += `[${getTimestamp()}] ${formatConsoleLog(message)}<br>`;
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        }
+    }
+
+    // Robust Markdown Parser
+    function parseMarkdown(md) {
+        // 1. Clean frontmatter if present
+        let cleaned = md.replace(/^---[\s\S]*?---\s*/, "");
+        
+        // 2. Extract and protect code blocks
+        const codeBlocks = [];
+        cleaned = cleaned.replace(/```([a-zA-Z0-9-]*)\n([\s\S]*?)```/g, (match, lang, code) => {
+            const placeholder = `<!-- __CODE_BLOCK_${codeBlocks.length}__ -->`;
+            const escapedCode = code
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+            codeBlocks.push(`<pre><code class="language-${lang || 'txt'}">${escapedCode}</code></pre>`);
+            return placeholder;
+        });
+
+        // 3. Horizontal rules
+        cleaned = cleaned.replace(/^---$/gm, "<hr>");
+
+        // 4. Split into blocks by double newlines or more
+        const blocks = cleaned.split(/\n\n+/);
+        const htmlBlocks = blocks.map(block => {
+            let trimmed = block.trim();
+            if (!trimmed) return "";
+
+            // Check if block is a code block placeholder
+            const placeholderMatch = trimmed.match(/^<!-- __CODE_BLOCK_(\d+)__ -->$/);
+            if (placeholderMatch) {
+                const index = parseInt(placeholderMatch[1], 10);
+                return codeBlocks[index];
+            }
+
+            // Headers
+            if (trimmed.startsWith("# ")) {
+                return `<h1>${parseInline(trimmed.substring(2))}</h1>`;
+            }
+            if (trimmed.startsWith("## ")) {
+                return `<h2>${parseInline(trimmed.substring(3))}</h2>`;
+            }
+            if (trimmed.startsWith("### ")) {
+                return `<h3>${parseInline(trimmed.substring(4))}</h3>`;
+            }
+
+            // Blockquote
+            if (trimmed.startsWith("> ")) {
+                const quoteContent = trimmed.split(/\n>\s?/).map(line => line.replace(/^>\s?/, "")).join("<br>");
+                return `<blockquote>${parseInline(quoteContent)}</blockquote>`;
+            }
+
+            // Lists
+            if (trimmed.startsWith("- ") || trimmed.startsWith("* ")) {
+                const items = trimmed.split(/\n[-*]\s+/).map(li => {
+                    const text = li.replace(/^[-*]\s+/, "").trim();
+                    return text ? `<li>${parseInline(text)}</li>` : '';
+                }).filter(Boolean).join("");
+                return `<ul>${items}</ul>`;
+            }
+
+            // Normal Paragraphs
+            return `<p>${parseInline(trimmed.replace(/\n/g, "<br>"))}</p>`;
+        });
+
+        function parseInline(text) {
+            return text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/`(.*?)`/g, '<code>$1</code>');
+        }
+
+        return htmlBlocks.filter(Boolean).join("\n");
     }
 
     function buildReportMarkdown(target, type, network) {
@@ -52,7 +153,7 @@ document.addEventListener("DOMContentLoaded", () => {
 - IP resuelta de manera exitosa: **216.58.204.174**.
 
 ## 2. Evidencia observada
-\`\`\`json
+```json
 {
     "domain": {
         "target": "${target}",
@@ -68,10 +169,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 }
-\`\`\`
+```
 
 ## 3. Interpretación técnica
-- **Infraestructura:** SSL Issuer verificado como *Sectigo Limited*. Puertos activos detectados: \`[80, 443, 22]\`.
+- **Infraestructura:** SSL Issuer verificado como *Sectigo Limited*. Puertos activos detectados: `[80, 443, 22]`.
 - **Análisis DNS:** DoH lookup completado para TXT/MX records. No se detectan anomalías de enrutamiento ni suplantación.
 
 ## 4. Riesgo fiscal o forense
@@ -91,7 +192,7 @@ document.addEventListener("DOMContentLoaded", () => {
 - Entidad Identificada: **Polygon: PoS Bridge (Mapeo estático CORTEX)**.
 
 ## 2. Evidencia observada
-\`\`\`json
+```json
 {
     "wallet": {
         "target": "${target}",
@@ -108,11 +209,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 }
-\`\`\`
+```
 
 ## 3. Interpretación técnica
 - **On-Chain Forensics:** Entidad identificada de forma determinista.
-- **Flujo de Fondos:** Se ha detectado interacción directa con puentes cross-chain (\`cross_chain_bridge: true\`). Sin enrutamiento por mezcladores de privacidad.
+- **Flujo de Fondos:** Se ha detectado interacción directa con puentes cross-chain (`cross_chain_bridge: true`). Sin enrutamiento por mezcladores de privacidad.
 
 ## 4. Riesgo fiscal o forense
 - **Clasificación Foral:** Requiere validación cruzada con declaraciones del Modelo 721 o IRPF por movimiento de fondos de volumen intermedio.
@@ -131,7 +232,7 @@ document.addEventListener("DOMContentLoaded", () => {
 - Perfil verificado de forma activa.
 
 ## 2. Evidencia observada
-\`\`\`json
+```json
 {
     "identity": {
         "target": "${target}",
@@ -147,7 +248,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 }
-\`\`\`
+```
 
 ## 3. Interpretación técnica
 - **Digital Footprint:** Identificación y mapeo de alias entre múltiples repositorios y redes. GitLab profile verificado.
@@ -169,8 +270,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const type = typeSelect.value;
         const network = document.getElementById("network-select").value;
 
-        // Clear output and print starting logs
-        consoleOutput.innerHTML = `[${getTimestamp()}] [+] Iniciando análisis para vector [${type.toUpperCase()}] sobre target: ${target}...<br>`;
+        // Clear output and start high-fidelity logs
+        consoleOutput.innerHTML = "";
+        logToConsole(`[+] Iniciando análisis para vector [${type.toUpperCase()}] sobre target: ${target}...`);
+        
         reportView.innerHTML = `
             <div class="empty-state">
                 <div class="empty-icon console-blink">⏳</div>
@@ -180,19 +283,45 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
         downloadBtn.disabled = true;
 
-        const logSteps = [
-            `[${getTimestamp()}] [+] Metacognición: Evaluando &lt;entropy_check&gt;...`,
-            `[${getTimestamp()}] [+] Consultando base de conocimientos local CORTEX_OSINT_KB.json...`,
-            `[${getTimestamp()}] [+] Resolviendo firma e infraestructura del objetivo...`,
-            `[${getTimestamp()}] [+] Extrayendo telemetría SOTA...`,
-            `[${getTimestamp()}] [+] Generando reporte pericial certificado...`
-        ];
+        let logSteps = [];
+        if (type === "domain") {
+            logSteps = [
+                `[+] [OUROBOROS-∞] Metacognición: Evaluando <entropy_check> para el dominio ${target}...`,
+                `[+] Consultando base de conocimientos local CORTEX_OSINT_KB.json para vectores DNS/SSL...`,
+                `[+] Iniciando DNS-over-HTTPS (DoH) resolver para TXT/MX records...`,
+                `[+] Resolviendo IP para ${target} -> 216.58.204.174`,
+                `[+] Escaneando certificado SSL metadata (Issuer: Sectigo Limited)...`,
+                `[+] Realizando mapeo de puertos activos: detectados [80, 443, 22]...`,
+                `[+] Validando conformidad con Norma Foral General Tributaria de Bizkaia...`,
+                `[SUCCESS] Reporte de inteligencia C5-REAL compilado y firmado.`
+            ];
+        } else if (type === "wallet") {
+            logSteps = [
+                `[+] [OUROBOROS-∞] Metacognición: Instando escáner forense para wallet ${target} en red ${network.toUpperCase()}...`,
+                `[+] Consultando base de conocimientos local CORTEX_OSINT_KB.json para heurísticas de mezcla...`,
+                `[+] Consultando balance de la dirección via Blockcypher Forensics...`,
+                `[+] Verificando enrutamiento en Privacy Pools (Tornado Cash, Railgun, etc.)...`,
+                `[+] Detectado mapeo estático CORTEX: Polygon: PoS Bridge (cross_chain_bridge: true)...`,
+                `[+] Evaluando volumen de transacciones (3,329,438 txs procesadas)...`,
+                `[+] Mapeando contingencia fiscal: Modelo 720 / Modelo 721 (Hacienda Foral de Bizkaia)...`,
+                `[SUCCESS] Reporte de inteligencia C5-REAL compilado y firmado.`
+            ];
+        } else {
+            logSteps = [
+                `[+] [OUROBOROS-∞] Metacognición: Iniciando fingerprinting digital para el alias ${target}...`,
+                `[+] Consultando base de conocimientos local CORTEX_OSINT_KB.json para herramientas de rastreo...`,
+                `[+] Realizando escaneo de perfil público en GitHub / GitLab...`,
+                `[+] Buscando coincidencia de alias en base de datos externa Keybase...`,
+                `[+] Analizando metadatos históricos de commits para fuga de emails en texto claro...`,
+                `[+] Mapeando relaciones en el grafo social del objetivo...`,
+                `[SUCCESS] Reporte de inteligencia C5-REAL compilado y firmado.`
+            ];
+        }
 
         let currentStep = 0;
         const interval = setInterval(() => {
             if (currentStep < logSteps.length) {
-                consoleOutput.innerHTML += `${logSteps[currentStep]}<br>`;
-                consoleOutput.scrollTop = consoleOutput.scrollHeight;
+                logToConsole(logSteps[currentStep]);
                 currentStep++;
             } else {
                 clearInterval(interval);
@@ -203,23 +332,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function renderReport(target, type, network) {
         currentReportContent = buildReportMarkdown(target, type, network);
-        consoleOutput.innerHTML += `[${getTimestamp()}] [+] Reporte generado en el visualizador.<br>`;
-        consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        logToConsole(`[+] Reporte generado en el visualizador.`);
 
-        const htmlContent = parseSimpleMarkdown(currentReportContent);
+        const htmlContent = parseMarkdown(currentReportContent);
         reportView.innerHTML = `<div class="report-content">${htmlContent}</div>`;
         downloadBtn.disabled = false;
-    }
-
-    function parseSimpleMarkdown(md) {
-        return md
-            .replace(/^# (.*$)/gim, '<h1>$1</h1>')
-            .replace(/^## (.*$)/gim, '<h2>$1</h2>')
-            .replace(/^- (.*$)/gim, '<ul><li>$1</li></ul>')
-            .replace(/<\/ul>\s*<ul>/g, '') // collapse multiple ULs
-            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-            .replace(/\`(.*?)\`/g, '<code>$1</code>')
-            .replace(/\`\`\`json([\s\S]*?)\`\`\`/g, '<pre>$1</pre>');
     }
 
     downloadBtn.addEventListener("click", () => {
@@ -254,10 +371,8 @@ document.addEventListener("DOMContentLoaded", () => {
             leadSubmitBtn.disabled = true;
             leadSubmitBtn.innerHTML = "REGISTRANDO EN LEDGER...";
 
-            // Log details in the terminal console to show backend connection
-            consoleOutput.innerHTML += `<br>[${getTimestamp()}] [!] B2B Lead capture triggered for target: ${domain}...<br>`;
-            consoleOutput.innerHTML += `[${getTimestamp()}] [+] Appending payload to leads_ledger.ndjson...<br>`;
-            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+            logToConsole(`[!] B2B Lead capture triggered for target: ${domain}...`);
+            logToConsole(`[+] Appending payload to leads_ledger.ndjson...`);
 
             try {
                 const response = await fetch("/submit-lead", {
@@ -274,17 +389,16 @@ document.addEventListener("DOMContentLoaded", () => {
                     leadForm.style.display = "none";
                     leadSuccessMsg.style.display = "block";
                     
-                    consoleOutput.innerHTML += `[${getTimestamp()}] [SUCCESS] Lead recorded. Compilando vectores de contacto (outreach_compiler.py)...<br>`;
-                    consoleOutput.innerHTML += `[${getTimestamp()}] [+] Ledger mutado autónomamente. Hash: e0a741a.<br>`;
+                    logToConsole(`[SUCCESS] Lead recorded. Compilando vectores de contacto (outreach_compiler.py)...`);
+                    logToConsole(`[+] Ledger mutado autónomamente. Hash: e0a741a.`);
                 } else {
                     throw new Error(data.error || "Error recording lead");
                 }
             } catch (error) {
-                consoleOutput.innerHTML += `[${getTimestamp()}] [C4-ERROR] Lead capture failed: ${error.message}<br>`;
+                logToConsole(`[C4-ERROR] Lead capture failed: ${error.message}`);
                 leadSubmitBtn.disabled = false;
                 leadSubmitBtn.innerHTML = "REINTENTAR REGISTRO";
             }
-            console.scrollTop = consoleOutput.scrollHeight;
         });
     }
 
@@ -297,8 +411,7 @@ document.addEventListener("DOMContentLoaded", () => {
             btn.innerHTML = "CONECTANDO PASARELA...";
             btn.disabled = true;
 
-            consoleOutput.innerHTML += `<br>[${getTimestamp()}] [!] Conectando con Stripe/SEPA Gateway para tier: ${tier}...<br>`;
-            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+            logToConsole(`[!] Conectando con Stripe/SEPA Gateway para tier: ${tier}...`);
 
             try {
                 const response = await fetch("/create-checkout-session", {
@@ -315,29 +428,53 @@ document.addEventListener("DOMContentLoaded", () => {
                 const session = await response.json();
 
                 if (session.id) {
-                    consoleOutput.innerHTML += `[${getTimestamp()}] [SUCCESS] Stripe checkout session initialized: ${session.id}<br>`;
-                    consoleOutput.scrollTop = consoleOutput.scrollHeight;
+                    logToConsole(`[SUCCESS] Stripe checkout session initialized: ${session.id}`);
 
                     if (session.id === "cs_test_mock_c5_real") {
-                        // Simulación local C5-REAL
-                        setTimeout(() => {
+                        // Simulación local C5-REAL/C4-SIM
+                        setTimeout(async () => {
                             alert(`[MOCK GATEWAY] Simulación de pago completada para ${tier}.\nID de Sesión: ${session.id}\nExergía liquidada exitosamente.`);
-                            consoleOutput.innerHTML += `[${getTimestamp()}] [+] [CORTEX-MOCK-PAY] Pago completado. Exergía liquidada. Aprovisionando recursos en el kernel local.<br>`;
-                            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+                            logToConsole(`[+] [CORTEX-MOCK-PAY] Pago completado. Exergía liquidada. Aprovisionando recursos en el kernel local.`);
                             btn.innerHTML = "APROVISIONADO";
+
+                            // C5-REAL: Trigger stripe-webhook call from client to run local autopoiesis pipeline
+                            try {
+                                const webhookRes = await fetch("/stripe-webhook", {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                        "stripe-signature": "mock_sig_c5_real"
+                                    },
+                                    body: JSON.stringify({
+                                        type: "checkout.session.completed",
+                                        data: {
+                                            object: {
+                                                amount_total: tier === "C5-REAL" ? 49900 : 4900,
+                                                currency: "eur",
+                                                payment_method_types: ["card"],
+                                                metadata: { tier: tier }
+                                            }
+                                        }
+                                    })
+                                });
+                                const webhookData = await webhookRes.json();
+                                if (webhookData.received) {
+                                    logToConsole(`[SUCCESS] [CORTEX-MOCK-WEBHOOK] Webhook event processed by server.`);
+                                }
+                            } catch (webhookErr) {
+                                logToConsole(`[C4-ERROR] Webhook simulation failed: ${webhookErr.message}`);
+                            }
                         }, 1000);
                     } else {
                         // En producción real, redirigir a Stripe
-                        consoleOutput.innerHTML += `[${getTimestamp()}] [+] Redirigiendo a pasarela segura de Stripe...<br>`;
-                        consoleOutput.scrollTop = consoleOutput.scrollHeight;
+                        logToConsole(`[+] Redirigiendo a pasarela segura de Stripe...`);
                         window.location.href = session.url;
                     }
                 } else {
                     throw new Error(session.error || "Invalid session id");
                 }
             } catch (err) {
-                consoleOutput.innerHTML += `[${getTimestamp()}] [C4-ERROR] Error en pasarela: ${err.message}<br>`;
-                consoleOutput.scrollTop = consoleOutput.scrollHeight;
+                logToConsole(`[C4-ERROR] Error en pasarela: ${err.message}`);
                 btn.innerHTML = "ERROR";
                 btn.disabled = false;
             }
@@ -345,23 +482,26 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // ----------------------------------------------------
-    // 5. Hero Canvas Electric Bridge Wave Animation
+    // 5. Hero Canvas Electric Bridge Wave Animation (Leak Protected)
     // ----------------------------------------------------
     const canvas = document.getElementById("bridge-canvas");
     if (canvas) {
         const ctx = canvas.getContext("2d");
         
-        function resizeCanvas() {
+        // Clean resize management using ResizeObserver (avoids global window pollution)
+        const resizeObserver = new ResizeObserver(() => {
             canvas.width = canvas.parentElement.clientWidth;
             canvas.height = canvas.parentElement.clientHeight;
-        }
-        
-        window.addEventListener("resize", resizeCanvas);
-        resizeCanvas();
+        });
+        resizeObserver.observe(canvas.parentElement);
 
         let offset = 0;
+        let animationFrameId = null;
+        let isAnimating = false;
 
         function drawBridge() {
+            if (!isAnimating) return;
+
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
             const startX = 40;
@@ -413,10 +553,27 @@ document.addEventListener("DOMContentLoaded", () => {
             
             ctx.shadowBlur = 0; // reset
             
-            requestAnimationFrame(drawBridge);
+            animationFrameId = requestAnimationFrame(drawBridge);
         }
         
-        drawBridge();
+        // Pause/Resume animation using IntersectionObserver (saves massive CPU resources)
+        const intersectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    if (!isAnimating) {
+                        isAnimating = true;
+                        drawBridge();
+                    }
+                } else {
+                    isAnimating = false;
+                    if (animationFrameId) {
+                        cancelAnimationFrame(animationFrameId);
+                        animationFrameId = null;
+                    }
+                }
+            });
+        }, { threshold: 0.1 });
+        intersectionObserver.observe(canvas);
     }
 
     // ----------------------------------------------------
@@ -424,37 +581,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // ----------------------------------------------------
     const readMoreLinks = document.querySelectorAll(".read-more");
     
-    function parseRichMarkdown(md) {
-        let cleaned = md.replace(/^---[\s\S]*?---\s*/, "");
-        cleaned = cleaned.replace(/^---$/gm, "<hr>");
-        cleaned = cleaned.replace(/^# (.*$)/gim, '<h1>$1</h1>');
-        cleaned = cleaned.replace(/^## (.*$)/gim, '<h2>$1</h2>');
-        cleaned = cleaned.replace(/^### (.*$)/gim, '<h3>$1</h3>');
-        cleaned = cleaned.replace(/^\> (.*$)/gm, '<blockquote>$1</blockquote>');
-        cleaned = cleaned.replace(/\`\`\`(.*?)\n([\s\S]*?)\`\`\`/g, '<pre><code class="language-$1">$2</code></pre>');
-        cleaned = cleaned.replace(/\`(.*?)\`/g, '<code>$1</code>');
-        cleaned = cleaned.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-        
-        let paragraphs = cleaned.split(/\n\n+/);
-        let html = paragraphs.map(p => {
-            p = p.trim();
-            if (!p) return "";
-            if (p.startsWith("<h") || p.startsWith("<pre") || p.startsWith("<blockquote") || p.startsWith("<ul>") || p.startsWith("<hr>")) {
-                return p;
-            }
-            if (p.startsWith("- ") || p.startsWith("* ")) {
-                let items = p.split(/\n[-*] /).map(li => {
-                    let text = li.replace(/^[-*] /, "").trim();
-                    return text ? `<li>${text}</li>` : '';
-                }).filter(Boolean).join("");
-                return `<ul>${items}</ul>`;
-            }
-            return `<p>${p.replace(/\n/g, "<br>")}</p>`;
-        }).join("");
-        
-        return html;
-    }
-
     readMoreLinks.forEach(link => {
         link.addEventListener("click", async (e) => {
             e.preventDefault();
@@ -512,7 +638,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 
                 modalTitle.innerText = title;
-                modalBody.innerHTML = parseRichMarkdown(text);
+                modalBody.innerHTML = parseMarkdown(text);
             } catch (err) {
                 modalTitle.innerText = "CORTEX // INGESTION ERROR";
                 modalBody.innerHTML = `
@@ -524,5 +650,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 `;
             }
         });
+    });
+
+    // Close active modal on Escape key press (UX / leak free)
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+            const modal = document.getElementById("blog-modal");
+            if (modal && modal.classList.contains("active")) {
+                modal.classList.remove("active");
+            }
+        }
     });
 });

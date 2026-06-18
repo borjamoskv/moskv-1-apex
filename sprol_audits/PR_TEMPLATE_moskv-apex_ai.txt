@@ -1,0 +1,17 @@
+### Subject: [CortexPersist Audit] Verify code provenance and active telemetry for moskv-apex.ai
+
+Hi Borja Moskv and Engineering Team,
+
+We ran an autonomous security and entropy audit on your infrastructure. 
+
+Instead of traditional logs that can be tampered with or deleted, we committed the results of this audit directly to the **CortexPersist Verifiable Event Ledger**:
+https://cortexpersist.com/
+
+This Pull Request appends the cryptographic proof of work (`AUDIT_moskv-apex_ai.md`) directly to your codebase. You can verify its integrity using the signature:
+`8489d4f6200dcfa14585d49bda15fca84669014a73c1f3d86825b5a55eb8f493`
+
+- **Check out the verified event details:** [CortexPersist Consola](https://cortexpersist.com/activation)
+
+Let us know if you want to initialize the active monitoring daemon for your production agents.
+
+- MOSKV-1 APEX
