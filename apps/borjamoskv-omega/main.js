@@ -3,7 +3,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initTelemetry();
   initWebGL();
   initTheremin();
+  initTdahSimulator();
 });
+
 
 // 1. Telemetry
 function initTelemetry() {
@@ -167,3 +169,277 @@ function initTheremin() {
     }
   }
 }
+
+// 4. TDAH Cognitive Thrashing & Exergy Simulator
+function initTdahSimulator() {
+  const btnRun = document.getElementById('run-sim-btn');
+  const btnReset = document.getElementById('reset-sim-btn');
+  const btnToggleAdvanced = document.getElementById('advanced-toggle');
+  const panelAdvanced = document.getElementById('advanced-params-panel');
+  const checkForceSeed = document.getElementById('force-seed');
+  
+  const consoleEl = document.getElementById('sim-console');
+  const stateIndicator = document.getElementById('sim-state-indicator');
+  const tapeEl = document.getElementById('sim-tape');
+  
+  const elEfficiency = document.getElementById('sim-efficiency');
+  const elEfficiencyFill = document.getElementById('sim-efficiency-fill');
+  const elExergy = document.getElementById('sim-exergy');
+  const elAnergy = document.getElementById('sim-anergy');
+  
+  const sliders = {
+    activationProb: { input: document.getElementById('param-activation-prob'), display: document.getElementById('val-activation-prob'), suffix: '%' },
+    switchProb: { input: document.getElementById('param-switch-prob'), display: document.getElementById('val-switch-prob'), suffix: '%' },
+    hyperfocusProb: { input: document.getElementById('param-hyperfocus-prob'), display: document.getElementById('val-hyperfocus-prob'), suffix: '%' },
+    activationCost: { input: document.getElementById('param-activation-cost'), display: document.getElementById('val-activation-cost'), suffix: ' A', divisor: 10 },
+    switchCost: { input: document.getElementById('param-switch-cost'), display: document.getElementById('val-switch-cost'), suffix: ' A', divisor: 10 },
+    hyperfocusMult: { input: document.getElementById('param-hyperfocus-mult'), display: document.getElementById('val-hyperfocus-mult'), suffix: 'x', divisor: 10 }
+  };
+
+  // Preset values
+  const presets = {
+    typical: {
+      activationProb: 10,
+      switchProb: 10,
+      hyperfocusProb: 5,
+      activationCost: 50, // 5.0
+      switchCost: 20,     // 2.0
+      hyperfocusMult: 25   // 2.5
+    },
+    tdah_raw: {
+      activationProb: 60,
+      switchProb: 45,
+      hyperfocusProb: 25,
+      activationCost: 50, // 5.0
+      switchCost: 20,     // 2.0
+      hyperfocusMult: 25   // 2.5
+    },
+    tdah_anchored: {
+      activationProb: 15,
+      switchProb: 15,
+      hyperfocusProb: 20,
+      activationCost: 20, // 2.0
+      switchCost: 10,     // 1.0
+      hyperfocusMult: 25   // 2.5
+    }
+  };
+
+  // Sync slider inputs and value text displays
+  Object.keys(sliders).forEach(key => {
+    const s = sliders[key];
+    if (s.input) {
+      s.input.addEventListener('input', () => {
+        let val = parseFloat(s.input.value);
+        if (s.divisor) val = val / s.divisor;
+        s.display.textContent = val + s.suffix;
+      });
+    }
+  });
+
+  // Advanced toggling
+  if (btnToggleAdvanced && panelAdvanced) {
+    btnToggleAdvanced.addEventListener('click', () => {
+      panelAdvanced.classList.toggle('hidden');
+      if (panelAdvanced.classList.contains('hidden')) {
+        btnToggleAdvanced.textContent = '// CONFIGURACIÓN AVANZADA (COEFICIENTES) [+]';
+      } else {
+        btnToggleAdvanced.textContent = '// CONFIGURACIÓN AVANZADA (COEFICIENTES) [-]';
+      }
+    });
+  }
+
+  // Presets handling
+  const presetButtons = document.querySelectorAll('.preset-btn');
+  presetButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      presetButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const presetKey = btn.getAttribute('data-preset');
+      const config = presets[presetKey];
+      if (config) {
+        Object.keys(config).forEach(key => {
+          const s = sliders[key];
+          if (s && s.input) {
+            s.input.value = config[key];
+            let val = config[key];
+            if (s.divisor) val = val / s.divisor;
+            s.display.textContent = val + s.suffix;
+          }
+        });
+        appendLog(`[PRESET] Cambiado a perfil '${presetKey.toUpperCase()}'`, 'system');
+      }
+    });
+  });
+
+  let running = false;
+  let animInterval = null;
+  let seedValue = 42;
+
+  function seededRandom() {
+    const x = Math.sin(seedValue++) * 10000;
+    return x - Math.floor(x);
+  }
+
+  function appendLog(text, className = '') {
+    const line = document.createElement('p');
+    line.className = `log-line ${className ? 'log-' + className : ''}`;
+    line.textContent = text;
+    consoleEl.appendChild(line);
+    consoleEl.scrollTop = consoleEl.scrollHeight;
+  }
+
+  function updateTelemetry(work, overhead) {
+    elExergy.textContent = work.toFixed(1) + " X";
+    elAnergy.textContent = overhead.toFixed(1) + " A";
+    
+    const total = work + overhead;
+    const eff = total > 0 ? (work / total) * 100 : 0;
+    elEfficiency.textContent = eff.toFixed(2) + "%";
+    elEfficiencyFill.style.width = eff.toFixed(1) + "%";
+  }
+
+  function resetSim() {
+    if (animInterval) {
+      clearInterval(animInterval);
+      animInterval = null;
+    }
+    running = false;
+    seedValue = 42;
+    stateIndicator.textContent = 'STANDBY';
+    stateIndicator.className = 'console-state-indicator';
+    consoleEl.innerHTML = '';
+    tapeEl.innerHTML = '';
+    appendLog('[SYSTEM] Núcleo listo. Presione \'INICIAR INYECCIÓN CAUSAL\' para comenzar...', 'system');
+    updateTelemetry(0, 0);
+  }
+
+  if (btnReset) {
+    btnReset.addEventListener('click', resetSim);
+  }
+
+  if (btnRun) {
+    btnRun.addEventListener('click', () => {
+      if (running) {
+        resetSim();
+      }
+
+      running = true;
+      stateIndicator.textContent = 'RUNNING';
+      stateIndicator.className = 'console-state-indicator running';
+      consoleEl.innerHTML = '';
+      tapeEl.innerHTML = '';
+      appendLog('[SYSTEM] Inicializando simulación de exergía cognitiva...', 'system');
+      appendLog('[SYSTEM] Conectando Ledger CORTEX (C5-REAL)...', 'system');
+      
+      const forceSeed = checkForceSeed ? checkForceSeed.checked : true;
+      if (forceSeed) {
+        seedValue = 42; // reset seed
+        appendLog('[SEED] Semilla fijada en C5-REAL (42). Simulación determinista.', 'system');
+      } else {
+        appendLog('[SEED] Semilla dinámica activa. Caos estocástico habilitado.', 'system');
+      }
+
+      // Read current values
+      const actProb = parseFloat(sliders.activationProb.input.value) / 100;
+      const swProb = parseFloat(sliders.switchProb.input.value) / 100;
+      const hypProb = parseFloat(sliders.hyperfocusProb.input.value) / 100;
+      const actCost = parseFloat(sliders.activationCost.input.value) / 10;
+      const swCost = parseFloat(sliders.switchCost.input.value) / 10;
+      const hypMult = parseFloat(sliders.hyperfocusMult.input.value) / 10;
+
+      let totalWork = 0;
+      let totalOverhead = 0;
+      const steps = 30;
+      let step = 0;
+      let inHyperfocus = false;
+      let hyperfocusTimer = 0;
+      let currentTaskIdx = 0;
+      const tasks = ["AST Parsing", "WAL Sync", "BFT Consenso", "Memory Alloc"];
+
+      function random() {
+        return forceSeed ? seededRandom() : Math.random();
+      }
+
+      animInterval = setInterval(() => {
+        step++;
+        
+        let stateClass = '';
+        let glyph = '';
+        let logMsg = '';
+        let stepWork = 0;
+        let stepOverhead = 0;
+
+        // 1. Activation failure (Executive Dysfunction / Static Friction)
+        if (!inHyperfocus && random() < actProb) {
+          stateClass = 'friction';
+          glyph = '░';
+          stepOverhead = actCost;
+          totalOverhead += actCost;
+          logMsg = `[ciclo ${step}] ░ BARRERA: Fallo de activación ($E_act). Procrastinando...`;
+          appendLog(logMsg, 'friction');
+        } 
+        // 2. Context switching (CPU Thrashing)
+        else if (!inHyperfocus && random() < swProb) {
+          currentTaskIdx = (currentTaskIdx + 1) % tasks.length;
+          stateClass = 'thrashing';
+          glyph = '⇄';
+          stepOverhead = swCost;
+          totalOverhead += swCost;
+          logMsg = `[ciclo ${step}] ⇄ THRASHING: Cambio de contexto a '${tasks[currentTaskIdx]}'. Anergia disipada.`;
+          appendLog(logMsg, 'thrashing');
+        } 
+        // 3. Execution (Nominal or Hyperfocus Resonance)
+        else {
+          // Trigger hyperfocus
+          if (!inHyperfocus && random() < hypProb) {
+            inHyperfocus = true;
+            hyperfocusTimer = Math.floor(random() * 4) + 3; // 3 to 6 cycles
+            appendLog(`[ciclo ${step}] █ RESONANCIA: ¡Frecuencia atencional acoplada! Hiperenfoque activo.`, 'hyperfocus');
+          }
+
+          if (inHyperfocus) {
+            stepWork = hypMult;
+            totalWork += hypMult;
+            stateClass = 'hyperfocus';
+            glyph = '█';
+            logMsg = `[ciclo ${step}] █ EXERGÍA: Procesando '${tasks[currentTaskIdx]}' en resonancia (x${hypMult.toFixed(1)}).`;
+            appendLog(logMsg, 'hyperfocus');
+            
+            hyperfocusTimer--;
+            if (hyperfocusTimer <= 0) {
+              inHyperfocus = false;
+            }
+          } else {
+            stepWork = 1.0;
+            totalWork += 1.0;
+            stateClass = 'nominal';
+            glyph = '▄';
+            logMsg = `[ciclo ${step}] ▄ NOMINAL: Procesando '${tasks[currentTaskIdx]}' en estado base.`;
+            appendLog(logMsg, 'work');
+          }
+        }
+
+        // Add to timeline tape
+        const block = document.createElement('div');
+        block.className = `tape-block ${stateClass}`;
+        block.textContent = glyph;
+        tapeEl.appendChild(block);
+        
+        // Update telemetry values
+        updateTelemetry(totalWork, totalOverhead);
+
+        if (step >= steps) {
+          clearInterval(animInterval);
+          animInterval = null;
+          running = false;
+          stateIndicator.textContent = 'COMPLETED';
+          stateIndicator.className = 'console-state-indicator';
+          
+          const finalEff = totalWork + totalOverhead > 0 ? (totalWork / (totalWork + totalOverhead)) * 100 : 0;
+          appendLog(`[COMPLETADO] Simulación finalizada. Eficiencia global: ${finalEff.toFixed(2)}%`, 'system');
+        }
+      }, 150);
+    });
+  }
+}
+

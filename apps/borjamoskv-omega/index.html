@@ -27,6 +27,7 @@
         <a href="#musica" class="nav-btn">MÚSICA</a>
         <a href="#video" class="nav-btn">VÍDEO</a>
         <a href="#diario" class="nav-btn">DIARIO</a>
+        <a href="#simulador" class="nav-btn">SIMULADOR TDAH</a>
         <a href="#manifiesto" class="nav-btn">MANIFIESTO</a>
       </nav>
     </header>
@@ -88,6 +89,144 @@
         <p>Análisis de la memoria física lock-free y la orquestación del enjambre K-0 bajo la física del silicio.</p>
         <span class="date">2026.06.01</span>
       </article>
+    </section>
+
+    <section id="simulador" class="content-section">
+      <h2>// SIMULADOR DE FRICCIÓN COGNITIVA TDAH</h2>
+      <p class="manifesto-text">
+        Modelado termodinámico del procesamiento cognitivo neurodivergente. Simula la disipación de energía útil (anergía) frente a la resonancia dopaminérgica regulada.
+      </p>
+
+      <div class="simulator-layout">
+        <!-- Panel de Control -->
+        <div class="sim-panel control-panel">
+          <h3>// CONFIGURACIÓN DE PARÁMETROS</h3>
+          
+          <div class="preset-selector">
+            <span class="preset-label">PRESETS TEMPORALES:</span>
+            <div class="preset-buttons">
+              <button class="preset-btn active" data-preset="typical">NEUROTÍPICO</button>
+              <button class="preset-btn" data-preset="tdah_raw">TDAH SIN REGULAR</button>
+              <button class="preset-btn" data-preset="tdah_anchored">TDAH ANCLADO (C5)</button>
+            </div>
+          </div>
+
+          <div class="slider-group">
+            <div class="slider-header">
+              <label for="param-activation-prob">Tasa de Fallo de Activación (Procrastinación)</label>
+              <span class="value-display" id="val-activation-prob">10%</span>
+            </div>
+            <input type="range" id="param-activation-prob" min="0" max="100" value="10">
+            <p class="param-desc">Probabilidad de que el sistema se congele en procrastinación activa (░) debido a la barrera inercial.</p>
+          </div>
+
+          <div class="slider-group">
+            <div class="slider-header">
+              <label for="param-switch-prob">Tasa de Context-Switching (CPU Thrashing)</label>
+              <span class="value-display" id="val-switch-prob">10%</span>
+            </div>
+            <input type="range" id="param-switch-prob" min="0" max="100" value="10">
+            <p class="param-desc">Probabilidad de que la atención salte entre tareas en cada ciclo, forzando una recarga de registros (⇄).</p>
+          </div>
+
+          <div class="slider-group">
+            <div class="slider-header">
+              <label for="param-hyperfocus-prob">Probabilidad de Resonancia (Hiperenfoque)</label>
+              <span class="value-display" id="val-hyperfocus-prob">5%</span>
+            </div>
+            <input type="range" id="param-hyperfocus-prob" min="0" max="100" value="5">
+            <p class="param-desc">Probabilidad de acoplar la atención a una frecuencia resonante y multiplicar la exergía (█).</p>
+          </div>
+
+          <!-- Parámetros de Penalización Físicos -->
+          <div class="advanced-toggle-btn" id="advanced-toggle">// CONFIGURACIÓN AVANZADA (COEFICIENTES) [+]</div>
+          <div class="advanced-params hidden" id="advanced-params-panel">
+            <div class="slider-group">
+              <div class="slider-header">
+                <label for="param-activation-cost">Costo de Activación (E<sub>act</sub>)</label>
+                <span class="value-display" id="val-activation-cost">5.0 A</span>
+              </div>
+              <input type="range" id="param-activation-cost" min="10" max="100" value="50" step="5">
+              <p class="param-desc">Pérdida de energía disipada por cada ciclo de procrastinación (Anergia estática).</p>
+            </div>
+
+            <div class="slider-group">
+              <div class="slider-header">
+                <label for="param-switch-cost">Costo de Reconfiguración (C<sub>penalty</sub>)</label>
+                <span class="value-display" id="val-switch-cost">2.0 A</span>
+              </div>
+              <input type="range" id="param-switch-cost" min="5" max="50" value="20" step="5">
+              <p class="param-desc">Anergia disipada al vaciar la caché mental por cambio de contexto.</p>
+            </div>
+
+            <div class="slider-group">
+              <div class="slider-header">
+                <label for="param-hyperfocus-mult">Multiplicador de Hiperenfoque (Resonancia)</label>
+                <span class="value-display" id="val-hyperfocus-mult">2.5x</span>
+              </div>
+              <input type="range" id="param-hyperfocus-mult" min="15" max="40" value="25" step="1">
+              <p class="param-desc">Ganancia de rendimiento en estado de resonancia atencional.</p>
+            </div>
+          </div>
+
+          <div class="action-buttons">
+            <button id="run-sim-btn" class="nav-btn">INICIAR INYECCIÓN CAUSAL</button>
+            <button id="reset-sim-btn" class="nav-btn secondary">RESETEAR LEDGER</button>
+          </div>
+          
+          <div class="seed-checkbox-wrapper">
+            <input type="checkbox" id="force-seed" checked>
+            <label for="force-seed">Forzar Ledger Determinista (Semilla C5-REAL)</label>
+          </div>
+        </div>
+
+        <!-- Telemetría en Tiempo Real -->
+        <div class="sim-panel telemetry-panel">
+          <h3>// MONITOR DE EXERGÍA</h3>
+          <div class="telemetry-grid">
+            <div class="telemetry-card efficiency-card">
+              <div class="card-title">EFICIENCIA COGNITIVA (&eta;)</div>
+              <div class="card-value" id="sim-efficiency">00.00%</div>
+              <div class="efficiency-track">
+                <div class="efficiency-fill" id="sim-efficiency-fill"></div>
+              </div>
+            </div>
+            
+            <div class="telemetry-card">
+              <div class="card-title">TRABAJO ÚTIL (EXERGÍA)</div>
+              <div class="card-value text-blue" id="sim-exergy">0.0 X</div>
+            </div>
+            
+            <div class="telemetry-card">
+              <div class="card-title">ENERGÍA DISIPADA (ANERGÍA)</div>
+              <div class="card-value text-orange" id="sim-anergy">0.0 A</div>
+            </div>
+          </div>
+
+          <div class="console-box">
+            <div class="console-box-header">
+              <span>LEDGER DE EXECUCIÓN // HOST DE ATENCIÓN</span>
+              <span class="console-state-indicator" id="sim-state-indicator">STANDBY</span>
+            </div>
+            <div class="console-box-content" id="sim-console">
+              [SYSTEM] Núcleo listo. Presione 'INICIAR INYECCIÓN CAUSAL' para comenzar...
+            </div>
+          </div>
+
+          <div class="tape-container">
+            <div class="tape-title">CADENA DE CUSTODIA CAUSAL (TAPE):</div>
+            <div class="tape-timeline" id="sim-tape">
+              <!-- Grid elements representing instruction states -->
+            </div>
+            <div class="tape-legend">
+              <span class="legend-item"><span class="legend-box nominal"></span> Trabajo (▄)</span>
+              <span class="legend-item"><span class="legend-box hyperfocus"></span> Resonancia (█)</span>
+              <span class="legend-item"><span class="legend-box friction"></span> Procrastinación (░)</span>
+              <span class="legend-item"><span class="legend-box thrashing"></span> Thrashing (⇄)</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section id="manifiesto" class="content-section">
