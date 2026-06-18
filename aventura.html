@@ -12,16 +12,23 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&family=Outfit:wght@300;400;600;700;800&family=Georgia&display=swap" rel="stylesheet">
     
     <style>
+        @property --gradient-angle {
+            syntax: "<angle>";
+            initial-value: 0deg;
+            inherits: false;
+        }
+
         :root {
             --bg-color: #030304;
-            --card-bg: rgba(8, 8, 10, 0.9);
+            --bg-radial: radial-gradient(circle at 50% 50%, #0c0b11 0%, #030304 100%);
+            --card-bg: rgba(8, 8, 12, 0.85);
             --accent-blue: #2B3BE5;
             --accent-red: #E52B2B;
             --text-light: #F3F3F3;
-            --text-muted: #5F5F6F;
-            --border-color: rgba(255, 255, 255, 0.04);
-            --neon-blue-glow: 0 0 30px rgba(43, 59, 229, 0.35);
-            --neon-red-glow: 0 0 30px rgba(229, 43, 43, 0.35);
+            --text-muted: #62627a;
+            --border-color: rgba(255, 255, 255, 0.05);
+            --neon-blue-glow: 0 0 30px rgba(43, 59, 229, 0.3);
+            --neon-red-glow: 0 0 30px rgba(229, 43, 43, 0.3);
         }
 
         * {
@@ -31,6 +38,7 @@
         }
 
         body {
+            background: var(--bg-radial);
             background-color: var(--bg-color);
             color: var(--text-light);
             font-family: 'Outfit', sans-serif;
@@ -47,11 +55,11 @@
             display: block;
             position: fixed;
             top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.04), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.04));
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.005), rgba(0, 0, 255, 0.02));
             z-index: 9999;
             background-size: 100% 4px, 6px 100%;
             pointer-events: none;
-            opacity: 0.35;
+            opacity: 0.3;
         }
 
         /* Analog Grain Layer */
@@ -59,7 +67,7 @@
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-            opacity: 0.02;
+            opacity: 0.015;
             pointer-events: none;
             z-index: 1000;
         }
@@ -68,22 +76,22 @@
         .glow-orb {
             position: fixed;
             border-radius: 50%;
-            filter: blur(160px);
+            filter: blur(140px);
             z-index: -1;
-            opacity: 0.15;
+            opacity: 0.12;
             pointer-events: none;
-            transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 1.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .orb-1 {
-            top: -20%; left: -10%;
-            width: 60vw; height: 60vh;
+            top: -10%; left: -5%;
+            width: 50vw; height: 50vh;
             background: var(--accent-blue);
         }
 
         .orb-2 {
-            bottom: -20%; right: -10%;
-            width: 60vw; height: 60vh;
+            bottom: -10%; right: -5%;
+            width: 50vw; height: 50vh;
             background: var(--accent-red);
         }
 
@@ -148,6 +156,7 @@
         .audio-toggle:hover {
             color: var(--text-light);
             border-color: var(--accent-blue);
+            background-color: rgba(43, 59, 229, 0.05);
         }
 
         /* Layout Columns */
@@ -158,42 +167,50 @@
             align-items: start;
         }
 
-        @media (max-width: 900px) {
+        @media (max-width: 930px) {
             .game-layout {
                 grid-template-columns: 1fr;
             }
         }
 
         /* Premium Rotating Border Card */
+        @keyframes rotation {
+            0% { --gradient-angle: 0deg; }
+            100% { --gradient-angle: 360deg; }
+        }
+
         .card-wrapper {
             position: relative;
             border-radius: 16px;
-            padding: 1px;
+            padding: 2px;
             background: linear-gradient(135deg, var(--accent-blue), var(--accent-red));
+            background: conic-gradient(from var(--gradient-angle), var(--accent-blue), var(--accent-red), var(--accent-blue));
+            animation: rotation 10s linear infinite;
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
             transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .card-wrapper.blue-mode {
-            background: linear-gradient(135deg, var(--accent-blue), rgba(255,255,255,0.05));
+            background: conic-gradient(from var(--gradient-angle), var(--accent-blue), rgba(255,255,255,0.05), var(--accent-blue));
             box-shadow: var(--neon-blue-glow);
         }
 
         .card-wrapper.red-mode {
-            background: linear-gradient(135deg, var(--accent-red), rgba(0,0,0,0.8));
+            background: conic-gradient(from var(--gradient-angle), var(--accent-red), rgba(0,0,0,0.8), var(--accent-red));
             box-shadow: var(--neon-red-glow);
         }
 
         .card {
             background: var(--card-bg);
-            border-radius: 15px;
+            border-radius: 14px;
             padding: 40px;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
             display: flex;
             flex-direction: column;
-            gap: 30px;
+            gap: 25px;
             position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.02);
         }
 
         /* Image Mask and Reveal */
@@ -201,10 +218,10 @@
             width: 100%;
             border-radius: 8px;
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.04);
             position: relative;
             aspect-ratio: 16/9;
-            background-color: #000;
+            background-color: #020203;
         }
 
         .scene-image {
@@ -212,12 +229,12 @@
             height: 100%;
             object-fit: cover;
             opacity: 0;
-            transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1.5s ease;
-            transform: scale(1.05);
+            transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 2s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: scale(1.06);
         }
 
         .scene-image.loaded {
-            opacity: 0.8;
+            opacity: 0.85;
             transform: scale(1);
         }
 
@@ -225,7 +242,7 @@
             content: '';
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(180deg, transparent 50%, rgba(5, 5, 6, 0.95) 100%);
+            background: linear-gradient(180deg, transparent 50%, rgba(3, 3, 4, 0.95) 100%);
             pointer-events: none;
         }
 
@@ -252,14 +269,14 @@
         /* YAML console blocks */
         .console-block {
             font-family: 'JetBrains Mono', monospace;
-            background-color: rgba(0, 0, 0, 0.85);
-            border: 1px solid rgba(255, 255, 255, 0.04);
+            background-color: rgba(0, 0, 0, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.03);
             border-left: 3px solid var(--accent-blue);
             padding: 16px 20px;
             border-radius: 6px;
             font-size: 12px;
             line-height: 1.6;
-            color: #83A598;
+            color: #83a598;
             margin: 10px 0;
             overflow-x: auto;
             position: relative;
@@ -276,7 +293,7 @@
 
         .console-block.red-alert {
             border-left-color: var(--accent-red);
-            color: #FB4934;
+            color: #fb4934;
         }
 
         /* Buttons & Choices */
@@ -298,7 +315,7 @@
             border-radius: 8px;
             cursor: pointer;
             text-align: left;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -312,16 +329,16 @@
         }
 
         .btn-choice:hover {
-            background-color: rgba(43, 59, 229, 0.08);
+            background-color: rgba(43, 59, 229, 0.1);
             border-color: var(--accent-blue);
-            box-shadow: 0 0 15px rgba(43, 59, 229, 0.15);
+            box-shadow: 0 0 20px rgba(43, 59, 229, 0.2);
             transform: translateX(4px);
         }
 
         .btn-choice.danger:hover {
-            background-color: rgba(229, 43, 43, 0.08);
+            background-color: rgba(229, 43, 43, 0.1);
             border-color: var(--accent-red);
-            box-shadow: 0 0 15px rgba(229, 43, 43, 0.15);
+            box-shadow: 0 0 20px rgba(229, 43, 43, 0.2);
         }
 
         .btn-choice::after {
@@ -368,10 +385,11 @@
             gap: 15px;
             font-family: 'JetBrains Mono', monospace;
             box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             position: sticky;
             top: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.02);
         }
 
         .sidebar-header {
@@ -385,12 +403,60 @@
             align-items: center;
         }
 
+        /* Metrics Panel */
+        .metrics-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 8px 0;
+        }
+
+        .metric-row {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .metric-label-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 9px;
+            color: var(--text-muted);
+            font-weight: bold;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background-color: rgba(255, 255, 255, 0.02);
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.01);
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent-blue), #5061ff);
+            transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            border-radius: 4px;
+        }
+
+        .progress-bar.danger-bar {
+            background: linear-gradient(90deg, var(--accent-red), #ff5050);
+        }
+
+        .metric-val {
+            font-size: 10px;
+            color: var(--text-light);
+        }
+
         .sidebar-output {
             font-size: 11px;
             color: var(--text-muted);
             line-height: 1.6;
             overflow-y: auto;
-            max-height: 520px;
+            max-height: 290px;
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -484,6 +550,13 @@
             90% { transform: translate(2px, 2px) rotate(0deg); }
             100% { transform: translate(1px, -2px) rotate(-1deg); }
         }
+
+        /* Pulsing indicator */
+        @keyframes pulse {
+            0% { opacity: 0.4; }
+            50% { opacity: 1; }
+            100% { opacity: 0.4; }
+        }
     </style>
 </head>
 <body>
@@ -515,6 +588,40 @@
             <!-- COLUMNA LATERAL (FLIGHT RECORDER TERMINAL) -->
             <div class="sidebar-terminal">
                 <div class="sidebar-header">
+                    <span>DASHBOARD TELEMETRÍA</span>
+                    <span id="system-status-indicator" style="color: #00FF66; font-weight: bold; font-size: 10px;">ONLINE</span>
+                </div>
+                
+                <div class="metrics-panel">
+                    <div class="metric-row">
+                        <div class="metric-label-row">
+                            <span>EXERGY INDEX</span>
+                            <span id="exergy-val-text">100.0%</span>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-bar" id="exergy-bar" style="width: 100%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="metric-row">
+                        <div class="metric-label-row">
+                            <span>ENTROPY RATIO</span>
+                            <span id="entropy-val-text">0.0000</span>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-bar danger-bar" id="entropy-bar" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="metric-row">
+                        <div class="metric-label-row">
+                            <span>CORE TEMPERATURE</span>
+                            <span id="temp-val-text" style="color: var(--text-light);">37.0°C</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-header" style="margin-top: 10px; border-top: 1px solid var(--border-color); padding-top: 15px;">
                     <span>FLIGHT RECORDER LOG</span>
                     <span style="color: var(--accent-red); font-weight: bold; font-size: 9px; animation: pulse 1.5s infinite;">RECORDING</span>
                 </div>
@@ -544,7 +651,7 @@
                 ],
                 mode: "normal",
                 ledger: "31359B4",
-                entropy: "0.0000"
+                entropy: 0.0000
             },
             cap1: {
                 title: "Capítulo 1: La Fórmula del Silicio",
@@ -557,7 +664,7 @@
                 ],
                 mode: "blue",
                 ledger: "449B0BF",
-                entropy: "0.1245"
+                entropy: 0.1245
             },
             cap_peluqueria: {
                 title: "Error: Colapso en la Peluquería Loli",
@@ -570,7 +677,7 @@
                 ],
                 mode: "red",
                 ledger: "ERR_LOLI",
-                entropy: "0.4102"
+                entropy: 0.4102
             },
             cap2: {
                 title: "Capítulo 2: Latencia en la Trinchera de Usera",
@@ -583,7 +690,7 @@
                 ],
                 mode: "blue",
                 ledger: "802018C",
-                entropy: "0.0833"
+                entropy: 0.0833
             },
             cap8_latente: {
                 title: "Capítulo 8: El Descenso al Latente",
@@ -596,7 +703,7 @@
                 ],
                 mode: "blue",
                 ledger: "9a8b7c6",
-                entropy: "0.5210"
+                entropy: 0.5210
             },
             matrix_fail: {
                 title: "Error 404: Bucle Infinito de Memoria",
@@ -609,7 +716,7 @@
                 ],
                 mode: "red",
                 ledger: "ERR_LOOP",
-                entropy: "0.7812"
+                entropy: 0.8812
             },
             cap22_cobre: {
                 title: "Capítulo 22: La Traición del Hardware",
@@ -621,7 +728,7 @@
                 ],
                 mode: "blue",
                 ledger: "8F9A2C4",
-                entropy: "0.6540"
+                entropy: 0.6540
             },
             cap29_climax: {
                 title: "Capítulo 29: Los Minutos Negros",
@@ -633,7 +740,7 @@
                 ],
                 mode: "red",
                 ledger: "TETRA_OK",
-                entropy: "0.9210"
+                entropy: 0.9210
             },
             cap30: {
                 title: "CAPÍTULO 30: AMANECER EN USERA (VERSIÓN Ω)",
@@ -646,7 +753,7 @@
                 ],
                 mode: "red",
                 ledger: "USERA_Ω",
-                entropy: "0.9999"
+                entropy: 0.9999
             },
             cap30_rotura: {
                 title: "La Segunda Rotura (El Giro)",
@@ -659,7 +766,7 @@
                 ],
                 mode: "red",
                 ledger: "INTERRUPT",
-                entropy: "1.0000"
+                entropy: 1.0000
             },
             final: {
                 title: "EL ESPACIO ENTRE NOSOTROS",
@@ -670,13 +777,14 @@
                     { text: "¿SEGURO?", target: "cover" }
                 ],
                 mode: "normal",
-                entropy: "NULL"
+                entropy: 0.0000
             }
         };
 
         let currentInterval = null;
         let audioCtx = null;
         let humNode = null;
+        let filterNode = null;
         let audioEnabled = false;
 
         // --- SISTEMA DE AUDIO SINTÉTICO (WEB AUDIO API) ---
@@ -684,7 +792,6 @@
             if (audioCtx) return;
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             
-            // 1. Generador de Hum de servidor / zumbido de fondo (LFO + low oscillator)
             const osc = audioCtx.createOscillator();
             const lfo = audioCtx.createOscillator();
             const lfoGain = audioCtx.createGain();
@@ -692,15 +799,15 @@
             const lowpass = audioCtx.createBiquadFilter();
 
             osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(55, audioCtx.currentTime); // A1 note
+            osc.frequency.setValueAtTime(55, audioCtx.currentTime); 
 
-            lfo.frequency.setValueAtTime(0.3, audioCtx.currentTime); // LFO muy lento
-            lfoGain.gain.setValueAtTime(2, audioCtx.currentTime); // Amplitud de oscilación
+            lfo.frequency.setValueAtTime(0.3, audioCtx.currentTime); 
+            lfoGain.gain.setValueAtTime(2, audioCtx.currentTime); 
 
             lowpass.type = 'lowpass';
             lowpass.frequency.setValueAtTime(90, audioCtx.currentTime);
 
-            mainGain.gain.setValueAtTime(0.04, audioCtx.currentTime); // Volumen bajo no intrusivo
+            mainGain.gain.setValueAtTime(0.04, audioCtx.currentTime); 
 
             lfo.connect(lfoGain);
             lfoGain.connect(osc.frequency);
@@ -710,7 +817,9 @@
 
             osc.start();
             lfo.start();
-            humNode = mainGain; // Guardar nodo para apagar/encender
+            
+            humNode = mainGain; 
+            filterNode = lowpass;
         }
 
         function playClick() {
@@ -736,11 +845,28 @@
             osc.stop(audioCtx.currentTime + 0.04);
         }
 
+        function playHover() {
+            if (!audioCtx || !audioEnabled) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(520, audioCtx.currentTime);
+            
+            gain.gain.setValueAtTime(0.003, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.03);
+            
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.03);
+        }
+
         function playGlitchSound() {
             if (!audioCtx || !audioEnabled) return;
             const now = audioCtx.currentTime;
             
-            // Generar zumbido ruidoso y desordenado
             for (let i = 0; i < 5; i++) {
                 const timeShift = i * 0.05;
                 const osc = audioCtx.createOscillator();
@@ -792,8 +918,6 @@
             logEntry.className = "log-entry";
             logEntry.innerHTML = `<span class="log-time">[${time}]</span> <span class="log-action">[${tag}]</span> ${message}`;
             output.appendChild(logEntry);
-            
-            // Mantener scroll abajo
             output.scrollTop = output.scrollHeight;
         }
 
@@ -806,7 +930,6 @@
             function step() {
                 if (idx < htmlText.length) {
                     if (htmlText[idx] === '<') {
-                        // Saltarse el tag HTML de golpe para no romper estructura
                         const closeIdx = htmlText.indexOf('>', idx);
                         if (closeIdx !== -1) {
                             currentHtml += htmlText.substring(idx, closeIdx + 1);
@@ -815,7 +938,6 @@
                     } else {
                         currentHtml += htmlText[idx];
                         idx++;
-                        // Sonido de tipeo sutil
                         if (idx % 2 === 0) playClick();
                     }
                     element.innerHTML = currentHtml;
@@ -841,7 +963,7 @@
             writeLog("ACTION", "Typewriter skip forzado por usuario.");
         }
 
-        // --- RENDERIZADO DE ESTADOS ---
+        // --- RENDERIZADO DE ESTADOS Y TABLERO ---
         function renderStage(stageKey) {
             if (currentInterval) {
                 clearTimeout(currentInterval);
@@ -852,11 +974,46 @@
             const wrapper = document.getElementById('game-card-wrapper');
             const card = document.getElementById('game-card');
             
-            // Escribir telemetría de eventos
             writeLog("TRANSITION", `Entrando en estado: ${stageKey.toUpperCase()}`);
             writeLog("METRICS", `Ledger: ${stage.ledger} | Entropy: ${stage.entropy}`);
 
-            // Aplicar efectos a orbes de color
+            // Actualizar tablero de telemetría
+            const entropyPct = stage.entropy * 100;
+            const exergyPct = (1 - stage.entropy) * 100;
+            
+            document.getElementById('entropy-bar').style.width = `${entropyPct}%`;
+            document.getElementById('exergy-bar').style.width = `${exergyPct}%`;
+            document.getElementById('entropy-val-text').innerText = stage.entropy.toFixed(4);
+            document.getElementById('exergy-val-text').innerText = `${exergyPct.toFixed(1)}%`;
+            
+            // Core Temperature calculada dinámicamente
+            const baseTemp = 37.0;
+            const currentTemp = baseTemp + (stage.entropy * 58);
+            const tempValText = document.getElementById('temp-val-text');
+            tempValText.innerText = `${currentTemp.toFixed(1)}°C`;
+            
+            const systemIndicator = document.getElementById('system-status-indicator');
+            
+            if (currentTemp > 85.0) {
+                tempValText.style.color = "var(--accent-red)";
+                systemIndicator.innerText = "CRITICAL";
+                systemIndicator.style.color = "var(--accent-red)";
+            } else if (currentTemp > 50.0) {
+                tempValText.style.color = "#FFCC00";
+                systemIndicator.innerText = "WARNING";
+                systemIndicator.style.color = "#FFCC00";
+            } else {
+                tempValText.style.color = "var(--text-light)";
+                systemIndicator.innerText = "ONLINE";
+                systemIndicator.style.color = "#00FF66";
+            }
+
+            // Modulación de frecuencia de audio en base a entropía
+            if (audioCtx && audioEnabled && filterNode) {
+                const filterFreq = 90 + (stage.entropy * 180);
+                filterNode.frequency.setValueAtTime(filterFreq, audioCtx.currentTime);
+            }
+
             wrapper.className = "card-wrapper " + (stage.mode === 'blue' ? 'blue-mode' : stage.mode === 'red' ? 'red-mode' : '');
             
             const orbBlue = document.getElementById('orb-blue');
@@ -866,7 +1023,6 @@
                 orbRed.style.opacity = 0.35;
                 orbBlue.style.opacity = 0.03;
                 playGlitchSound();
-                // Efecto de parpadeo temporal en modo rojo
                 card.classList.add('card-glitch-active');
                 setTimeout(() => card.classList.remove('card-glitch-active'), 500);
             } else if (stage.mode === 'blue') {
@@ -877,7 +1033,6 @@
                 orbRed.style.opacity = 0.15;
             }
 
-            // Crear layout interno
             let imageHtml = "";
             if (stage.image) {
                 imageHtml = `
@@ -910,13 +1065,12 @@
             stage.choices.forEach(choice => {
                 const dangerClass = choice.danger ? 'danger' : '';
                 choicesHtml += `
-                    <button class="btn-choice ${dangerClass}" onclick="renderStage('${choice.target}')">
+                    <button class="btn-choice ${dangerClass}" onmouseenter="playHover()" onclick="renderStage('${choice.target}')">
                         ${choice.text}
                     </button>
                 `;
             });
 
-            // Fade out
             card.style.opacity = 0;
             
             setTimeout(() => {
@@ -931,10 +1085,8 @@
                     </div>
                 `;
                 
-                // Fade in
                 card.style.opacity = 1;
 
-                // Transición suave de carga de imagen
                 const img = document.getElementById('scene-img');
                 if (img) {
                     img.onload = () => img.classList.add('loaded');
@@ -948,7 +1100,6 @@
                     card.querySelector('.choices-area').style.opacity = 1;
                     card.querySelector('.skip-btn').style.display = 'none';
                 } else {
-                    // Tipeo secuencial
                     typeWriter(contentArea, stage.text.replace(/\n/g, '<br/>'), 12, () => {
                         card.querySelector('.choices-area').style.opacity = 1;
                         card.querySelector('.skip-btn').style.display = 'none';
@@ -960,8 +1111,8 @@
 
         // Carga Inicial
         window.addEventListener('DOMContentLoaded', () => {
-            writeLog("SYSTEM", "AGENTS.ARCHI Lector Interactivo v3.0.0 montado.");
-            writeLog("LEDGER", " Ledger de telemetría de red montado (c5-real).");
+            writeLog("SYSTEM", "AGENTS.ARCHI Lector Interactivo v4.0.0 montado.");
+            writeLog("LEDGER", "Ledger de telemetría de red montado (c5-real).");
             renderStage('cover');
         });
     </script>
