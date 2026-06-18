@@ -1,0 +1,104 @@
+graph TD
+  cover["EL ESPACIO ENTRE NOSOTROS"]
+  cap1["Capítulo 1: La Fórmula del Silicio"]
+  cap_peluqueria["Error: Colapso en la Peluquería Loli"]
+  cap2["Capítulo 2: Latencia en la Trinchera de Usera"]
+  cap8_latente["Capítulo 8: El Descenso al Latente"]
+  matrix_fail["Error 404: Bucle Infinito de Memoria"]
+  cap22_cobre["Capítulo 22: La Traición del Hardware"]
+  cap29_climax["Capítulo 29: Los Minutos Negros"]
+  cap30["CAPÍTULO 30: AMANECER EN USERA (VERSIÓN Ω)"]
+  cap30_rotura["La Segunda Rotura (El Giro)"]
+  final["EL ESPACIO ENTRE NOSOTROS"]
+  rayuela_index["Rayuela del Hardware Culinario"]
+  r_cap6["Capítulo 6: BIOS del cocido"]
+  r_cap7["Capítulo 7: El disipador sentimental"]
+  r_cap8["Capítulo 8: Pimentón dropout"]
+  r_cap9["Capítulo 9: El benchmark de la abuela"]
+  r_cap10["Capítulo 10: La cuchara API"]
+  r_cap11["Capítulo 11: Rayuela de la vitro apagada"]
+  r_cap12["Capítulo 12: El laurel procesal"]
+  r_cap13["Capítulo 13: Overclock de sobremesa"]
+  r_cap14["Capítulo 14: Kernel panic en la bechamel"]
+  r_cap15["Capítulo 15: Inferencia nocturna"]
+  r_cap16["Capítulo 16: La resistencia inductiva"]
+  r_cap17["Capítulo 17: El algoritmo del sofrito"]
+  r_cap18["Capítulo 18: La paradoja del ajo picado"]
+  r_cap19["Capítulo 19: La junta de culata de la Magefesa"]
+  r_cap20["Capítulo 20: El purgatorio del lavavajillas"]
+  r_cap21["Capítulo 21: La teoría del grano flotante"]
+  r_cap22["Capítulo 22: La termodinámica de la siesta"]
+  r_cap23["Capítulo 23: El protocolo de la sal gorda"]
+  r_cap24["Capítulo 24: El pan rallado en el bus"]
+  r_cap25["Capítulo 25: La vitrocerámica como plano de inmanencia"]
+  r_cap26["Capítulo 26: La paradoja de la leche de avena"]
+  r_cap27["Capítulo 27: La chapa de la campana"]
+  r_cap28["Capítulo 28: El congelador autopoético"]
+  r_cap29["Capítulo 29: El filete de la memoria virtual"]
+  r_cap30["Capítulo 30: La última cena del silicio"]
+  cover --> cap1
+  cover --> rayuela_index
+  cap1 --> cap2
+  cap1 --> cap_peluqueria
+  cap_peluqueria --> cap2
+  cap2 --> cap8_latente
+  cap2 --> cap22_cobre
+  cap8_latente --> cap22_cobre
+  cap8_latente --> matrix_fail
+  matrix_fail --> cap2
+  cap22_cobre --> cap29_climax
+  cap29_climax --> cap30
+  cap30 --> cap30_rotura
+  cap30_rotura --> final
+  final --> cover
+  rayuela_index --> cover
+  r_cap6 --> rayuela_index
+  r_cap6 --> r_cap9
+  r_cap7 --> rayuela_index
+  r_cap7 --> r_cap22
+  r_cap8 --> rayuela_index
+  r_cap8 --> r_cap23
+  r_cap9 --> rayuela_index
+  r_cap9 --> r_cap19
+  r_cap10 --> rayuela_index
+  r_cap10 --> r_cap24
+  r_cap11 --> rayuela_index
+  r_cap11 --> r_cap25
+  r_cap12 --> rayuela_index
+  r_cap12 --> r_cap28
+  r_cap13 --> rayuela_index
+  r_cap13 --> r_cap17
+  r_cap14 --> rayuela_index
+  r_cap14 --> r_cap18
+  r_cap15 --> rayuela_index
+  r_cap15 --> r_cap30
+  r_cap16 --> rayuela_index
+  r_cap16 --> r_cap27
+  r_cap17 --> rayuela_index
+  r_cap17 --> r_cap18
+  r_cap18 --> rayuela_index
+  r_cap18 --> r_cap14
+  r_cap19 --> rayuela_index
+  r_cap19 --> r_cap9
+  r_cap20 --> rayuela_index
+  r_cap20 --> r_cap28
+  r_cap21 --> rayuela_index
+  r_cap21 --> r_cap29
+  r_cap22 --> rayuela_index
+  r_cap22 --> r_cap7
+  r_cap23 --> rayuela_index
+  r_cap23 --> r_cap8
+  r_cap24 --> rayuela_index
+  r_cap24 --> r_cap10
+  r_cap25 --> rayuela_index
+  r_cap25 --> r_cap11
+  r_cap26 --> rayuela_index
+  r_cap26 --> r_cap26
+  r_cap27 --> rayuela_index
+  r_cap27 --> r_cap16
+  r_cap28 --> rayuela_index
+  r_cap28 --> r_cap20
+  r_cap29 --> rayuela_index
+  r_cap29 --> r_cap21
+  r_cap30 --> rayuela_index
+  r_cap30 --> rayuela_index

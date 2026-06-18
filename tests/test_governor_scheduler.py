@@ -26,17 +26,28 @@ async def test_memory_governor_routing():
 @pytest.mark.asyncio
 async def test_exergy_scheduler_priority():
     bus = EventBus(server_url="nats://localhost:4222")
-    
     execution_order = []
-    
     async def high_priority_task(event, msg):
         execution_order.append("high")
-        
     async def low_priority_task(event, msg):
         execution_order.append("low")
-
-    await bus.task_queue.put((-1, 1, low_priority_task, None, None))
-    await bus.task_queue.put((-10000, 2, high_priority_task, None, None))
+    low_event = CortexEvent(hash="1", prevHash="0", timestamp=100.0, payload={
+        "expected_value": 1.0, 
+        "novelty": 1.0, 
+        "urgency": 1.0, 
+        "content": "slop" * 1000
+    })
+    high_event = CortexEvent(hash="2", prevHash="0", timestamp=100.0, payload={
+        "expected_value": 1000.0, 
+        "novelty": 1.0, 
+        "urgency": 1.0, 
+        "content": "tiny"
+    })
+    score_low = bus.exergy_meter.get_priority_score(low_event, 0)
+    score_high = bus.exergy_meter.get_priority_score(high_event, 0)
+    assert score_high < score_low
+    await bus.task_queue.put((score_low, 1, low_priority_task, None, None))
+    await bus.task_queue.put((score_high, 2, high_priority_task, None, None))
     while not bus.task_queue.empty():
         item = await bus.task_queue.get()
         await item[2](None, None)

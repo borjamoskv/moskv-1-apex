@@ -4,6 +4,7 @@ import hashlib
 import asyncio
 from typing import Callable, Any, Dict, Optional, Awaitable, List
 from dataclasses import dataclass, asdict, field
+from moskv_1.exergy import ExergyMeter
 
 @dataclass
 class CortexEvent:
@@ -80,6 +81,7 @@ class EventBus:
         self._scheduler_task = None
         self._ledger_hashes = set()
         self._ledger_hashes.add("GENESIS")
+        self.exergy_meter = ExergyMeter()
 
     async def _exergy_scheduler_worker(self):
         while True:
@@ -145,14 +147,7 @@ class EventBus:
             return event
 
     async def _dispatch(self, topic: str, event: CortexEvent):
-        payload = event.payload
-        urgency = float(payload.get("urgency", 1.0))
-        novelty = float(payload.get("novelty", 1.0))
-        expected_value = float(payload.get("expected_value", 1.0))
-        entropy = float(payload.get("entropy", 1.0))
-        
-        score = urgency * novelty * expected_value * entropy
-        priority_score = -score
+        priority_score = self.exergy_meter.get_priority_score(event, time.time())
 
         for sub_topic, callbacks in self._subscriptions.items():
             if _topic_matches(sub_topic, topic):
