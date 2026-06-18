@@ -5,6 +5,10 @@ const cors = require('cors');
 const fs = require('fs');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || 'sk_test_mock_c5_real');
 const { mutateInfra } = require('../kernel/edge/claw.js');
+const { proposeMutation } = require('../kernel/evolution/mutator.js');
+const { createPR } = require('../kernel/evolution/pr.js');
+const { runTests } = require('../kernel/evolution/test_gate.js');
+const { selectMutation } = require('../kernel/evolution/selector.js');
 
 const app = express();
 app.use(cors());
@@ -38,6 +42,20 @@ app.post('/stripe-webhook', express.raw({ type: 'application/json' }), (req, res
         
         try {
             mutateInfra({ amount_total: session.amount_total });
+            
+            setImmediate(() => {
+                const payload = { amount: session.amount_total };
+                const branch = proposeMutation(payload);
+                createPR(branch, "autonomous revenue-driven mutation");
+                const ok = runTests();
+                if (!ok) {
+                    console.log("[EVOLUTION] mutation failed tests");
+                    return;
+                }
+                const before = { revenue: 0, latency: 100 };
+                const after = { revenue: payload.amount, latency: 80 };
+                selectMutation(before, after, branch);
+            });
         } catch (e) {
             console.error(`[CORTEX-EDGE-ERR] Claw mutation dispatch failed: ${e.message}`);
         }
