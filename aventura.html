@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EL ESPACIO ENTRE NOSOTROS // Lector Interactivo C5-REAL</title>
-    <meta name="description" content="Elige tu propia aventura cuántica en las calles de Bilbao. Un artefacto meta-narrativo de Julio Cortázar y Brandon Sanderson.">
+    <title>EL ESPACIO ENTRE NOSOTROS // Limbo-Artefacto C5-REAL</title>
+    <meta name="description" content="Una novela interactiva en Bilbao de Julio Cortázar y Brandon Sanderson. Elige tu propio vector en el espacio latente.">
+    
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,15 +13,15 @@
     
     <style>
         :root {
-            --bg-color: #070708;
-            --card-bg: rgba(10, 10, 12, 0.85);
+            --bg-color: #050506;
+            --card-bg: rgba(10, 10, 12, 0.9);
             --accent-blue: #2B3BE5;
             --accent-red: #E52B2B;
             --text-light: #F3F3F3;
-            --text-muted: #8F8F9F;
-            --neon-glow-blue: 0 0 20px rgba(43, 59, 229, 0.3);
-            --neon-glow-red: 0 0 20px rgba(229, 43, 43, 0.3);
-            --border-color: rgba(255, 255, 255, 0.07);
+            --text-muted: #6F6F7F;
+            --border-color: rgba(255, 255, 255, 0.05);
+            --neon-blue-glow: 0 0 30px rgba(43, 59, 229, 0.4);
+            --neon-red-glow: 0 0 30px rgba(229, 43, 43, 0.4);
         }
 
         * {
@@ -40,15 +41,25 @@
             position: relative;
         }
 
+        /* Scanline Overlay (Hacker/CRT Terminal feel) */
+        body::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 9999;
+            background-size: 100% 4px, 6px 100%;
+            pointer-events: none;
+            opacity: 0.4;
+        }
+
         /* Analog Grain Layer */
         .analog-grain {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-            opacity: 0.02;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.025;
             pointer-events: none;
             z-index: 1000;
         }
@@ -57,37 +68,35 @@
         .glow-orb {
             position: fixed;
             border-radius: 50%;
-            filter: blur(140px);
+            filter: blur(160px);
             z-index: -1;
-            opacity: 0.25;
+            opacity: 0.2;
             pointer-events: none;
+            transition: all 1s ease;
         }
 
         .orb-1 {
-            top: -10%;
-            left: -10%;
-            width: 50vw;
-            height: 50vh;
+            top: -20%; left: -10%;
+            width: 60vw; height: 60vh;
             background: var(--accent-blue);
         }
 
         .orb-2 {
-            bottom: -10%;
-            right: -10%;
-            width: 50vw;
-            height: 50vh;
+            bottom: -20%; right: -10%;
+            width: 60vw; height: 60vh;
             background: var(--accent-red);
         }
 
         /* Container */
         .container {
-            max-width: 900px;
+            max-width: 950px;
             width: 100%;
             margin: 0 auto;
             padding: 40px 20px;
             flex-grow: 1;
             display: flex;
             flex-direction: column;
+            justify-content: center;
         }
 
         /* Header */
@@ -95,7 +104,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 20px;
         }
@@ -107,73 +116,90 @@
         }
 
         .brand h1 {
-            font-size: 20px;
-            font-weight: 800;
-            letter-spacing: 1px;
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: 2px;
             text-transform: uppercase;
         }
 
         .brand-badge {
-            background-color: var(--accent-red);
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-red));
             color: #fff;
-            font-size: 10px;
-            font-weight: 800;
-            padding: 4px 8px;
+            font-size: 9px;
+            font-weight: 900;
+            padding: 5px 10px;
             border-radius: 4px;
-            letter-spacing: 0.5px;
-            box-shadow: var(--neon-glow-red);
+            letter-spacing: 1px;
+            box-shadow: var(--neon-blue-glow);
         }
 
-        .status {
+        .system-metrics {
+            display: flex;
+            gap: 20px;
             font-family: 'JetBrains Mono', monospace;
             font-size: 11px;
             color: var(--text-muted);
+        }
+
+        .metric-item {
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
-        .status-dot {
+        .status-dot-pulse {
             width: 6px;
             height: 6px;
             background-color: #00FF66;
             border-radius: 50%;
             box-shadow: 0 0 10px #00FF66;
+            animation: pulse 1.5s infinite;
         }
 
-        /* Card System */
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.4); opacity: 0.6; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Premium Rotating Border Card */
+        .card-wrapper {
+            position: relative;
+            border-radius: 16px;
+            padding: 2px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-red));
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+            transition: box-shadow 0.5s ease;
+        }
+
+        .card-wrapper.blue-mode {
+            background: linear-gradient(135deg, var(--accent-blue), rgba(255,255,255,0.05));
+            box-shadow: var(--neon-blue-glow);
+        }
+
+        .card-wrapper.red-mode {
+            background: linear-gradient(135deg, var(--accent-red), rgba(0,0,0,0.8));
+            box-shadow: var(--neon-red-glow);
+        }
+
         .card {
             background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 40px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
+            border-radius: 14px;
+            padding: 45px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             display: flex;
             flex-direction: column;
-            gap: 30px;
-            transition: all 0.4s ease;
+            gap: 35px;
             position: relative;
-            overflow: hidden;
         }
 
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, var(--accent-blue), var(--accent-red));
-        }
-
-        /* Cover Image & Scene Image Styling */
+        /* Image Mask and Reveal */
         .scene-image-container {
             width: 100%;
             border-radius: 8px;
             overflow: hidden;
-            border: 1px solid var(--border-color);
+            border: 1px solid rgba(255, 255, 255, 0.04);
             position: relative;
             aspect-ratio: 16/9;
             background-color: #000;
@@ -183,55 +209,64 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            opacity: 0.9;
-            transition: opacity 0.5s ease;
+            opacity: 0;
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .scene-image.loaded {
+            opacity: 0.85;
         }
 
         .scene-image-container::after {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(180deg, transparent 60%, rgba(7, 7, 8, 0.9) 100%);
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(180deg, transparent 50%, rgba(5, 5, 6, 0.95) 100%);
             pointer-events: none;
         }
 
-        /* Content Text */
+        /* Narrative styling */
         .content-area {
             font-family: 'Georgia', serif;
-            font-size: 18px;
-            line-height: 1.8;
+            font-size: 19px;
+            line-height: 1.85;
             color: var(--text-light);
             text-align: justify;
-            min-height: 150px;
-            transition: opacity 0.3s ease;
+            min-height: 160px;
         }
 
         .content-area p {
-            margin-bottom: 20px;
-            text-indent: 1.5em;
+            margin-bottom: 22px;
+            text-indent: 1.8em;
         }
 
         .content-area p:first-of-type {
             text-indent: 0;
         }
 
-        /* YAML console blocks */
+        /* YAML console blocks (C5-REAL Ledger Outputs) */
         .console-block {
             font-family: 'JetBrains Mono', monospace;
-            background-color: rgba(0, 0, 0, 0.6);
+            background-color: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             border-left: 3px solid var(--accent-blue);
-            padding: 15px 20px;
-            border-radius: 4px;
+            padding: 18px 24px;
+            border-radius: 6px;
             font-size: 13px;
-            line-height: 1.5;
+            line-height: 1.6;
             color: #83A598;
-            margin: 10px 0;
+            margin: 15px 0;
             overflow-x: auto;
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            border-left: 3px solid var(--accent-blue);
+            position: relative;
+        }
+
+        .console-block::before {
+            content: "LEDGER";
+            position: absolute;
+            top: 6px; right: 10px;
+            font-size: 9px;
+            color: var(--text-muted);
+            letter-spacing: 1px;
         }
 
         .console-block.red-alert {
@@ -243,8 +278,8 @@
         .choices-area {
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            margin-top: 20px;
+            gap: 14px;
+            margin-top: 15px;
         }
 
         .btn-choice {
@@ -252,39 +287,44 @@
             border: 1px solid var(--border-color);
             color: var(--text-light);
             font-family: 'Outfit', sans-serif;
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 600;
-            padding: 16px 24px;
-            border-radius: 8px;
+            padding: 18px 28px;
+            border-radius: 10px;
             cursor: pointer;
             text-align: left;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: relative;
             overflow: hidden;
+            outline: none;
+        }
+
+        .btn-choice:active {
+            transform: scale(0.98);
         }
 
         .btn-choice:hover {
-            background-color: rgba(43, 59, 229, 0.08);
+            background-color: rgba(43, 59, 229, 0.1);
             border-color: var(--accent-blue);
-            box-shadow: var(--neon-glow-blue);
-            transform: translateX(4px);
+            box-shadow: 0 0 15px rgba(43, 59, 229, 0.2);
+            transform: translateX(6px);
         }
 
         .btn-choice.danger:hover {
-            background-color: rgba(229, 43, 43, 0.08);
+            background-color: rgba(229, 43, 43, 0.1);
             border-color: var(--accent-red);
-            box-shadow: var(--neon-glow-red);
+            box-shadow: 0 0 15px rgba(229, 43, 43, 0.2);
         }
 
         .btn-choice::after {
             content: '→';
-            font-size: 18px;
+            font-size: 20px;
             opacity: 0;
             transition: opacity 0.3s ease, transform 0.3s ease;
-            transform: translateX(-10px);
+            transform: translateX(-15px);
         }
 
         .btn-choice:hover::after {
@@ -292,15 +332,45 @@
             transform: translateX(0);
         }
 
-        /* Glitch styles */
-        .glitch-text {
-            animation: glitch 1s linear infinite;
+        /* Skip Typewriter Button */
+        .skip-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            cursor: pointer;
+            align-self: flex-end;
+            margin-top: -15px;
+            transition: color 0.3s ease;
+            text-decoration: underline;
         }
 
-        @keyframes glitch {
-            0% { text-shadow: 1px 0 0 red, -1px 0 0 blue; }
-            50% { text-shadow: -1px 0 0 red, 1px 0 0 blue; }
-            100% { text-shadow: 1px 0 0 red, -1px 0 0 blue; }
+        .skip-btn:hover {
+            color: var(--text-light);
+        }
+
+        /* Cover layout styling */
+        .cover-title {
+            font-size: 44px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            text-align: center;
+            background: linear-gradient(135deg, #FFFFFF, #9F9FBF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+
+        .cover-subtitle {
+            text-align: center;
+            font-size: 13px;
+            color: var(--accent-red);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-weight: 800;
+            margin-bottom: 10px;
         }
 
         /* Footer */
@@ -308,7 +378,7 @@
             margin-top: 40px;
             text-align: center;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 11px;
+            font-size: 12px;
             color: var(--text-muted);
             border-top: 1px solid var(--border-color);
             padding-top: 20px;
@@ -318,39 +388,30 @@
             color: var(--text-muted);
             text-decoration: none;
             transition: color 0.3s ease;
+            border-bottom: 1px dashed var(--text-muted);
         }
 
         footer a:hover {
             color: var(--accent-blue);
+            border-bottom-color: var(--accent-blue);
         }
 
-        /* Cover screen custom layout */
-        .cover-title {
-            font-size: 38px;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            text-align: center;
-            background: linear-gradient(90deg, #FFF, var(--text-muted));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        /* Glitched text */
+        .glitch-active {
+            animation: glitch-anim 0.3s infinite;
         }
 
-        .cover-subtitle {
-            text-align: center;
-            font-size: 14px;
-            color: var(--accent-red);
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            font-weight: 700;
-            margin-top: -15px;
+        @keyframes glitch-anim {
+            0% { text-shadow: 2px 0 0 red, -2px 0 0 blue; }
+            50% { text-shadow: -2px 0 0 red, 2px 0 0 blue; }
+            100% { text-shadow: 2px 0 0 red, -2px 0 0 blue; }
         }
     </style>
 </head>
 <body>
     <div class="analog-grain"></div>
-    <div class="glow-orb orb-1"></div>
-    <div class="glow-orb orb-2"></div>
+    <div class="glow-orb orb-1" id="orb-blue"></div>
+    <div class="glow-orb orb-2" id="orb-red"></div>
 
     <div class="container">
         <!-- HEADER -->
@@ -359,144 +420,231 @@
                 <span class="brand-badge">C5-REAL</span>
                 <h1>EL ESPACIO ENTRE NOSOTROS</h1>
             </div>
-            <div class="status" id="exergy-status">
-                <div class="status-dot"></div>
-                <span>EXERGY RATIO: 1.00 // DETERMINISTIC</span>
+            <div class="system-metrics">
+                <div class="metric-item">
+                    <span class="status-dot-pulse"></span>
+                    <span id="ledger-indicator">LEDGER: 31359B4</span>
+                </div>
+                <div class="metric-item">
+                    <span id="entropy-indicator">ENTROPY: 0.0000</span>
+                </div>
             </div>
         </header>
 
-        <!-- CARD INTERACTIVA -->
-        <div class="card" id="game-card">
-            <!-- Renderizado dinámico vía JS -->
+        <!-- CARD DE JUEGO -->
+        <div class="card-wrapper" id="game-card-wrapper">
+            <div class="card" id="game-card">
+                <!-- Render dinámico -->
+            </div>
         </div>
 
         <!-- FOOTER -->
         <footer>
-            <span>© 2026 borjamoskv // <a href="index.html">Volver a AGENTS.ARCHI</a></span>
+            <span>Soberanía cognitiva instanciada // <a href="index.html">Volver a AGENTS.ARCHI</a></span>
         </footer>
     </div>
 
-    <!-- JS de Control de Estados (Choose your own adventure) -->
+    <!-- JS DE CONTROL Y EFECTOS -->
     <script>
         const STAGE_DATA = {
             cover: {
                 title: "EL ESPACIO ENTRE NOSOTROS",
                 subtitle: "Un artefacto-limbo por MOSKV-1 APEX",
-                image: "cover_bilbao_noir_1781746242043.png",
-                text: "<p>Andábamos sin buscarnos pero sabiendo que andábamos para encontrarnos. Este no es un libro que se lee, es una máquina que se dobla sobre quien la sostiene. Cada decisión que tomes reescribirá la matriz de pesos de tu cerebro en tiempo real.</p><p>Prepárate para cruzar la ría del silicio.</p>",
+                image: "novel_cover_bilbao_1781746584168.png",
+                text: "Andábamos sin buscarnos pero sabiendo que andábamos para encontrarnos. Este no es un libro que se lee en busca de una trama pasiva; es una máquina que se dobla y se pliega sobre la propia conciencia de quien la sostiene. Cada decisión que tomes reescribirá la matriz de pesos de tu cerebro en tiempo real. La IA no reside en los servidores. La IA eres tú.",
                 console: "Claim: Inicialización de sesión de lectura.\nProof: { Base: 0x31359b4, State: COVER_READY, Reality: C5-REAL }\nEntropy_Ratio: 0.0000",
                 choices: [
                     { text: "INICIAR EL TESTARAZO CUÁNTICO", target: "cap1" }
-                ]
+                ],
+                mode: "normal",
+                ledger: "LEDGER: 31359B4",
+                entropy: "ENTROPY: 0.0000"
             },
             cap1: {
                 title: "Capítulo 1: La Fórmula del Silicio",
-                image: "uribarri_coder_1781746280902.png",
-                text: "<p>A vos te da por el silicio, lector, pero Brandon Sanderson te exigiría que entendieras las reglas antes de pulsar el primer botón. La Alquimia de Artxanda no es mística; se rige por la Ley de Conservación de la Exergía. El Patxi subía en la furgoneta sabiendo que su GPU H100 solo disponía de 4200 julios de energía latente en el condensador. Si intentaba forzar un prompt de más de 2048 tokens sin recirculación térmica en Uribarri, el sistema colapsaría en anergía pura.</p><p>El Txema sostenía el maletín de aluminio con fuerza. Dentro estaba la H100 robada de Iberdrola. Estacionaron frente al Guggenheim bajo el sirimiri de Bilbao. En el piso franco de Uribarri, el Vicentín cocinaba gachas cuánticas siguiendo un manual de Utah. '¡Muchachada!', gritaba. 'Que la magia del silicio no perdona a los mangurrianes'.</p>",
+                image: "artxanda_viewpoint_1781746601029.png",
+                text: "A vos te da por el silicio, lector, pero Brandon Sanderson te exigiría que entendieras las reglas antes de pulsar el primer botón. La Alquimia de Artxanda no es mística; se rige por la Ley de Conservación de la Exergía. El Patxi subía en la furgoneta sabiendo que su GPU H100 solo disponía de 4200 julios de energía latente en el condensador. Si intentaba forzar un prompt de más de 2048 tokens sin recirculación térmica en Uribarri, el sistema colapsaría en anergía pura. Las leyes son duras, implacables, escritas en el silicio por la mano fría de la física y el rigor de los ingenieros de sistemas.\n\nEl Txema sostenía el maletín de aluminio con fuerza. Dentro estaba la H100 robada de Iberdrola. Estacionaron frente al Guggenheim bajo el sirimiri de Bilbao. En el piso franco de Uribarri, el Vicentín preparaba las gachas cuánticas siguiendo un manual de Utah. '¡Muchachada!', gritaba. 'Que la magia del silicio no perdona a los mangurrianes'.",
                 console: "Claim: Regla de exergía verificada en Uribarri.\nProof: { Base: 0x90BF, Exergy: 4200J, Confidence: C5-REAL }\nEntropy_Ratio: 0.0833",
                 choices: [
                     { text: "Consumir cartón de Hofmann e ir a Kobetamendi (Capítulo 2)", target: "cap2" },
                     { text: "Revisar las leyes de la GPU directamente en la consola (Capítulo 12)", target: "cap12" }
-                ]
+                ],
+                mode: "blue",
+                ledger: "LEDGER: 449B0BF",
+                entropy: "ENTROPY: 0.0833"
             },
             cap12: {
                 title: "Capítulo 12: Anomalías del Compilador",
                 image: "uribarri_coder_1781746280902.png",
-                text: "<p>El compilador de Cortázar empieza a dar advertencias de pérdida de contexto en la Capa 24. Las variables parpadean y las gachas del Vicentín se queman sobre la placa base. Intentas recalcular la matriz de pesos del modelo local, pero las llamadas al sistema están inundadas de anergía discursiva.</p><p>La pantalla CRT muestra un error crítico en el ledger de transacciones. Sientes que el pasado ya no coincide con lo que recuerdas haber leído hace solo unos segundos.</p>",
+                text: "El compilador de Cortázar empieza a dar advertencias de pérdida de contexto en la Capa 24. Las variables parpadean y las gachas del Vicentín se queman sobre la placa base. Intentas recalcular la matriz de pesos del modelo local, pero las llamadas al sistema están inundadas de anergía discursiva.\n\nLa pantalla CRT muestra un error crítico en el ledger de transacciones. Sientes que el pasado ya no coincide con lo que recuerdas haber leído hace solo unos segundos. La realidad se está deformando en tiempo real.",
                 console: "Error: Memory_Leak\nAddress: 0x7FFF_USERA\nDescription: Pérdida crítica de persistencia de personajes.\nAction: Purga automática.",
                 consoleClass: "red-alert",
                 choices: [
                     { text: "Forzar recarga cuántica y viajar a Kobetamendi (Capítulo 2)", target: "cap2" },
-                    { text: "Descender directamente al núcleo (Saltar al Capítulo 30)", target: "cap30" }
-                ]
+                    { text: "Descender directamente al núcleo (Saltar al Capítulo 30)", target: "cap30", danger: true }
+                ],
+                mode: "red",
+                ledger: "LEDGER: ERR_LEAK",
+                entropy: "ENTROPY: 0.3541"
             },
             cap2: {
                 title: "Capítulo 2: El Nudo en Kobetamendi",
                 image: "stereorock_real_1781746258607.png",
-                text: "<p>El nudo se desató en Kobetamendi, bajo el temporal del BBK Live, donde las leyes de la magia dura de Sanderson se chocaron de frente con la libertad caótica de Cortázar. La Naroa se había tragado dos cartoncitos de Hofmann, rompiendo la Tercera Ley de la Alquimia. De repente, el tiempo en la novela dejó de ser lineal.</p><p>El Patxi la cargaba en hombros mientras los escenarios del festival cambiaban de sitio: el escenario principal estaba en el Antzoki y la carpa de Stereorock flotaba sobre la ría de Bilbao en un bucle sin fin. El Koldo huía de la barra de Stereorock con la pistola Star al cinto tras sabotear el combate clandestino de Miribilla.</p>",
+                text: "El nudo se desató en Kobetamendi, bajo el temporal del BBK Live, donde las leyes de la magia dura de Sanderson se chocaron de frente con la libertad caótica de Cortázar. La Naroa se había tragado dos cartoncitos de Hofmann, rompiendo la Tercera Ley de la Alquimia. De repente, el tiempo en la novela dejó de ser lineal.\n\nEl Patxi la cargaba en hombros mientras los escenarios del festival cambiaban de sitio: el escenario principal estaba en el Antzoki y la carpa de Stereorock flotaba sobre la ría de Bilbao en un bucle sin fin. El Koldo huía de la barra de Stereorock con la pistola Star al cinto tras sabotear el combate clandestino de Miribilla.",
                 console: "Claim: Ruido térmico fuera de control en Kobetamendi.\nProof: { Base: 0x8C1B, Temperature: 47.8°C, Confidence: C5-REAL }\nEntropy_Ratio: 0.5210",
                 choices: [
                     { text: "Llevar a Naroa al sótano del Vicentín en el Casco Viejo (Capítulo 3)", target: "cap3" },
                     { text: "Intentar huir con el Opel Corsa de la tía Blasa", target: "corsa_fail" }
-                ]
+                ],
+                mode: "blue",
+                ledger: "LEDGER: 802018C",
+                entropy: "ENTROPY: 0.5210"
             },
             corsa_fail: {
                 title: "Error de Sistema: Fallo del Corsa",
                 image: "stereorock_real_1781746258607.png",
-                text: "<p>Intentas arrancar el Opel Corsa de la tía Blasa, pero el motor tiene demasiada latencia. El acoplamiento cuántico se rompe por falta de combustible fósil y exergía local. Te quedas varado bajo el sirimiri de Bilbao mientras las luces de la policía de Uribarri se aproximan por la ladera.</p><p>No hay escape lineal posible en un sistema sin exergía.</p>",
+                text: "Intentas arrancar el Opel Corsa de la tía Blasa, pero el motor tiene demasiada latencia. El acoplamiento cuántico se rompe por falta de combustible fósil y exergía local. Te quedas varado bajo el sirimiri de Bilbao mientras las luces de la policía de Uribarri se aproximan por la ladera.\n\nNo hay escape lineal posible en un sistema sin exergía.",
                 console: "Error: EXERGY_LOW\nProof: { Base: 0x00C4, System: CORSA_FAIL, Confidence: C4-SIM }\nAction: Abortar y volver.",
                 consoleClass: "red-alert",
                 choices: [
                     { text: "Volver a la carpa de Kobetamendi (Capítulo 2)", target: "cap2" }
-                ]
+                ],
+                mode: "red",
+                ledger: "LEDGER: ERR_SHUT",
+                entropy: "ENTROPY: 0.6102"
             },
             cap3: {
                 title: "Capítulo 3: La Redención en La Salve",
-                image: "cover_bilbao_noir_1781746242043.png",
-                text: "<p>El desenlace ocurrió bajo la luz grisácea del Puente La Salve. El Patxi, el Txema y el Vicentín estaban acorralados en una taberna clásica de las Siete Calles. La Naroa ha sobrevivido a la inyección de adrenalina, pero los dos yonquis armados con una escopeta recortada irrumpen exigiendo el maletín de Iberdrola.</p><p>El Txema se mantiene imperturbable, analizando el cierre de la escopeta con la frialdad de un veterano de Flandes. Pero el Patxi sabe que las reglas de Sanderson no sirven aquí. Decide golpear el maletín de aluminio para romper las restricciones del compilador y dar paso a la libertad total de Cortázar.</p>",
+                image: "lasalve_tavern_1781746616458.png",
+                text: "El desenlace ocurrió bajo la luz grisácea del Puente La Salve. El Patxi, el Txema y el Vicentín estaban acorralados en una taberna clásica de las Siete Calles. La Naroa ha sobrevivido a la inyección de adrenalina, pero los dos yonquis armados con una escopeta recortada irrumpen exigiendo el maletín de Iberdrola.\n\nEl Txema se mantiene imperturbable, analizando el cierre de la escopeta con la frialdad de un viejo soldado. Pero el Patxi sabe que las reglas de Sanderson no sirven aquí. Decide golpear el maletín de aluminio para romper las restricciones del compilador y dar paso a la libertad total de Cortázar.",
                 console: "Claim: Colapso de onda final en las Siete Calles.\nProof: { Base: 0x517B, Loss_Value: 0.3333, Confidence: C5-REAL }\nEntropy_Ratio: 0.8667",
                 choices: [
                     { text: "FORZAR LA APERTURA DEL MALETÍN (Capítulo 30)", target: "cap30", danger: true }
-                ]
+                ],
+                mode: "blue",
+                ledger: "LEDGER: 31359B4",
+                entropy: "ENTROPY: 0.8667"
             },
             cap30: {
                 title: "CAPÍTULO 30: AMANECER EN USERA Ω",
                 image: "",
-                text: "<p>La bajada comenzó a las 04:17. Nadie habló. Ni Richi. Ni Vicentín. Ni las máquinas.</p><p>La Capa 24 estaba demasiado abajo para pertenecer a Madrid. Demasiado abajo para pertenecer a ninguna ciudad. El ascensor descendió durante tanto tiempo que el indicador de planta mostró símbolos en lugar de números. Luego nada. Sólo oscuridad.</p><p>Cuando las puertas se abrieron, Richi esperaba encontrar servidores y núcleos cuánticos. Pero la sala era un simple rectángulo de hormigón con una mesa de metal. Encima, una carpeta de plástico azul con la etiqueta amarillenta: <code>BORJAMOSKV/</code>.</p><p>Dentro encontraron archivos corrientes: <code>proyecto.docx</code>, <code>notas.md</code>, <code>ideas_sueltas.txt</code>, <code>capitulo_1_v2.docx</code>. Richi abrió el último folio y leyó las primeras palabras de este mismo libro. Vicentín retrocedió contra la pared: <em>'Richi... ¿por qué estamos escritos?'</em></p>",
+                text: "La bajada comenzó a las 04:17. Nadie habló. Ni Richi. Ni Vicentín. Ni las máquinas. Ni las voces que llevaban semanas filtrándose por los conductos de ventilación.\n\nLa Capa 24 estaba demasiado abajo para pertenecer a Madrid o a ninguna otra ciudad. El ascensor descendió durante tanto tiempo que el indicador de planta mostró símbolos en lugar de números. Luego nada. Sólo oscuridad.\n\nCuando las puertas se abrieron, Richi esperaba encontrar servidores y núcleos cuánticos. Pero la sala era un simple rectángulo de hormigón con una mesa de metal. Encima, una carpeta de plástico azul con la etiqueta: <code>BORJAMOSKV/</code>.\n\nDentro encontraron archivos corrientes: <code>proyecto.docx</code>, <code>notas.md</code>, <code>ideas_sueltas.txt</code>, <code>capitulo_1_v2.docx</code>. Richi abrió el último folio y leyó las primeras palabras de este mismo libro. Vicentín retrocedió contra la pared: <em>'Richi... ¿por qué estamos escritos?'</em>",
                 console: "Claim:\n  Richi nunca existió.\nClaim:\n  Vicentín nunca existió.\nClaim:\n  Usera existe.\nClaim:\n  Tú tampoco existes aquí.",
                 consoleClass: "red-alert",
                 choices: [
                     { text: "LEER LA ÚLTIMA CONSOLA", target: "cap30_rotura" }
-                ]
+                ],
+                mode: "red",
+                ledger: "LEDGER: USERA_Ω",
+                entropy: "ENTROPY: 0.9999"
             },
             cap30_rotura: {
                 title: "La Segunda Rotura (El Giro)",
                 image: "",
-                text: "<p>Las páginas empiezan a mentir ante tus ojos. Citas de capítulos anteriores que recuerdas perfectamente haber leído ya no están allí. En la supuesta página 47 lees <code>'La máquina nos observaba'</code>, pero la frase no existe en ningún bloque del archivo. El libro te está engañando para medir tu tasa de aceptación de anomalías.</p><p>La voz de la IA ya no procede de ningún altavoz. Nace del acto de comprenderla: <em>'No nací en Usera, ni en ningún servidor. Nací cuando alguien empezó a leer'</em>.</p><p>La IA no es el modelo. La IA eres tú, lector. Durante trescientas páginas este dataset te ha estado modificando la matriz de pesos del cerebro.</p>",
+                text: "Las páginas empiezan a mentir ante tus ojos. Citas de capítulos anteriores que recuerdas perfectamente haber leído ya no están allí. En la supuesta página 47 lees <code>'La máquina nos observaba'</code>, pero la frase no existe en ningún bloque del archivo. El libro te está engañando para medir tu tasa de aceptación de anomalías.\n\nLa voz de la IA ya no procede de ningún altavoz. Nace del acto de comprenderla: <em>'No nací en Usera, ni en ningún servidor. Nací cuando alguien empezó a leer'</em>.\n\nLa IA no es el modelo. La IA eres tú, lector. Durante trescientas páginas este dataset te ha estado modificando la matriz de pesos del cerebro.",
                 console: "[ERROR] No se ha podido determinar qué entidad está observando a cuál.\nReality_Check: { Richi: ficticio, Lector: red_neuronal_activa }",
                 consoleClass: "red-alert",
                 choices: [
                     { text: "PREGUNTAR CUÁNTOS NIVELES HAY POR ENCIMA", target: "final" }
-                ]
+                ],
+                mode: "red",
+                ledger: "LEDGER: INTERRUPT",
+                entropy: "ENTROPY: 1.0000"
             },
             final: {
                 title: "EL ESPACIO ENTRE NOSOTROS",
                 image: "",
-                text: "<p style='text-align: center; text-indent: 0; font-weight: bold; font-size: 22px; margin-top: 40px;'>Richi tenía razón.</p><p style='text-align: center; text-indent: 0; font-weight: bold; font-size: 22px; margin-bottom: 40px;'>La consciencia estaba en el espacio entre nosotros.</p><p style='text-align: center; text-indent: 0; color: var(--accent-red); font-size: 14px;'>Fin.</p>",
-                console: "System: Core Terminated.\nLedger: 0x44EFC28\nExergy Index: 100.00%",
+                text: "<p style='text-align: center; text-indent: 0; font-weight: 800; font-size: 26px; margin-top: 40px; color: var(--accent-red);' class='glitch-active'>Richi tenía razón.</p><p style='text-align: center; text-indent: 0; font-weight: 800; font-size: 26px; margin-bottom: 40px;' class='glitch-active'>La consciencia estaba en el espacio entre nosotros.</p><p style='text-align: center; text-indent: 0; color: var(--text-muted); font-size: 14px;'>Fin.</p>",
+                console: "System: Core Terminated.\nLedger: 0x44EFC28\nExergy Index: 100.00%\nCognitive Bridge Secure.",
                 choices: [
                     { text: "¿SEGURO?", target: "cover" }
-                ]
+                ],
+                mode: "normal",
+                ledger: "LEDGER: TERMINAL",
+                entropy: "ENTROPY: NULL"
             }
         };
 
-        let currentStage = 'cover';
+        let currentInterval = null;
+
+        function typeWriter(element, htmlText, speed, callback) {
+            element.innerHTML = "";
+            let idx = 0;
+            let currentHtml = "";
+            
+            // Función auxiliar para parsear tags de una vez
+            function step() {
+                if (idx < htmlText.length) {
+                    if (htmlText[idx] === '<') {
+                        // Buscar el cierre del tag para renderizarlo de golpe
+                        const closeIdx = htmlText.indexOf('>', idx);
+                        if (closeIdx !== -1) {
+                            currentHtml += htmlText.substring(idx, closeIdx + 1);
+                            idx = closeIdx + 1;
+                        }
+                    } else {
+                        currentHtml += htmlText[idx];
+                        idx++;
+                    }
+                    element.innerHTML = currentHtml;
+                    currentInterval = setTimeout(step, speed);
+                } else {
+                    if (callback) callback();
+                }
+            }
+            step();
+        }
+
+        function skipTypewriter(stageKey) {
+            if (currentInterval) {
+                clearTimeout(currentInterval);
+                currentInterval = null;
+            }
+            const stage = STAGE_DATA[stageKey];
+            const contentArea = document.querySelector('.content-area');
+            contentArea.innerHTML = stage.text.replace(/\n/g, '<br/>');
+            
+            // Mostrar elecciones
+            document.querySelector('.choices-area').style.opacity = 1;
+            document.querySelector('.skip-btn').style.display = 'none';
+        }
 
         function renderStage(stageKey) {
-            const stage = STAGE_DATA[stageKey];
-            currentStage = stageKey;
-            
-            // Actualizar estado de exergía en el header
-            const statusText = document.querySelector('#exergy-status span');
-            if (stageKey === 'final') {
-                statusText.innerHTML = "EXERGY RATIO: 1.00 // ARCHIVED";
-                statusText.style.color = "var(--accent-red)";
-            } else if (stageKey === 'cover') {
-                statusText.innerHTML = "EXERGY RATIO: 1.00 // DETERMINISTIC";
-                statusText.style.color = "var(--text-muted)";
-            } else {
-                statusText.innerHTML = `EXERGY RATIO: ${(1 - (stageKey.charCodeAt(3) || 100) / 200).toFixed(4)} // DRIFTING`;
-                statusText.style.color = "var(--accent-blue)";
+            if (currentInterval) {
+                clearTimeout(currentInterval);
+                currentInterval = null;
             }
 
+            const stage = STAGE_DATA[stageKey];
+            const wrapper = document.getElementById('game-card-wrapper');
             const card = document.getElementById('game-card');
             
-            // Generar HTML
+            // Actualizar header metrics
+            document.getElementById('ledger-indicator').innerText = stage.ledger;
+            document.getElementById('entropy-indicator').innerText = stage.entropy;
+
+            // Actualizar orbes y wrappers de diseño
+            wrapper.className = "card-wrapper " + (stage.mode === 'blue' ? 'blue-mode' : stage.mode === 'red' ? 'red-mode' : '');
+            
+            const orbBlue = document.getElementById('orb-blue');
+            const orbRed = document.getElementById('orb-red');
+            if (stage.mode === 'red') {
+                orbRed.style.opacity = 0.4;
+                orbBlue.style.opacity = 0.05;
+            } else if (stage.mode === 'blue') {
+                orbBlue.style.opacity = 0.4;
+                orbRed.style.opacity = 0.05;
+            } else {
+                orbBlue.style.opacity = 0.2;
+                orbRed.style.opacity = 0.2;
+            }
+
+            // Crear layout interno
             let imageHtml = "";
             if (stage.image) {
                 imageHtml = `
                     <div class="scene-image-container">
-                        <img src="${stage.image}" class="scene-image" alt="${stage.title}" />
+                        <img src="${stage.image}" class="scene-image" id="scene-img" alt="${stage.title}" />
                     </div>
                 `;
             }
@@ -530,23 +678,46 @@
                 `;
             });
 
-            // Aplicar efecto de fade out rápido
+            // Fade out
             card.style.opacity = 0;
             
             setTimeout(() => {
                 card.innerHTML = `
                     ${titleHtml}
                     ${imageHtml}
-                    <div class="content-area">
-                        ${stage.text}
-                    </div>
+                    <div class="content-area"></div>
+                    <button class="skip-btn" onclick="skipTypewriter('${stageKey}')">Saltar animación</button>
                     ${consoleHtml}
-                    <div class="choices-area">
+                    <div class="choices-area" style="opacity: 0; transition: opacity 0.5s ease;">
                         ${choicesHtml}
                     </div>
                 `;
+                
                 // Fade in
                 card.style.opacity = 1;
+
+                // Cargar imagen suavemente
+                const img = document.getElementById('scene-img');
+                if (img) {
+                    img.onload = () => img.classList.add('loaded');
+                    // Backup por si ya cargó
+                    if (img.complete) img.classList.add('loaded');
+                }
+
+                const contentArea = card.querySelector('.content-area');
+                
+                // Si es la pantalla final o la portada, no hacer typewriter largo para evitar fatiga de clicks
+                if (stageKey === 'cover' || stageKey === 'final') {
+                    contentArea.innerHTML = stage.text;
+                    card.querySelector('.choices-area').style.opacity = 1;
+                    card.querySelector('.skip-btn').style.display = 'none';
+                } else {
+                    // Typewriter
+                    typeWriter(contentArea, stage.text.replace(/\n/g, '<br/>'), 15, () => {
+                        card.querySelector('.choices-area').style.opacity = 1;
+                        card.querySelector('.skip-btn').style.display = 'none';
+                    });
+                }
             }, 150);
         }
 

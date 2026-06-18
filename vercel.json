@@ -44,6 +44,18 @@
     {
       "src": "uribarri_coder_1781746280902.png",
       "use": "@vercel/static"
+    },
+    {
+      "src": "novel_cover_bilbao_1781746584168.png",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "artxanda_viewpoint_1781746601029.png",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "lasalve_tavern_1781746616458.png",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
