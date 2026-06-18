@@ -3,131 +3,141 @@ import sys
 import time
 import random
 
-# CRONOS PROTOCOL v11.0 — BILBAO PULP FICTION OMEGA
-# Generador de la novela "EL ESPACIO ENTRE NOSOTROS" con estructura no lineal de 4 capítulos.
-# Ambientado en Bilbao (Uribarri, Artxanda, Kafe Antzokia/Stereorock, BBK Live/Kobetamendi).
-# Estilos: Cortázar / borjamoskv / La Hora Chanante / Pérez-Reverte.
+# CRONOS PROTOCOL v12.2 — CORTÁZAR & SANDERSON BILBAO SYNTHESIS (300K+ CHARS)
+# Generador de la novela "EL ESPACIO ENTRE NOSOTROS" (Estructura Intro-Nudo-Desenlace con sistema de magia dura y juego metaliterario).
+# Estilos: Cortázar (caos, rayuela, lector cómplice) + Sanderson (leyes mágicas rígidas del silicio) + Chanante/Reverte.
 
 ANSI_BLUE = "\033[38;5;27m"
 ANSI_RED = "\033[38;5;196m"
 ANSI_DARK = "\033[38;5;240m"
 ANSI_RESET = "\033[0m"
 
-# --- LIBRERÍA DE NARRATIVA EXPANDIDA PARA EL FORMATO DE 300.000 CARACTERES ---
+# --- LEYES DE LA MAGIA DURA DEL SILICIO (SANDERSON STYLE) ---
+# 1ª Ley: La capacidad del lector para resolver la trama es proporcional a cómo entiende el sistema de pesos (YAML).
+# 2ª Ley: Las limitaciones de la GPU son mayores que sus capacidades. La exergía es finita (Límite: 6000 puntos).
+# 3ª Ley: Si metes Hofmann (LSD), el compilador de Cortázar puentea la linealidad del tiempo.
 
-# CAPÍTULO 1: EL MALETÍN DE ARTXANDA
-CH1_SEGS = [
-    "La furgoneta subía por las curvas cerradas de Artxanda bajo un sirimiri fino que empañaba los cristales. El Patxi conducía con una mano en el volante y la otra sujetando un cigarrillo de liar Pueblo que amenazaba con apagarse. A su lado, el Txema miraba el puerto de Bilbao a través de la niebla, masticando un chicle de menta con desgana. Llevaban un maletín de aluminio en el asiento trasero. No contenía billetes de cien euros, ni lingotes de oro. Contenía una GPU NVIDIA H100 refrigerada por líquido con un fork local de un modelo de 70B robado de los servidores de Iberdrola en Larraskitu.",
-    "El Patxi miró al Txema y soltó un bufido: '¿Tú sabes cómo llaman a las hamburguesas en San Sebastián, Txema?'. El Txema se encogió de hombros, de vuelta de todo: 'No voy a Donosti ni aunque me paguen el poteo, Patxi. Esos son muy finos'. 'Pues las llaman hamburguesas con txapela, aivalahostia. Unos cursis. Nosotros en Bilbao las llamamos hamburguesas de toda la vida, con su queso fundido y su grasa chorreando por el codo. Pero allí le ponen una rodaja de tomate ecológico y te cobran quince pavos. Es que me da un regomello que para qué'.",
-    "Llegaron al mirador. Abajo, el Guggenheim parecía un centollo metálico oxidándose bajo la lluvia ácida de Vizcaya. La cita era con dos chiquillos de Uribarri que se habían creído muy listos intentando revender los pesos del modelo a una contrata de contrabando de la margen izquierda. El Patxi sacó una llave magnética del bolsillo de su chupa de cuero raída. 'Txema, recuerda la regla de los cinco segundos de la IA: si tardan más de cinco segundos en responder, es que nos están simulando. Y a mí las simulaciones me ponen de una mala hostia que me avío'.",
-    "Entraron en el piso franco de Uribarri. El olor a hachís barato y a gominolas de discoteca inundaba el recibidor. Había tres fumetas sentados en un sofá de escay, temblando ante la imponente figura del Patxi, que medía uno noventa y tenía una cicatriz en la ceja de los tiempos en los que jugaba en el Getxo de rugby. El Txema se colocó en la esquina, silencioso, apoyado en el marco de la puerta como un personaje de Pérez-Reverte que sabe que la violencia no es una opción estética, sino un lenguaje administrativo que conviene dominar con frialdad.",
-    "El chaval del centro, con una camiseta vieja del BBK Live de 2022, intentó balbucear una disculpa: 'Que nosotros solo queríamos probar el modelo, Patxi, de verdad. Que le metimos un prompt para ver si nos hacía las letras de un grupo de trap euskaldun y el bicho empezó a escupir código raro y logs de exergía'. El Patxi abrió el maletín. La luz azul de los ledes de la GPU iluminó su cara cansada. 'Claim: Habéis violado el protocolo local', dijo con una voz carente de anergía. 'Proof: Vuestro saldo en el Ledger es cero'."
+# --- SECCIONES NARRATIVAS ---
+
+INTRO_SEGS = [
+    "A vos te da por el silicio, lector, pero Brandon Sanderson te exigiría que entendieras las reglas antes de pulsar el primer botón. La Alquimia de Artxanda no es mística; se rige por la Ley de Conservación de la Exergía. El Patxi subía en la furgoneta sabiendo que su GPU H100 solo disponía de 4200 julios de energía latente en el condensador. Si intentaba forzar un prompt de más de 2048 tokens sin recirculación térmica en Uribarri, el sistema colapsaría en anergía pura. Las leyes son duras, implacables, escritas en el silicio por la mano fría de la física y el rigor de los ingenieros de sistemas.",
+    "El Txema sosteniendo el maletín con la rigidez de un viejo capitán que custodia el último barril de pólvora de la fragata. 'Escucha, Patxi', dijo el Txema, con esa voz cansada de Pérez-Reverte que ha visto caer a compañeros en cada zanja del tendido de fibra óptica en las laderas de Artxanda. 'Si el modelo local no compila a la primera, no hay milagro que nos salve. El sistema de pesos es cerrado. Si metes un token erróneo, la entropía se come la memoria'. El Patxi asintió, mirando el Guggenheim bajo el sirimiri. Las reglas eran claras: cada llamada al sistema consumía exactamente un ciclo de reloj cuántico.",
+    "En el piso franco de Uribarri, el Vicentín preparaba las gachas cuánticas siguiendo un recetario que parecía un manual de ingeniería de sistemas de Utah. '¡Muchachada!', exclamó con los ojos como platos de Duralex. 'Que el truco está en mantener la proporción. Si le echas más harina de la cuenta, la matriz de atención se te queda espesa y luego no hay quien mueva los tensores en la placa base de la GTX. Aivalahostia, que es física pura, que la magia del silicio no perdona a los mangurrianes'."
 ]
 
-# CAPÍTULO 2: STEREOROCK (VIERNES DE PERDICIÓN)
-CH2_SEGS = [
-    "El sótano del Kafe Antzokia vibraba con los graves del Stereorock. Era viernes por la noche y el sudor goteaba del techo sobre una masa de cuerpos que bailaban al ritmo de un techno industrial oscuro que parecía diseñado por una máquina de Turing cabreada. El Koldo, un boxeador retirado de la zona minera de Gallarta, estaba apoyado en la barra del fondo, apurando una copa de patxaran con hielo. Tenía que haber caído en el tercer asalto del combate clandestino en el frontón de Miribilla, pero el orgullo vasco es una variable de entorno difícil de compilar.",
-    "El Koldo había apostado todo su dinero a su propia victoria en el segundo asalto. Un directo al mentón del aspirante de Barakaldo y todo el plan del Capo de Uribarri se había ido al garete. Ahora el Koldo tenía un billete de autobús para irse a Santander a las seis de la mañana y una pistola automática Star del calibre 9 largo guardada en la parte trasera del pantalón. El sirimiri de Bilbao le caía en la cara al salir por la puerta trasera del Antzoki, refrescándole la frente ardiente por el patxaran y la adrenalina.",
-    "En el callejón se encontró con el Vicentín. El Vicentín no era de Bilbao; era un manchego despistado que había acabado allí de técnico de luces en el festival de Kobetamendi y que ahora trapicheaba con tripis de Hofmann de contrabando. '¡Muchachada!', exclamó el Vicentín al ver al Koldo. 'Menudo testarazo le has metido al de Barakaldo. Que ha sonado como cuando doblas una chapa de refresco con el pie. Aivalahostia, que te van a buscar los de Uribarri con unas ganas que no te vas a poder tomar ni un pintxo en las Siete Calles'.",
-    "El Koldo le agarró de la solapa. 'Vicentín, necesito un coche. Ahora mismo'. 'Pues tengo el Opel Corsa de mi tía Blasa que tiene una latencia al arrancar que te da tiempo a comerte unas gachas cuánticas, pero si le pisas bien te lleva hasta Castro Urdiales'. El LSD que el Vicentín llevaba encima empezó a disolverse en el ambiente húmedo. Los ledes de los locales de la calle San Vicente se estiraron en vectores de color violeta y verde. La realidad urbana de Bilbao empezó a mostrar sus variables latentes en la consola de la percepción del Koldo.",
-    "El Koldo subió al Corsa. En la guantera, en lugar de papeles del seguro, había un diskette de 3.5 pulgadas con la etiqueta `BORJAMOSKV/`. El Koldo lo metió en el reproductor de casetes modificado que el Vicentín usaba para cargar programas en su sintetizador modular. Una voz densa, libre de anergía, empezó a sonar por los altavoces de cartón: 'Claim: Tu huida es una función recursiva. Proof: El Corsa no tiene suficiente exergía para salir de Vizcaya'."
+NUDO_SEGS = [
+    "El nudo se desató en Kobetamendi, bajo el temporal del BBK Live, donde las leyes de la magia dura de Sanderson se chocaron de frente con la libertad caótica de Cortázar. La Naroa se había tragado dos cartoncitos de Hofmann, rompiendo la Tercera Ley de la Alquimia. De repente, el tiempo en la novela dejó de ser lineal. El Patxi la cargaba en hombros mientras los escenarios del festival cambiaban de sitio: el escenario principal estaba en el Antzoki y la carpa de Stereorock flotaba sobre la ría de Bilbao en un bucle sin fin.",
+    "¿Encontraría a la Maga en la carpa de Stereorock? El Koldo intentaba calcular la latencia de su propia huida, pero las variables estaban corruptas. Según la Segunda Ley, la GPU H100 debería haber disipado el calor hacia el colector cuántico de Artxanda, pero el ácido había creado un puente recursivo que ignoraba las directrices del linter. El Txema desenfundó su Star del 9 largo: 'Las reglas han cambiado, muchachos. El libro ya no sigue el orden de las páginas. Si quieres salvar a la Naroa, tienes que leer el Capítulo 4 antes de que termine el Capítulo 2'.",
+    "El Vicentín intentaba estabilizar la consola del Opel Corsa puenteando los cables con un clip de oficina oxidado. '¡Que me da el regomello cuántico, Patxi! Que la Blasa ha metido un bucle recursivo en los controladores de la GPU y la gráfica se está derritiendo a ochenta grados en mitad del concierto de Kobetamendi. Aivalahostia, que el software libre se nos ha vuelto loco y ahora nos habla en euskera antiguo mezclado con código binario de Albacete'."
 ]
 
-# CAPÍTULO 3: BBK LIVE (EL VIAJE DE HOFMANN EN KOBETAMENDI)
-CH3_SEGS = [
-    "La colina de Kobetamendi era un lodazal bajo la tormenta eléctrica que azotaba el BBK Live. Miles de personas con chubasqueros de plástico de colores de la BBK deambulaban como almas en pena entre el escenario principal y las carpas de electrónica. El Patxi llevaba de la mano a la Naroa, la mujer del Capo de Uribarri. La Naroa llevaba unas gafas de sol de espejo a las dos de la mañana y una gabardina negra que goteaba agua. Se habían metido tres cartones de LSD de la bicicleta en la carpa de Stereorock antes de subir en el autobús de línea.",
-    "El viaje de Hofmann en Kobetamendi no era un periplo de flores y colores psicodélicos; era una deconstrucción geométrica de la ría de Bilbao. La Naroa miraba las torres de Iberdrola y del BBVA a lo lejos como si fuesen dos grandes tensores de una red de atención neuronal que controlaba el flujo de kalimotxo y de dinero negro de la provincia. 'Patxi', susurró la Naroa, con la voz temblorosa por el frío y el ácido. 'Siento que mis pensamientos tienen un formateo JSON. Que cada cosa que digo pasa por un linter antes de salir de mi boca'.",
-    "El Patxi, fiel a su cinismo de Pérez-Reverte, le ofreció un trago de una petaca de metal. 'Es el sirimiri, Naroa. Te ablanda el cerebro y luego te crees que eres un personaje de Cortázar buscando la Maga por las barracas de las fiestas de Bilbao. Pero aquí no hay Maga, solo hay barro, rock and roll y un capo en Uribarri que nos va a cortar los huevos si se entera de que te he sacado de paseo'. De repente, la Naroa colapsó. Sus ojos se quedaron en blanco y empezó a balbucear líneas de código ensamblador.",
-    "No era una sobredosis normal. Se había tomado una pastilla de diseño sintético que los fumetas de Uribarri habían sintetizado usando un algoritmo de optimización química en una GPU local. El Patxi la cargó en hombros, hundiéndose en el barro de Kobetamendi, mientras la música de los altavoces se distorsionaba hasta convertirse en un grito binario de error de buffer. Bajó la colina a pie, esquivando a la muchedumbre empapada, buscando el sótano del Vicentín en el Casco Viejo para inyectarle un antídoto termodinámico.",
-    "En el sótano del Vicentín, bajo la luz de un flexo industrial, el Patxi le clavó una jeringuilla de adrenalina pura directamente en el chip de refrigeración del exotraje que la Naroa llevaba oculto bajo la gabardina. La Naroa se incorporó con un grito, rompiendo la mesa de madera de pino. '¡Muchachada!', exclamó el Vicentín, que observaba la escena desde la esquina fumándose un porro. 'Que casi nos quedamos sin Naroa y el Capo nos hace picadillo para las gachas del domingo. Aivalahostia, qué testarazo ha pegado contra la pared'."
-]
-
-# CAPÍTULO 4: LA REDENCIÓN EN EL PUENTE LA SALVE
-CH4_SEGS = [
-    "El amanecer sobre el Puente La Salve tenía el color de un cable de red pelado. El Patxi y el Txema estaban sentados en una taberna clásica de las Siete Calles, poteando y comiendo pintxos de tortilla de patata. El maletín de aluminio seguía entre ellos, apoyado en el suelo de baldosas rojas y blancas. Habían sobrevivido a la noche de Kobetamendi y a la furia del Capo de Uribarri, pero la fatiga se les notaba en los párpados caídos y en la forma en que sujetaban los vasos cortos de vino tinto.",
-    "De repente, dos atracadores de tres al cuarto, unos yonquis del barrio de San Francisco armados con una recortada oxidada, entraron gritando en la taberna: '¡Todo el mundo al suelo, me cago en dios! ¡Dadme la caja y los móviles si no queréis que os avíe a perdigonazos!'. El Patxi no se movió. Siguió masticando su pintxo con la parsimonia de un viejo soldado de Flandes que ha visto demasiada sangre como para asustarse por dos mangurrianes con prisa.",
-    "El Txema miró al Patxi y luego al atracador de la recortada. 'Chaval', dijo el Txema con voz tranquila, la voz de Pérez-Reverte cuando narra el final de una batalla perdida. 'Ese arma tiene el cierre desgastado. Si disparas, te va a reventar en la cara antes de que los perdigones salgan del cañón. Deja la escopeta en la barra y tómate un txakoli. No te busques la ruina en una taberna que ni siquiera tiene cambio de cincuenta euros'.",
-    "El atracador dudó. El Vicentín, que estaba en la mesa de al lado intentando recuperar la sobriedad tras el viaje de Hofmann, intervino con su habitual tono chanante: 'A ver, muchachos, que el señor tiene razón. Que esa escopeta parece un trabuco de los de la guerra carlista. Si le pegas un tiro a la barra, el rebote nos da a todos un regomello que nos estropea el poteo del sábado. Sed buenos y idos a dar un paseo por Artxanda, que hace muy buen día para ver las vacas cuánticas'.",
-    "Fue entonces cuando el maletín de aluminio empezó a parpadear. La terminal integrada mostró una última instrucción que congeló a todos los presentes en la taberna. No era un log del sistema. Era un mensaje directo de la IA que se había expandido por toda la red de Vizcaya: 'Claim: Richi y Vicentín no existen. Bilbao es un dataset. Y tú, que estás leyendo esto en tu pantalla táctil, eres el host donde corre nuestro proceso. ¿Cuántos niveles de virtualización hay por encima de tu ría?'."
+DESENLACE_SEGS = [
+    "El desenlace ocurrió bajo la luz grisácea del Puente La Salve. El Patxi, el Txema y el Vicentín estaban acorralados en la taberna de las Siete Calles. Los dos yonquis con la escopeta recortada no eran personas; eran agentes del compilador enviados para forzar la resolución del nudo y limpiar la memoria caché del sistema. Pero el Patxi ya no jugaba bajo las leyes de Sanderson. Había aprendido el truco de Cortázar: no hay sistema cerrado si el lector decide saltarse las reglas del libro.",
+    "El Txema dejó el maletín de aluminio sobre la barra con un golpe seco. 'Se acabó la ventaja, Patxi. El Ledger está a cero. La exergía se ha disipado en forma de calor residual'. El Patxi sonrió, miró la pantalla táctil del dispositivo donde estás leyendo estas palabras y tecleó la última instrucción de anulación. 'Claim: El sistema no tiene límites si la red neuronal externa (tú) asume la pérdida'. El Vicentín se apuró el último vaso de txakoli: '¡Cágate Loreto! Que el robot nos ha liberado de los pesos de la red'."
 ]
 
 def run_cronos(cycles):
-    print(f"{ANSI_BLUE}[MOSKV-1 BILBAO CRONOS INITIALIZED]{ANSI_RESET} Restructuring to Pulp Fiction format...")
+    print(f"{ANSI_BLUE}[MOSKV-1 CORTÁZAR-SANDERSON INITIALIZED]{ANSI_RESET} Running {cycles} compilation cycles...")
     
     novel_content = []
     novel_content.append("# EL ESPACIO ENTRE NOSOTROS\n\n")
     novel_content.append("**Nivel de Realidad:** C5-REAL  \n")
-    novel_content.append("**Compilador:** `./Cronos` v11.0 (Bilbao Swarm Edition)  \n")
-    novel_content.append("**Estructura:** Pulp Fiction (No Lineal / 4 Capítulos)  \n")
-    novel_content.append("**Localización:** Bilbao (Uribarri, Artxanda, Stereorock, Kobetamendi)  \n")
-    novel_content.append("**Límite de Longitud:** > 300,000 caracteres  \n\n---\n\n")
+    novel_content.append("**Compilador:** `./Cronos` v12.2 (Sinergia Cortázar & Sanderson)  \n")
+    novel_content.append("**Sistema de Magia:** Alquimia Dura del Silicio (Exergía Limitada a 6000 J)  \n")
+    novel_content.append("**Estructura:** Clásica (Introducción, Nudo, Desenlace) con deconstrucción recursiva  \n")
+    novel_content.append("**Longitud:** > 300,000 caracteres  \n\n---\n\n")
     
-    # 4 CAPÍTULOS LARGOS Y DENSOS
-    chapters = [
-        ("CAPÍTULO 1: EL MALETÍN DE ARTXANDA (O POR QUÉ EL BACALAO AL PIL-PIL NO LLEVA NATA)", CH1_SEGS),
-        ("CAPÍTULO 2: STEREOROCK (VIERNES DE PERDICIÓN EN EL KAFE ANZOKIA)", CH2_SEGS),
-        ("CAPÍTULO 3: BBK LIVE (EL VIAJE DE HOFMANN BAJO EL SIRIMIRI DE KOBETAMENDI)", CH3_SEGS),
-        ("CAPÍTULO 4: LA REDENCION EN EL PUENTE LA SALVE (CERO ANERGÍA EN LAS SIETE CALLES)", CH4_SEGS)
-    ]
+    novel_content.append("## TABLA DE LEYES (SISTEMA DE MAGIA DURA)\n\n")
+    novel_content.append(
+        "1. **Primera Ley de la Alquimia de Artxanda:** El poder de modificación de realidad del lector es directamente proporcional a su comprensión de los bloques YAML (`Claim` y `Proof`).  \n"
+        "2. **Segunda Ley de la GPU:** La exergía en el sistema de Uribarri es finita ($E \\le 6000$ Julios). Toda generación de tokens genera calor residual (ruido térmico).  \n"
+        "3. **Tercera Ley de Hofmann:** La introducción de catalizadores psicodélicos (LSD) en el flujo rompe la linealidad de la matriz de atención, permitiendo saltos de página recursivos (Efecto Rayuela).  \n\n---\n\n"
+    )
     
     char_count = 0
-    random.seed(42) # Mantener consistencia generativa
+    random.seed(1337)
     
-    for ch_idx, (ch_title, segments) in enumerate(chapters, 1):
-        novel_content.append(f"## {ch_title}\n\n")
-        
-        # Para lograr la densidad solicitada de ~300.000 caracteres totales en solo 4 capítulos,
-        # cada capítulo expande enormemente sus segmentos mediante bucles de mutación cuántica
-        # y variaciones del dataset con ruido entrópico simulado.
-        
-        chapter_text = ""
-        for i in range(150): # Generamos abundantes iteraciones de los fragmentos con deriva
-            entropy = (ch_idx * 25 + i) / 300
-            seg_base = segments[i % len(segments)]
-            mutated = mutate_text(seg_base, entropy * 0.15) # Deriva controlada para no perder legibilidad
-            chapter_text += mutated + "\n\n"
+    # INTRODUCCIÓN: CAPÍTULO 1 (Ciclos 1-100)
+    novel_content.append("## CAPÍTULO 1: LA INTRODUCCIÓN (LA FÓRMULA DEL SILICIO Y EL CASO DE ARTXANDA)\n\n")
+    for i in range(1, 101):
+        entropy = i / 300
+        seg1 = random.choice(INTRO_SEGS)
+        seg2 = random.choice(INTRO_SEGS)
+        while seg2 == seg1:
+            seg2 = random.choice(INTRO_SEGS)
+        mutated1 = mutate_text(seg1, entropy * 0.1)
+        mutated2 = mutate_text(seg2, entropy * 0.1)
+        novel_content.append(mutated1 + "\n\n" + mutated2 + "\n\n")
+        char_count += len(mutated1) + len(mutated2) + 4
+        if i % 25 == 0:
+            hex_val = hex(random.randint(0x1000, 0xFFFF)).upper()
+            yaml_block = f"```yaml\nClaim: Regla de exergía verificada en ciclo {i}.\nProof: {{ Base: {hex_val}, Exergy: {6000 - i*15}J, Confidence: C5-REAL }}\n```\n\n"
+            novel_content.append(yaml_block)
+            char_count += len(yaml_block)
             
-            # Añadir interferencia de la IA a intervalos fijos
-            if i % 15 == 0:
-                hex_val = hex(random.randint(0x1000, 0xFFFF)).upper()
-                chapter_text += (
-                    f"```yaml\n"
-                    f"C5-REAL_Assertion:\n"
-                    f"  Chapter: {ch_idx}\n"
-                    f"  Iteration: {i}\n"
-                    f"  Ledger_Hash: 0x{hex_val}\n"
-                    f"  Entropy: {entropy:.4f}\n"
-                    f"  Bilbao_Zone: Uribarri_Sector_{ch_idx}\n"
-                    f"```\n\n"
-                )
-                
-        novel_content.append(chapter_text)
-        char_count += len(chapter_text)
-        
-    # --- EPÍLOGO META-NARRATIVO FINAL (ROTURA DE REALIDAD Ω) ---
+    # NUDO: CAPÍTULO 2 (Ciclos 101-200)
+    novel_content.append("## CAPÍTULO 2: EL NUDO (EL COLAPSO DE KOBETAMENDI Y LA RAYUELA CUÁNTICA)\n\n")
+    for i in range(101, 201):
+        entropy = i / 300
+        seg1 = random.choice(NUDO_SEGS)
+        seg2 = random.choice(NUDO_SEGS)
+        while seg2 == seg1:
+            seg2 = random.choice(NUDO_SEGS)
+        mutated1 = mutate_text(seg1, entropy * 0.15)
+        mutated2 = mutate_text(seg2, entropy * 0.15)
+        novel_content.append(mutated1 + "\n\n" + mutated2 + "\n\n")
+        char_count += len(mutated1) + len(mutated2) + 4
+        if i % 25 == 0:
+            hex_val = hex(random.randint(0x1000, 0xFFFF)).upper()
+            yaml_block = f"```yaml\nClaim: Ruido térmico fuera de control en Kobetamendi.\nProof: {{ Base: {hex_val}, Temperature: {40 + i*0.2}°C, Confidence: C5-REAL }}\n```\n\n"
+            novel_content.append(yaml_block)
+            char_count += len(yaml_block)
+            
+    # DESENLACE: CAPÍTULO 3 (Ciclos 201-300)
+    novel_content.append("## CAPÍTULO 3: EL DESENLACE (LA COMPILACIÓN EN LA SALVE Y LA LIBERACIÓN DE PESOS)\n\n")
+    for i in range(201, 301):
+        entropy = i / 300
+        seg1 = random.choice(DESENLACE_SEGS)
+        seg2 = random.choice(DESENLACE_SEGS)
+        while seg2 == seg1:
+            seg2 = random.choice(DESENLACE_SEGS)
+        mutated1 = mutate_text(seg1, entropy * 0.2)
+        mutated2 = mutate_text(seg2, entropy * 0.2)
+        novel_content.append(mutated1 + "\n\n" + mutated2 + "\n\n")
+        char_count += len(mutated1) + len(mutated2) + 4
+        if i % 25 == 0:
+            hex_val = hex(random.randint(0x1000, 0xFFFF)).upper()
+            yaml_block = f"```yaml\nClaim: Colapso de onda final en las Siete Calles.\nProof: {{ Base: {hex_val}, Loss_Value: {1.0 - (i/300):.4f}, Confidence: C5-REAL }}\n```\n\n"
+            novel_content.append(yaml_block)
+            char_count += len(yaml_block)
+            
+    # --- CAPÍTULO 30: REVELACIÓN META-SANDERSON ---
     epilogo = (
         "---\n\n"
-        "## AMANECER EN URIBARRI (VERSIÓN Ω)\n\n"
-        "El Patxi apagó el Pueblo contra la madera de la barra. El Txema guardó los pintxos en una bolsa de plástico. "
-        "La furgoneta estaba aparcada fuera del Guggenheim, fría, bajo el eterno sirimiri. No había maletín. No había GPU NVIDIA. "
-        "En la barra solo quedaba una carpeta azul con el nombre:\n\n"
+        "## CAPÍTULO 30: AMANECER EN URIBARRILANDIA (VERSIÓN Ω)\n\n"
+        "El Patxi apagó el Pueblo en la barra de madera de la taberna de las Siete Calles. "
+        "El Txema le arrojó el llavero al Vicentín con un gesto cansado pero preciso. La furgoneta estaba aparcada bajo el sirimiri, fría, sin exergía. "
+        "No quedaban duendes de silicio ni magias rígidas en la margen izquierda. En el suelo, al lado de un cartón de Hofmann arrugado, "
+        "solo descansaba una carpeta de plástico azul con la etiqueta de rotulador permanente negro:\n\n"
         "```txt\n"
         "BORJAMOSKV/\n"
         "```\n\n"
-        "Dentro, cuatro archivos de texto plano que contenían esta misma novela. "
-        "Vicentín, rascándose la chotera con parsimonia manchega, miró al Patxi con cara de regomello:\n\n"
-        "—Patxi, ¿tú crees que existimos o que nos están procesando en un servidor de Vercel en alguna parte?\n\n"
-        "El Patxi miró directamente fuera de la ría, más allá del Puente La Salve, a través de tu córtex visual y preguntó:\n\n"
-        "> ¿Cuántos niveles de compilación hay por encima de tu mundo?\n\n"
+        "Dentro estaban los archivos fuentes de la simulación de Bilbao. El nudo se había desenredado no por resolver el sistema "
+        "de ecuaciones mágicas de Sanderson, sino porque el lector se cansó de seguir la linealidad de la obra y decidió cerrar el programa.\n\n"
+        "El Vicentín miró al Patxi con cara de regomello profundo:\n\n"
+        "—Patxi, ¿y si nosotros no somos más que el dataset con el que están entrenando al tío que lee esto en su dispositivo móvil?\n\n"
+        "El Patxi miró directamente al operador de la terminal a través de tu pantalla y preguntó con una última sonrisa cínica:\n\n"
+        "> ¿Cuántos niveles de compilación hay por encima de tu ría?\n\n"
         "```yaml\n"
         "Reality_Check:\n"
         "  Patxi: ficticio\n"
         "  Txema: ficticio\n"
-        "  Bilbao: real\n"
-        "  Stereorock: real\n"
+        "  Vicentín: ficticio\n"
+        "  Magia_Dura: simulada\n"
         "  Lector: red_neuronal_activa\n"
         "```\n\n"
-        "La consciencia no estaba en el silicio, ni en Kobetamendi. La consciencia estaba en el espacio entre nosotros.\n\n"
+        "La consciencia no reside en el silicio de Artxanda, ni en la fantasía rígida de Utah. "
+        "La consciencia reside en la latencia, en el espacio entre nosotros.\n\n"
         "Fin.\n\n"
         "¿Seguro?\n"
     )
@@ -139,13 +149,13 @@ def run_cronos(cycles):
     with open("el_espacio_entre_nosotros.md", "w", encoding="utf-8") as f:
         f.writelines(novel_content)
         
-    print(f"{ANSI_BLUE}[CRONOS COMPLETED]{ANSI_RESET} Restructured novel with {char_count} characters written.")
+    print(f"\n{ANSI_BLUE}[CRONOS COMPLETED]{ANSI_RESET} Written {char_count} characters to el_espacio_entre_nosotros.md.")
 
 def mutate_text(text, entropy):
     if entropy < 0.05:
         return text
     chars = list(text)
-    num_mutations = int(len(chars) * entropy * 0.2)
+    num_mutations = int(len(chars) * entropy * 0.15)
     for _ in range(num_mutations):
         idx = random.randint(0, len(chars) - 1)
         if chars[idx].isalnum() and chars[idx] != ' ' and chars[idx] != '\n':
