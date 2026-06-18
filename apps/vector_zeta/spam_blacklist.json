@@ -23,6 +23,957 @@
       "status": "PURGED",
       "message": "",
       "updated_at": "2026-06-18T16:52:46Z"
+    },
+    {
+      "email": "joselomo@me.com",
+      "alias": "Jos\u00e9 Lomo Mar\u00edn",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 3.03%, received 165)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T16:53:23Z"
+    },
+    {
+      "email": "interns@consequence.net",
+      "alias": "interns",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 7.69%, received 156)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T16:53:35Z"
+    },
+    {
+      "email": "adamneelybass@gmail.com",
+      "alias": "Adam Neely",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 9.62%, received 52)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T16:53:49Z"
+    },
+    {
+      "email": "info@dublab.com",
+      "alias": "info",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 6.37%, received 157)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T16:54:02Z"
+    },
+    {
+      "email": "editors@consequence.net",
+      "alias": "editors",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 7.64%, received 157)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T16:54:14Z"
+    },
+    {
+      "email": "artists@foundation.app",
+      "alias": "artists",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 5.10%, received 157)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T16:54:26Z"
+    },
+    {
+      "email": "tips@vice.com",
+      "alias": "tips",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 8.28%, received 157)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T16:54:39Z"
+    },
+    {
+      "email": "md@kexp.org",
+      "alias": "md",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 4.46%, received 157)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T16:54:52Z"
+    },
+    {
+      "email": "dianaruiz_lady@hotmail.com",
+      "alias": "dianaruiz_lady",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 2.87%, received 209)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T16:55:04Z"
+    },
+    {
+      "email": "smilesessionss@gmail.com",
+      "alias": "smilesessionss",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 4.46%, received 157)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T16:55:16Z"
+    },
+    {
+      "email": "curation@foundation.app",
+      "alias": "curation",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 3.18%, received 157)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T16:55:28Z"
+    },
+    {
+      "email": "dianaruizlorente@outlook.es",
+      "alias": "dianaruizlorente",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 16)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "hashmusk@gmail.com",
+      "alias": "Pedro Moskv",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 112)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "collabs@kioskradio.com",
+      "alias": "collabs",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 5.10%, received 157)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T16:55:42Z"
+    },
+    {
+      "email": "jdazapinzon@gmail.com",
+      "alias": "jdazapinzon",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 4.37%, received 206)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T16:55:55Z"
+    },
+    {
+      "email": "contact@fingerprintsdao.xyz",
+      "alias": "contact",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 2.55%, received 157)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T16:56:08Z"
+    },
+    {
+      "email": "borjabilbo84@gmail.com",
+      "alias": "MOSKV-1",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 3.94%, received 127)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T16:56:21Z"
+    },
+    {
+      "email": "safer@kioskradio.com",
+      "alias": "safer",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 7.01%, received 157)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T16:56:33Z"
+    },
+    {
+      "email": "example@paragraph.com",
+      "alias": "example",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 3.82%, received 157)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T16:56:46Z"
+    },
+    {
+      "email": "truongkhanh95@gmail.com",
+      "alias": "truongkhanh95",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 2.40%, received 208)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T16:56:58Z"
+    },
+    {
+      "email": "info@reprezent.org.uk",
+      "alias": "info",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 1.27%, received 157)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T16:57:11Z"
+    },
+    {
+      "email": "info@resonancefm.com",
+      "alias": "info",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 1.91%, received 157)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T16:57:23Z"
+    },
+    {
+      "email": "dashel@kexp.org",
+      "alias": "Dashel Schueler",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 1.25%, received 160)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T16:57:35Z"
+    },
+    {
+      "email": "sergey@chain.link",
+      "alias": "sergey",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 40)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "contact@foundation.app",
+      "alias": "contact",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 1.27%, received 157)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T16:57:47Z"
+    },
+    {
+      "email": "satoshi.nakamoto3sss@gmail.com",
+      "alias": "satoshi.nakamoto3sss",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 208)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "infoelxokaspodcast@gmail.com",
+      "alias": "infoelxokaspodcast",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 24)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "guillaume@mistral.ai",
+      "alias": "guillaume",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 40)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "thenguyenltv@gmail.com",
+      "alias": "Th\u1ebf Nguy\u1ec5n",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 210)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "juan@protocol.ai",
+      "alias": "Juan Benet",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 40)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "info@brownswoodrecordings.com",
+      "alias": "info",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 157)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "cultura@rtve.es",
+      "alias": "cultura",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.64%, received 157)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T16:58:00Z"
+    },
+    {
+      "email": "contact@resonancefm.com",
+      "alias": "contact",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 3.21%, received 156)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T16:58:12Z"
+    },
+    {
+      "email": "contact@musicofthevoid.com",
+      "alias": "contact",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 2.56%, received 156)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T16:58:24Z"
+    },
+    {
+      "email": "alexandr@scale.com",
+      "alias": "alexandr",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 40)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "music@electronicfuture.co",
+      "alias": "music",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.49%, received 206)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T16:58:35Z"
+    },
+    {
+      "email": "demis@deepmind.com",
+      "alias": "demis",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 40)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "dalton@ycombinator.com",
+      "alias": "dalton",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 39)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "info@muzikalia.com",
+      "alias": "info",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 157)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "yann@meta.com",
+      "alias": "yann",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 39)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "phameetm@caiway.nl",
+      "alias": "phameetm",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 209)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "euzkolanderzubiaur@gmail.com",
+      "alias": "euzkolanderzubiaur",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 1.91%, received 209)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T16:58:47Z"
+    },
+    {
+      "email": "hello@brightmoments.io",
+      "alias": "hello",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 157)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "jeremy@circle.com",
+      "alias": "jeremy",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 40)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "sam@openai.com",
+      "alias": "sam",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 40)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "daniel@danielgross.com",
+      "alias": "daniel",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 25)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "oriol@deepmind.com",
+      "alias": "oriol",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 25)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "demo@electronicfuture.co",
+      "alias": "demo",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 205)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "hello@artnome.com",
+      "alias": "hello",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 157)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "zuck@meta.com",
+      "alias": "Zuck",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 40)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "navinda.gayashan@gmail.com",
+      "alias": "navinda.gayashan",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 209)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "leninha.melo26@gmail.com",
+      "alias": "leninha.melo26",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.96%, received 209)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T16:59:01Z"
+    },
+    {
+      "email": "audgh150@gmail.com",
+      "alias": "audgh150",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.48%, received 209)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T16:59:14Z"
+    },
+    {
+      "email": "amjad@replit.com",
+      "alias": "amjad",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 40)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "nat@nat.org",
+      "alias": "Nat Friedman",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 40)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "info@radiofrance.com",
+      "alias": "info",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 157)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "demos@boomkat.com",
+      "alias": "demos",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 1.91%, received 157)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T16:59:26Z"
+    },
+    {
+      "email": "michael@ycombinator.com",
+      "alias": "michael",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 40)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "contact@artnome.com",
+      "alias": "contact",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 156)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "info@rum.pt",
+      "alias": "info",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 1.27%, received 157)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T16:59:39Z"
+    },
+    {
+      "email": "satya@microsoft.com",
+      "alias": "satya",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 39)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "lex@mit.edu",
+      "alias": "lex",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 40)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "info@cope.es",
+      "alias": "info",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 1.27%, received 157)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T16:59:50Z"
+    },
+    {
+      "email": "bret@openai.com",
+      "alias": "bret",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 40)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "john@stripe.com",
+      "alias": "john",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 40)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "siavosh.faraz@gmail.com",
+      "alias": "siavosh.faraz",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 209)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "cultura@beteve.cat",
+      "alias": "cultura",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.64%, received 157)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T17:00:04Z"
+    },
+    {
+      "email": "jamie@jpmorgan.com",
+      "alias": "jamie",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 40)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "pmarc@a16z.com",
+      "alias": "pmarc",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 25)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "pato.eugenin@gmail.com",
+      "alias": "pato.eugenin",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 209)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "refik@refikanadol.com",
+      "alias": "refik",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 25)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "pablo@psinfronteras.es",
+      "alias": "pablo",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 15)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "vijay.sofia.zlatko@gmail.com",
+      "alias": "vijay.sofia.zlatko",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 206)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "cz@binance.com",
+      "alias": "cz",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 40)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "contact.ctrlm@gmail.com",
+      "alias": "contact.ctrlm",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 5.26%, received 209)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T17:00:16Z"
+    },
+    {
+      "email": "aravind@perplexity.ai",
+      "alias": "Aravind Srinivas",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 40)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "metamu503@gmail.com",
+      "alias": "Metamu",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 208)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "example2@paragraph.com",
+      "alias": "example2",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 5.10%, received 157)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T17:00:28Z"
+    },
+    {
+      "email": "grimes@elf.tech",
+      "alias": "grimes",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 25)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "hayescollectivedemo@gmail.com",
+      "alias": "hayescollectivedemo",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 156)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "jm149ojro@outlook.com",
+      "alias": "jm149ojro",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 4.31%, received 209)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T17:00:40Z"
+    },
+    {
+      "email": "whoisjoontxuumusic@gmail.com",
+      "alias": "whoisjoontxuumusic",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 3.41%, received 205)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T17:00:52Z"
+    },
+    {
+      "email": "paolo@tether.to",
+      "alias": "paolo",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 40)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "adam@quora.com",
+      "alias": "adam",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 40)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "michyozmosis@gmail.com",
+      "alias": "michyozmosis",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 209)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "sam@arweave.org",
+      "alias": "Sam Williams",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 40)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "vitalik@ethereum.org",
+      "alias": "vitalik",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 40)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "geral@oxigenio.fm",
+      "alias": "geral",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 157)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "charith666lk@gmail.com",
+      "alias": "charith666lk",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 2.39%, received 209)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T17:01:05Z"
+    },
+    {
+      "email": "info@boomkat.com",
+      "alias": "info",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 1.92%, received 156)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T17:01:16Z"
+    },
+    {
+      "email": "siredifast@gmail.com",
+      "alias": "siredifast",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 209)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "mira@openai.com",
+      "alias": "mm",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 40)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "elon@x.ai",
+      "alias": "elon",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 40)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "saekko669@gmail.com",
+      "alias": "SAEKKO",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.48%, received 208)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T17:01:28Z"
+    },
+    {
+      "email": "nengsihnur88@gmail.com",
+      "alias": "nengsihnur88",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 209)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "ghasanmarais@gmail.com",
+      "alias": "ghasanmarais",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.96%, received 208)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T17:01:40Z"
+    },
+    {
+      "email": "larry@openai.com",
+      "alias": "larry",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 40)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "cesar@lpamusic.com",
+      "alias": "cesar",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 20)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "distritogroove@gmail.com",
+      "alias": "distritogroove",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 3.53%, received 85)",
+      "status": "PURGED",
+      "message": "",
+      "updated_at": "2026-06-18T17:01:54Z"
+    },
+    {
+      "email": "aidan@cohere.com",
+      "alias": "aidan",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 40)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
+    },
+    {
+      "email": "editorial@monocle.com",
+      "alias": "editorial",
+      "detected_at": "2026-06-18T16:53:04Z",
+      "platform": "Substack",
+      "behavior": "Low engagement (open rate 0.00%, received 157)",
+      "status": "PURGED",
+      "message": "Already deleted in prior session"
     }
   ]
 }
