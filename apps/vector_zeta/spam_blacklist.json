@@ -1,0 +1,16 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "description": "C5-REAL Ledger de Spam Traps y Entidades Hostiles"
+  },
+  "spam_traps": [
+    {
+      "email": "acidarab@gmail.com",
+      "alias": "Jarana d'Or",
+      "detected_at": "2026-06-18T13:20:00Z",
+      "platform": "Substack",
+      "behavior": "High open/click rate bot simulation",
+      "status": "PURGE_REQUIRED"
+    }
+  ]
+}
