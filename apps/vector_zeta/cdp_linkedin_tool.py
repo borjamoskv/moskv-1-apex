@@ -98,6 +98,54 @@ class CDPLinkedInTool:
                 print(f"[-] Scraping error: {e}")
                 traceback.print_exc()
 
+    def _handle_connect_modal(self, page, personalized_msg, lead):
+        # Handle connect invitation modal
+        add_note_btn = page.locator("button[aria-label*='Add a note'], button[aria-label*='nota'], button:has-text('Añadir una nota'), button:has-text('Add a note')").first
+        if add_note_btn.is_visible():
+            add_note_btn.click()
+            time.sleep(1.0)
+            
+        textarea = page.locator("textarea[name='message'], textarea#custom-message").first
+        if textarea.is_visible():
+            textarea.fill(personalized_msg)
+            time.sleep(1.5)
+
+            send_btn = page.locator("button[aria-label*='Send'], button[aria-label*='Enviar'], button:has-text('Send'), button:has-text('Enviar')").first
+            if send_btn.is_visible():
+                send_btn.click(force=True)
+                lead['status'] = 'INJECTED'
+                print(f"[+] Injected connection invite note to {lead.get('name')}")
+            else:
+                print("[-] Send button not visible.")
+                lead['status'] = 'ERROR'
+        else:
+            # If no note field, connect without note
+            send_without_note = page.locator("button[aria-label*='Send without a note'], button[aria-label*='sin nota'], button:has-text('Send without a note'), button:has-text('Enviar sin nota')").first
+            if send_without_note.is_visible():
+                send_without_note.click()
+                lead['status'] = 'INJECTED_NO_NOTE'
+                print(f"[+] Sent connection request directly (no note) to {lead.get('name')}")
+            else:
+                lead['status'] = 'ERROR'
+
+    def _handle_message_flow(self, page, personalized_msg, lead):
+        chat_area = page.locator("div[contenteditable='true'], textarea[placeholder*='Write a message'], textarea[placeholder*='mensaje'], textarea[placeholder*='Mensaje']").first
+        if chat_area.is_visible():
+            chat_area.click()
+            chat_area.fill(personalized_msg)
+            time.sleep(1.5)
+
+            send_btn = page.locator("button[type='submit'], button:has-text('Send'), button:has-text('Enviar')").first
+            if send_btn.is_visible():
+                send_btn.click(force=True)
+            else:
+                page.keyboard.press("Control+Enter")
+            lead['status'] = 'MESSAGE_INJECTED'
+            print(f"[+] Injected direct message to {lead.get('name')}")
+        else:
+            print("[-] Chat area not found.")
+            lead['status'] = 'ERROR'
+
     def run_outreach(self, message_template, limit=5):
         print(f"[C5-REAL] Connecting to Brave via CDP on port {self.port} for outreach injection...")
         db = self.load_leads()
@@ -127,71 +175,54 @@ class CDPLinkedInTool:
                         page.mouse.wheel(0, -200)
                         time.sleep(1.0)
 
-                        # Try to locate Connect or Message buttons
-                        connect_button = page.locator("button.pvs-profile-actions__action:has-text('Connect'), button[aria-label*='Connect']").first
-                        message_button = page.locator("button.pvs-profile-actions__action:has-text('Message'), button[aria-label*='Message']").first
+                        # Try to locate Connect or Message buttons directly
+                        connect_button = page.locator("button:has-text('Connect'), button:has-text('Conectar'), button[aria-label*='Connect'], button[aria-label*='Conectar']").first
+                        message_button = page.locator("button:has-text('Message'), button:has-text('Mensaje'), button:has-text('Enviar mensaje'), button[aria-label*='Message'], button[aria-label*='Mensaje'], button[aria-label*='Enviar mensaje']").first
 
                         # Personalize the note template
                         first_name = name.split()[0]
                         personalized_msg = message_template.replace("{{name}}", first_name)
 
                         if connect_button.is_visible():
-                            print("[*] Connect button found. Clicking Connect...")
+                            print("[*] Connect button found directly. Clicking Connect...")
                             connect_button.click(force=True)
                             time.sleep(1.5)
-
-                            add_note_btn = page.locator("button[aria-label*='Add a note']").first
-                            if add_note_btn.is_visible():
-                                add_note_btn.click()
-                                time.sleep(1.0)
-                                
-                            textarea = page.locator("textarea[name='message'], textarea#custom-message").first
-                            if textarea.is_visible():
-                                textarea.fill(personalized_msg)
-                                time.sleep(1.5)
-
-                                send_btn = page.locator("button[aria-label*='Send'], button:has-text('Send')").first
-                                if send_btn.is_visible():
-                                    send_btn.click(force=True)
-                                    lead['status'] = 'INJECTED'
-                                    print(f"[+] Injected connection invite note to {name}")
-                                else:
-                                    print("[-] Send button not visible.")
-                                    lead['status'] = 'ERROR'
-                            else:
-                                # If no note field, connect without note
-                                send_without_note = page.locator("button[aria-label*='Send without a note']").first
-                                if send_without_note.is_visible():
-                                    send_without_note.click()
-                                    lead['status'] = 'INJECTED_NO_NOTE'
-                                    print(f"[+] Sent connection request directly (no note) to {name}")
-                                else:
-                                    lead['status'] = 'ERROR'
+                            self._handle_connect_modal(page, personalized_msg, lead)
 
                         elif message_button.is_visible():
-                            print("[*] Message button found. Clicking Message...")
+                            print("[*] Message button found directly. Clicking Message...")
                             message_button.click(force=True)
                             time.sleep(2.0)
+                            self._handle_message_flow(page, personalized_msg, lead)
 
-                            chat_area = page.locator("div[contenteditable='true'], textarea[placeholder*='Write a message']").first
-                            if chat_area.is_visible():
-                                chat_area.click()
-                                chat_area.fill(personalized_msg)
-                                time.sleep(1.5)
-
-                                send_btn = page.locator("button[type='submit'], button:has-text('Send')").first
-                                if send_btn.is_visible():
-                                    send_btn.click(force=True)
-                                else:
-                                    page.keyboard.press("Control+Enter")
-                                lead['status'] = 'MESSAGE_INJECTED'
-                                print(f"[+] Injected direct message to {name}")
-                            else:
-                                print("[-] Chat area not found.")
-                                lead['status'] = 'ERROR'
                         else:
-                            print("[-] Connect/Message buttons not available for this profile.")
-                            lead['status'] = 'UNAVAILABLE'
+                            # Try to click More/Más button to find Connect/Conectar in dropdown
+                            more_button = page.locator("main button:has-text('Más'), main button:has-text('More'), main button[aria-label*='Más'], main button[aria-label*='More']").first
+                            if more_button.is_visible():
+                                print("[*] Primary button is not Connect/Message (Creator Mode active). Clicking More...")
+                                more_button.click(force=True)
+                                time.sleep(1.5)
+                                
+                                # Look for Connect/Conectar or Message/Mensaje in the dropdown
+                                dropdown_connect = page.locator("div.artdeco-dropdown__content span:has-text('Conectar'), div.artdeco-dropdown__content span:has-text('Connect'), [class*='dropdown'] span:has-text('Conectar'), [class*='dropdown'] span:has-text('Connect'), div.artdeco-dropdown__content button:has-text('Conectar'), div.artdeco-dropdown__content button:has-text('Connect')").first
+                                dropdown_message = page.locator("div.artdeco-dropdown__content span:has-text('Enviar mensaje'), div.artdeco-dropdown__content span:has-text('Message'), [class*='dropdown'] span:has-text('Enviar mensaje'), [class*='dropdown'] span:has-text('Message')").first
+                                
+                                if dropdown_connect.is_visible():
+                                    print("[*] Connect option found in dropdown. Clicking...")
+                                    dropdown_connect.click(force=True)
+                                    time.sleep(1.5)
+                                    self._handle_connect_modal(page, personalized_msg, lead)
+                                elif dropdown_message.is_visible():
+                                    print("[*] Message option found in dropdown. Clicking...")
+                                    dropdown_message.click(force=True)
+                                    time.sleep(2.0)
+                                    self._handle_message_flow(page, personalized_msg, lead)
+                                else:
+                                    print("[-] Connect/Message options not found in More dropdown.")
+                                    lead['status'] = 'UNAVAILABLE'
+                            else:
+                                print("[-] Connect/Message/More buttons not available for this profile.")
+                                lead['status'] = 'UNAVAILABLE'
 
                         self.save_leads(db)
                         
