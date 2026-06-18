@@ -124,7 +124,28 @@ def trigger_immediate_board() -> None:
     # Use sys.executable for internal consistency
     subprocess.run([sys.executable or "python3", BOARD_SCRIPT], cwd=ROOT_DIR)
 
+def check_cronos_heartbeat() -> None:
+    print(f"[{datetime.now(timezone.utc).isoformat()}] [WATCHDOG-OMEGA] Checking Cronos External Heartbeat...")
+    import json
+    heartbeat_path = os.path.expanduser("~/.cortex/cronos_heartbeat.json")
+    try:
+        with open(heartbeat_path, "r") as f:
+            state = json.load(f)
+        last_time = datetime.fromisoformat(state.get("timestamp", "2000-01-01T00:00:00+00:00"))
+        if (datetime.now(timezone.utc) - last_time).total_seconds() > 120:
+            print("[WATCHDOG-OMEGA] Heartbeat STALE! Cronos is dead or hanging. Executing hard restart.")
+            subprocess.run(["launchctl", "kickstart", "-k", f"gui/{os.getuid()}/com.moskv.cronos"], capture_output=True)
+        else:
+            print("[WATCHDOG-OMEGA] Heartbeat OK. Cronos is alive.")
+    except Exception as e:
+        print(f"[WATCHDOG-OMEGA] Failed to read heartbeat (daemon might be dead): {e}. Kicking start.")
+        try:
+            subprocess.run(["launchctl", "kickstart", "-k", f"gui/{os.getuid()}/com.moskv.cronos"], capture_output=True)
+        except Exception:
+            pass
+
 if __name__ == "__main__":
     enforce_autopoiesis()
+    check_cronos_heartbeat()
     trigger_immediate_board()
 

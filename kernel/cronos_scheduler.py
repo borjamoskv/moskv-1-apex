@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# CRONOS SCHEDULER v4.0 — SRE-GRADE AUTONOMOUS DAEMON
+# CRONOS SCHEDULER v5.0 — BULLETPROOF C5-REAL DAEMON
 # Execution Level: C5-REAL
 import os
 import sys
@@ -11,6 +11,7 @@ import fcntl
 import re
 import signal
 import json
+import shlex
 from datetime import datetime, timezone, timedelta
 
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -23,7 +24,9 @@ os.makedirs(LOG_DIR, exist_ok=True)
 os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
 
 def apply_resource_limits(cmd_list):
-    return ["/usr/bin/nice", "-n", "10"] + cmd_list
+    # Enforces hard macOS resource limits: RAM = 1.5GB, CPU Time = 3600s
+    cmd_str = " ".join(shlex.quote(arg) for arg in cmd_list)
+    return ["/bin/zsh", "-c", f"ulimit -v 1572864; ulimit -t 3600; exec {cmd_str}"]
 
 def rotate_log(log_path):
     if os.path.exists(log_path) and os.path.getsize(log_path) > 50 * 1024 * 1024:
@@ -106,9 +109,9 @@ def get_db_connection():
         conn.execute("SELECT 1")
         return conn
     except sqlite3.DatabaseError:
-        print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS-RECOVERY] Corrupción en DB. Purgando y recreando...")
+        print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS-RECOVERY] Corrupción en DB. Aislada y recreada.")
         try:
-            os.remove(DB_PATH)
+            os.rename(DB_PATH, DB_PATH + f".corrupt.{int(time.time())}")
         except OSError:
             pass
         conn = sqlite3.connect(DB_PATH, timeout=5.0)
@@ -243,37 +246,58 @@ async def run_task(name: str, config: dict):
     rotate_log(out_log_path)
     rotate_log(err_log_path)
 
-    try:
-        with open(out_log_path, "w") as out_fd, open(err_log_path, "w") as err_fd:
-            proc = await asyncio.create_subprocess_exec(
-                *config["command"],
-                stdout=out_fd,
-                stderr=err_fd,
-                cwd=ROOT_DIR
-            )
-            
-            kill_task = asyncio.create_task(shutdown_event.wait())
-            wait_task = asyncio.create_task(asyncio.wait_for(proc.wait(), timeout=config.get("timeout_seconds", 3600)))
-            
-            done, pending = await asyncio.wait([kill_task, wait_task], return_when=asyncio.FIRST_COMPLETED)
-            
-            if kill_task in done:
-                print(f"[CRONOS-SHUTDOWN] Asesinando proceso hijo {name} (PID: {proc.pid})...")
-                proc.terminate()
-                await asyncio.sleep(1)
-                if proc.returncode is None:
-                    proc.kill()
-                status = "ABORTED_SIGTERM"
-            else:
+    async def stream_and_cap(stream, filepath, max_bytes=50*1024*1024):
+        written = 0
+        capped = False
+        with open(filepath, "ab") as fd:
+            while True:
                 try:
-                    await wait_task
-                    if proc.returncode != 0:
-                        status = "FAILED"
-                except asyncio.TimeoutError:
-                    print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS-ERR] Tarea {name} (PID: {proc.pid}) excedió timeout de {config.get('timeout_seconds')}s. Ejecutando SIGKILL.")
-                    proc.kill()
-                    status = "TIMEOUT_KILL"
-            
+                    chunk = await stream.read(8192)
+                    if not chunk:
+                        break
+                    if written < max_bytes:
+                        fd.write(chunk)
+                        written += len(chunk)
+                    elif not capped:
+                        fd.write(b"\n[CRONOS-ERR] LOG CEILING REACHED (50MB). STREAM TRUNCATED.\n")
+                        capped = True
+                except Exception:
+                    break
+
+    try:
+        proc = await asyncio.create_subprocess_exec(
+            *config["command"],
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+            cwd=ROOT_DIR
+        )
+
+        out_task = asyncio.create_task(stream_and_cap(proc.stdout, out_log_path))
+        err_task = asyncio.create_task(stream_and_cap(proc.stderr, err_log_path))
+        
+        kill_task = asyncio.create_task(shutdown_event.wait())
+        wait_task = asyncio.create_task(asyncio.wait_for(proc.wait(), timeout=config.get("timeout_seconds", 3600)))
+        
+        done, pending = await asyncio.wait([kill_task, wait_task], return_when=asyncio.FIRST_COMPLETED)
+        
+        if kill_task in done:
+            print(f"[CRONOS-SHUTDOWN] Asesinando proceso hijo {name} (PID: {proc.pid})...")
+            proc.terminate()
+            await asyncio.sleep(1)
+            if proc.returncode is None:
+                proc.kill()
+            status = "ABORTED_SIGTERM"
+        else:
+            try:
+                await wait_task
+                if proc.returncode != 0:
+                    status = "FAILED"
+            except asyncio.TimeoutError:
+                print(f"[{datetime.now(timezone.utc).isoformat()}] [CRONOS-ERR] Tarea {name} (PID: {proc.pid}) excedió timeout de {config.get('timeout_seconds')}s. Ejecutando SIGKILL.")
+                proc.kill()
+                status = "TIMEOUT_KILL"
+        
+        await asyncio.gather(out_task, err_task)
         duration = time.time() - t_start
     except Exception as e:
         status = "CRASHED"
