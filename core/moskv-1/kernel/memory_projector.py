@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(ROOT_DIR)
 
-from kernel.memory_store import get_memory_db, init_memory_schema
+from kernel.memory_store import get_memory_db, init_memory_schema, _sign, HMAC_SECRET
 from kernel.cortex_schema import EventEnvelope
 from kernel.event_projector import migrate_event
 
@@ -31,9 +31,17 @@ def derive_narrative(event: EventEnvelope) -> str:
 
 def project_memory(cursor, event: EventEnvelope):
     narrative = derive_narrative(event)
+    
+    payload_to_sign = {
+        "event_id": event.event_id,
+        "timestamp": event.timing.occurred_at,
+        "narrative": narrative
+    }
+    signature = _sign(payload_to_sign, HMAC_SECRET)
+    
     cursor.execute(
-        "INSERT OR IGNORE INTO episodic_memory (event_id, timestamp, correlation_id, actor, narrative) VALUES (?, ?, ?, ?, ?)",
-        (event.event_id, event.timing.occurred_at, event.causality.correlation_id, event.metadata.actor, narrative)
+        "INSERT OR IGNORE INTO episodic_memory (event_id, timestamp, correlation_id, actor, narrative, hmac_signature) VALUES (?, ?, ?, ?, ?, ?)",
+        (event.event_id, event.timing.occurred_at, event.causality.correlation_id, event.metadata.actor, narrative, signature)
     )
 
 def replay_memory_ledger():

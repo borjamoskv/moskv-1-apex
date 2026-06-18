@@ -147,13 +147,28 @@ class EventBus:
             return event
 
     async def _dispatch(self, topic: str, event: CortexEvent):
-        priority_score = self.exergy_meter.get_priority_score(event, time.time())
+        priority_levels = {
+            "CRITICAL": 0,
+            "SCHEDULER": 1,
+            "OSINT": 2,
+            "AUDIT": 3
+        }
+        
+        topic_upper = topic.upper()
+        base_priority = 4 # default fallback
+        for level_name, score in priority_levels.items():
+            if level_name in topic_upper:
+                base_priority = score
+                break
+
+        exergy_score = self.exergy_meter.get_priority_score(event, time.time())
+        final_priority = (base_priority, exergy_score)
 
         for sub_topic, callbacks in self._subscriptions.items():
             if _topic_matches(sub_topic, topic):
                 for cb in callbacks:
                     msg = MockMsg(event.to_json().encode('utf-8'))
-                    await self.task_queue.put((priority_score, time.time(), cb, event, msg))
+                    await self.task_queue.put((final_priority, time.time(), cb, event, msg))
 
     async def subscribe(self, topic: str, callback: Callable[[CortexEvent, Any], Awaitable[None]], durable_name: Optional[str] = None):
         """

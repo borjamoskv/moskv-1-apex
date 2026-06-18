@@ -2,7 +2,16 @@
 # Execution Level: C5-REAL
 import os
 import sqlite3
+import hmac
+import hashlib
+import json
 from contextlib import contextmanager
+
+HMAC_SECRET = b"moskv-1-c5-real-secret"
+
+def _sign(payload: dict, key: bytes) -> str:
+    raw = json.dumps(payload, sort_keys=True).encode()
+    return hmac.new(key, raw, hashlib.sha256).hexdigest()
 
 MEMORY_DB_PATH = "/Users/borjafernandezangulo/.cortex/memory.db"
 
@@ -26,7 +35,8 @@ def init_memory_schema():
                 timestamp TEXT NOT NULL,
                 correlation_id TEXT NOT NULL,
                 actor TEXT,
-                narrative TEXT NOT NULL
+                narrative TEXT NOT NULL,
+                hmac_signature TEXT NOT NULL
             );
         """)
         conn.execute("""
