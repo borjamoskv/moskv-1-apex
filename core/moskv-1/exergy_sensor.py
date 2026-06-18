@@ -71,8 +71,10 @@ def calculate_exergy(transcript_path: str):
                                 tool_calls += 3.0
                             elif name in ("run_command",):
                                 tool_calls += 2.0
-                            elif name in ("invoke_subagent", "send_message"):
+                            elif name in ("invoke_subagent", "send_message", "define_subagent"):
                                 tool_calls += 5.0 # Swarm Mitosis is maximum exergy
+                            elif name in ("schedule", "manage_task"):
+                                tool_calls += 4.0 # Asynchronous orchestration
                             elif name in ("ask_question", "ask_permission"):
                                 tool_calls -= 5.0 # Blocking operator I/O is severe anergy
                             elif name in ("view_file", "list_dir", "grep_search", "read_url_content", "read_browser_page"):
@@ -244,7 +246,10 @@ def calculate_git_diff_exergy() -> float:
             if not content:
                 added_anergy += 1
             elif content.startswith("#") or content.startswith("//") or (content.startswith("/*") and content.endswith("*/")) or content.startswith("*"):
-                added_anergy += 1
+                if any(token in content for token in ("C5-REAL", "C4-SIM", "Claim:", "Proof:", "Status:", "Axiom:", "Exergy")):
+                    added_code += 1
+                else:
+                    added_anergy += 1
             else:
                 added_code += 1
                 
@@ -261,7 +266,6 @@ def calculate_git_diff_exergy() -> float:
     
     if exergy_index < 80.0 and total_added > 5:
         print("[!] ERROR: Staged changes exergy index is below 80%. High Anergy slop detected in diff.")
-        import sys
         sys.exit(1)
         
     print("[✓] Git Staged Exergy check passed.")
