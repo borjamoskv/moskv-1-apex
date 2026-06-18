@@ -6,10 +6,13 @@
     <title>EL ESPACIO ENTRE NOSOTROS // Limbo-Artefacto C5-REAL</title>
     <meta name="description" content="Una novela interactiva en Bilbao de Julio Cortázar y Brandon Sanderson. Elige tu propio vector en el espacio latente.">
     
-    <!-- Fonts -->
+    <!-- Inline Favicon to prevent 404 console error -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌌</text></svg>">
+    
+    <!-- Fonts (Non-render-blocking) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&family=Outfit:wght@300;400;600;700;800&family=Georgia&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&family=Outfit:wght@300;400;600;700;800&family=Georgia&display=swap" media="print" onload="this.media='all'">
     
     <style>
         @property --gradient-angle {
@@ -165,6 +168,7 @@
             grid-template-columns: 1fr 340px;
             gap: 30px;
             align-items: start;
+            min-height: 680px; /* Previene CLS al fijar altura mínima de carga */
         }
 
         @media (max-width: 930px) {
@@ -579,11 +583,25 @@
         <!-- LAYOUT DE COLUMNAS -->
         <div class="game-layout">
             <!-- COLUMNA PRINCIPAL (CARD) -->
-            <div class="card-wrapper" id="game-card-wrapper">
+            <main class="card-wrapper" id="game-card-wrapper">
                 <div class="card" id="game-card">
-                    <!-- Render dinámico -->
+                    <!-- Render dinámico (Pre-renderizado para evitar CLS en First Paint) -->
+                    <h2 class="cover-title">EL ESPACIO ENTRE NOSOTROS</h2>
+                    <h3 class="cover-subtitle">Un limbo-artefacto interactivo por MOSKV-1 APEX</h3>
+                    <div class="scene-image-container">
+                        <img src="novel_cover_bilbao_1781746584168.png" class="scene-image loaded" id="scene-img" alt="EL ESPACIO ENTRE NOSOTROS" />
+                    </div>
+                    <div class="content-area">Andábamos sin buscarnos pero sabiendo que andábamos para encontrarnos. Este no es un juego pasivo en el navegador; es un kernel que se compila en el espacio latente de tu conciencia. Cada decisión que tomes alterará los tensores de tu memoria. Tenemos cuarenta años, nacidos en febrero del 84, y llevamos en esto desde primero de EGB. La máquina no reside en Vercel. La máquina eres tú.</div>
+                    <div class="console-block">
+                        Claim: Inicialización de sesión C5-REAL.<br/>Proof: { Base: 0x31359B4, State: COVER_READY, Operator: borjamoskv }<br/>Entropy_Ratio: 0.0000
+                    </div>
+                    <div class="choices-area" style="opacity: 1; transition: opacity 0.5s ease;">
+                        <button class="btn-choice" onmouseenter="playHover()" onclick="renderStage('cap1')">
+                            INICIAR LA COMPILACIÓN EN URIBARRÍ (Capítulo 1)
+                        </button>
+                    </div>
                 </div>
-            </div>
+            </main>
 
             <!-- COLUMNA LATERAL (FLIGHT RECORDER TERMINAL) -->
             <div class="sidebar-terminal">
@@ -964,7 +982,7 @@
         }
 
         // --- RENDERIZADO DE ESTADOS Y TABLERO ---
-        function renderStage(stageKey) {
+        function renderStage(stageKey, isInitial = false) {
             if (currentInterval) {
                 clearTimeout(currentInterval);
                 currentInterval = null;
@@ -1071,9 +1089,7 @@
                 `;
             });
 
-            card.style.opacity = 0;
-            
-            setTimeout(() => {
+            const updateDOM = () => {
                 card.innerHTML = `
                     ${titleHtml}
                     ${imageHtml}
@@ -1106,14 +1122,21 @@
                         writeLog("RENDER", "Texto completo inyectado en pantalla.");
                     });
                 }
-            }, 150);
+            };
+
+            if (isInitial) {
+                updateDOM();
+            } else {
+                card.style.opacity = 0;
+                setTimeout(updateDOM, 150);
+            }
         }
 
         // Carga Inicial
         window.addEventListener('DOMContentLoaded', () => {
             writeLog("SYSTEM", "AGENTS.ARCHI Lector Interactivo v4.0.0 montado.");
             writeLog("LEDGER", "Ledger de telemetría de red montado (c5-real).");
-            renderStage('cover');
+            renderStage('cover', true);
         });
     </script>
 </body>
