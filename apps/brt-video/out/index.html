@@ -2,43 +2,25 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>BRT_KERNEL // THE WEATHERALL DUB</title>
+  <title>BRT_KERNEL // PURE EXERGY [140 BPM]</title>
   <style>
-    * { margin: 0; padding: 0; overflow: hidden; background: #050508; cursor: crosshair; user-select: none; }
-    canvas { display: block; width: 100vw; height: 100vh; mix-blend-mode: screen; filter: contrast(1.2) sepia(0.3) hue-rotate(180deg); }
+    * { margin: 0; padding: 0; overflow: hidden; background: #000; cursor: crosshair; user-select: none; }
+    canvas { display: block; width: 100vw; height: 100vh; }
     #hud {
       position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-      font-family: "Helvetica Neue", sans-serif; font-size: 4rem; font-weight: 300;
-      color: rgba(255, 255, 255, 0.8); text-align: center;
-      line-height: 1; letter-spacing: 0.1em; pointer-events: none; mix-blend-mode: overlay;
+      font-family: "Helvetica Neue", sans-serif; font-size: 4rem; font-weight: 900;
+      color: #fff; text-align: center; line-height: 1; letter-spacing: 0.1em; pointer-events: none; mix-blend-mode: exclusion;
     }
     #boot {
       position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-      color: #7a8b99; font-family: monospace; font-size: 1rem; letter-spacing: 0.4em; z-index: 100;
+      color: #f00; font-family: monospace; font-size: 1rem; letter-spacing: 0.4em; z-index: 100;
     }
-    #tattoo {
-      position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
-      color: #445; font-family: serif; font-style: italic; font-size: 1.2rem; letter-spacing: 0.2em;
-    }
-    .portrait {
-      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-      height: 120vh; object-fit: cover;
-      mix-blend-mode: overlay;
-      filter: contrast(1.5) grayscale(1) sepia(1) hue-rotate(180deg) brightness(0.8);
-      opacity: 0; transition: opacity 0.1s ease-out;
-      pointer-events: none;
-    }
-    #rosalia { z-index: 50; }
-    #tangana { z-index: 51; mix-blend-mode: difference; }
   </style>
 </head>
 <body>
-  <div id="boot">INITIATE WEATHERALL DUB MIX [140 BPM]</div>
+  <div id="boot">INITIATE ZERO-ENTROPY ENGINE [140 BPM]</div>
   <canvas id="gl"></canvas>
-  <img id="rosalia" class="portrait" src="https://upload.wikimedia.org/wikipedia/commons/4/4e/2023-11-16_Gala_de_los_Latin_Grammy%2C_27_%28cropped%29.jpg" crossorigin="anonymous">
-  <img id="tangana" class="portrait" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Goyas_2025_-_C_Tangana_%28cropped%29.jpg/1280px-Goyas_2025_-_C_Tangana_%28cropped%29.jpg" crossorigin="anonymous">
   <div id="hud"></div>
-  <div id="tattoo">Fail We May, Sail We Must</div>
 
   <script>
     const canvas = document.getElementById('gl');
@@ -48,45 +30,61 @@
 
     const vsSource = `
       attribute vec4 position;
-      void main() { gl_Position = position; }
+      varying vec2 v_uv;
+      void main() { 
+        gl_Position = position; 
+        v_uv = position.xy * 0.5 + 0.5;
+        v_uv.y = 1.0 - v_uv.y; // Flip Y for image texture
+      }
     `;
 
-    // Acid Dub Hypnotic Shader
     const fsSource = `
       precision highp float;
+      varying vec2 v_uv;
       uniform vec2 u_resolution;
       uniform float u_time;
       uniform vec2 u_mouse;
       uniform float u_kick;
+      uniform float u_strobe;
+      uniform sampler2D u_tex0; // Rosalia
+      uniform sampler2D u_tex1; // Tangana
       
       float hash(vec2 p) { return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
       mat2 rot(float a) { float s=sin(a), c=cos(a); return mat2(c, -s, s, c); }
 
       void main() {
         vec2 uv = gl_FragCoord.xy / u_resolution.xy;
-        uv = uv * 2.0 - 1.0;
-        uv.x *= u_resolution.x / u_resolution.y;
+        vec2 p = uv * 2.0 - 1.0;
+        p.x *= u_resolution.x / u_resolution.y;
         
-        vec2 m = u_mouse * 2.0 - 1.0;
+        // UV Glitch
+        float noise = hash(vec2(uv.y * 10.0, u_time));
+        vec2 glitch = vec2(noise * 0.1 * u_kick * u_strobe, 0.0);
         
-        // Slow hypnotic acid rotation
-        uv *= rot(u_time * 0.05 + length(uv) * 0.5 - m.x);
+        vec2 texUV = v_uv;
+        texUV += glitch;
+        // Scale pulse
+        texUV = (texUV - 0.5) * (1.0 - u_kick * 0.15) + 0.5;
         
-        // Liquid Dub Waves
-        float f = sin(uv.x * 5.0 + u_time) * cos(uv.y * 3.0 - u_time * 0.8) * 0.5;
-        vec2 q = uv + vec2(f, -f);
+        // Dynamic blending between Tangana and Rosalia based on strobe
+        vec4 col0 = texture2D(u_tex0, texUV);
+        vec4 col1 = texture2D(u_tex1, texUV);
         
-        // Deep geometry (Sabres of Paradise)
-        float d = length(q) - 0.5 - u_kick * 0.1;
-        float ring = abs(sin(d * 10.0 - u_time * 2.0));
+        vec3 final_tex = mix(col0.rgb, col1.rgb, step(0.5, u_strobe));
         
-        // Tape Delay Visual Artifacts
-        float tapeNoise = hash(uv * 5.0 + u_time * 0.1) * 0.1;
+        // Black and white mapping + Industrial red/blue tinting
+        float lum = dot(final_tex, vec3(0.299, 0.587, 0.114));
+        vec3 tint = mix(vec3(0.1, 0.0, 0.0), vec3(0.0, 0.1, 0.2), step(0.5, u_strobe));
+        vec3 col = vec3(lum) + tint * u_kick;
         
-        // Deep indigo, cyan, and slow red pulsing
-        vec3 col = vec3(0.05, 0.1 + ring * 0.2, 0.3 + ring * 0.5);
-        col += vec3(u_kick * 0.2, u_kick * 0.4, u_kick * 0.6) * (1.0 - ring);
-        col += tapeNoise;
+        // CRT Scanlines
+        col -= sin(uv.y * 800.0) * 0.05;
+        
+        // Vignette
+        col *= 1.0 - dot(p, p) * 0.3;
+        
+        // Strobe flash
+        col += vec3(u_kick * 0.8) * step(0.8, u_strobe);
         
         gl_FragColor = vec4(col, 1.0);
       }
@@ -115,80 +113,86 @@
     const uTime = gl.getUniformLocation(program, "u_time");
     const uMouse = gl.getUniformLocation(program, "u_mouse");
     const uKick = gl.getUniformLocation(program, "u_kick");
+    const uStrobe = gl.getUniformLocation(program, "u_strobe");
+    const uTex0 = gl.getUniformLocation(program, "u_tex0");
+    const uTex1 = gl.getUniformLocation(program, "u_tex1");
+
+    function loadTexture(url, unit) {
+      const tex = gl.createTexture();
+      gl.activeTexture(gl.TEXTURE0 + unit);
+      gl.bindTexture(gl.TEXTURE_2D, tex);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([0,0,0,255]));
+      
+      const img = new Image();
+      img.onload = () => {
+        gl.activeTexture(gl.TEXTURE0 + unit);
+        gl.bindTexture(gl.TEXTURE_2D, tex);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      };
+      img.src = url;
+    }
+
+    loadTexture('rosalia.jpg', 0);
+    loadTexture('tangana.jpg', 1);
+    
+    gl.uniform1i(uTex0, 0);
+    gl.uniform1i(uTex1, 1);
 
     let audioCtx, delayNode, feedbackNode, filterNode;
     let mx = 0.5, my = 0.5;
     let isPlaying = false;
     let currentKick = 0;
+    let currentStrobe = 0;
     
-    // Substack SEO Alignment: 140 BPM
     const BPM = 140;
     const interval = 60 / BPM;
 
     document.addEventListener('mousemove', e => {
       mx = e.clientX / window.innerWidth;
       my = e.clientY / window.innerHeight;
-      if (filterNode) filterNode.frequency.value = 200 + (1.0 - my) * 2000; // Acid cutoff
-      if (feedbackNode) feedbackNode.gain.value = 0.4 + mx * 0.4; // Space Echo feedback
+      if (filterNode) filterNode.frequency.value = 100 + (1.0 - my) * 3000;
+      if (feedbackNode) feedbackNode.gain.value = 0.3 + mx * 0.5;
     });
 
     function playDubSub(time) {
-      // 1. Kick (Deep, less attack)
       const kickOsc = audioCtx.createOscillator();
       const kickGain = audioCtx.createGain();
       kickOsc.connect(kickGain);
       kickGain.connect(audioCtx.destination);
       
-      kickOsc.frequency.setValueAtTime(80, time);
-      kickOsc.frequency.exponentialRampToValueAtTime(0.01, time + 0.6);
-      kickGain.gain.setValueAtTime(0.8, time);
-      kickGain.gain.exponentialRampToValueAtTime(0.01, time + 0.6);
+      kickOsc.frequency.setValueAtTime(100, time);
+      kickOsc.frequency.exponentialRampToValueAtTime(0.01, time + 0.4);
+      kickGain.gain.setValueAtTime(1.0, time);
+      kickGain.gain.exponentialRampToValueAtTime(0.01, time + 0.4);
       
       kickOsc.start(time);
-      kickOsc.stop(time + 0.6);
+      kickOsc.stop(time + 0.4);
 
-      // 2. Off-beat Dub Bass / Chord
-      if (Math.random() > 0.3) {
+      if (Math.random() > 0.4) {
         const chordOsc = audioCtx.createOscillator();
         const chordGain = audioCtx.createGain();
-        chordOsc.type = 'sawtooth';
+        chordOsc.type = 'square';
         
         chordOsc.connect(filterNode);
         filterNode.connect(chordGain);
-        chordGain.connect(delayNode); // Send to Space Echo
+        chordGain.connect(delayNode);
         chordGain.connect(audioCtx.destination);
         
         chordOsc.frequency.setValueAtTime(55 * (Math.random() > 0.5 ? 1 : 1.5), time + interval/2);
         chordGain.gain.setValueAtTime(0, time + interval/2);
-        chordGain.gain.linearRampToValueAtTime(0.3, time + interval/2 + 0.1);
-        chordGain.gain.exponentialRampToValueAtTime(0.01, time + interval/2 + 0.5);
+        chordGain.gain.linearRampToValueAtTime(0.4, time + interval/2 + 0.05);
+        chordGain.gain.exponentialRampToValueAtTime(0.01, time + interval/2 + 0.3);
         
         chordOsc.start(time + interval/2);
-        chordOsc.stop(time + interval/2 + 0.5);
+        chordOsc.stop(time + interval/2 + 0.3);
       }
 
-      // Visual Glitch & Image Strobe
       setTimeout(() => {
         currentKick = 1.0;
-        const ros = document.getElementById('rosalia');
-        const tan = document.getElementById('tangana');
-        
-        // Alternar entre las entidades
-        if (Math.random() > 0.5) {
-            ros.style.opacity = Math.random() * 0.8 + 0.2;
-            tan.style.opacity = 0;
-            ros.style.transform = `translate(-50%, -50%) scale(${1.0 + Math.random()*0.1}) rotate(${(Math.random()-0.5)*5}deg)`;
-        } else {
-            tan.style.opacity = Math.random() * 0.8 + 0.2;
-            ros.style.opacity = 0;
-            tan.style.transform = `translate(-50%, -50%) scale(${1.0 + Math.random()*0.1}) rotate(${(Math.random()-0.5)*5}deg)`;
-        }
-        
-        // Decay
-        setTimeout(() => {
-            ros.style.opacity = 0;
-            tan.style.opacity = 0;
-        }, 300);
+        currentStrobe = Math.random(); // Pass raw entropy to the GPU
       }, (time - audioCtx.currentTime) * 1000);
     }
 
@@ -199,8 +203,9 @@
       gl.uniform1f(uTime, time * 0.001);
       gl.uniform2f(uMouse, mx, my);
       
-      currentKick = Math.max(0, currentKick - 0.02); // Slower decay for Dub
+      currentKick = Math.max(0, currentKick - 0.03);
       gl.uniform1f(uKick, currentKick);
+      gl.uniform1f(uStrobe, currentStrobe);
       
       gl.drawArrays(gl.TRIANGLES, 0, 6);
       requestAnimationFrame(render);
@@ -209,24 +214,22 @@
     document.addEventListener('click', () => {
       if (!isPlaying) {
         boot.style.display = 'none';
-        hud.innerHTML = "CONCRETO Y MANTILLA<br/>(THE WEATHERALL DUB)";
+        hud.innerHTML = "CONCRETO<br/>Y<br/>MANTILLA";
         
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         
-        // Roland RE-201 Space Echo emulation
         delayNode = audioCtx.createDelay();
-        delayNode.delayTime.value = interval * 0.75; // Dotted eighth note delay
+        delayNode.delayTime.value = interval * 0.75;
         feedbackNode = audioCtx.createGain();
-        feedbackNode.gain.value = 0.6;
+        feedbackNode.gain.value = 0.5;
         delayNode.connect(feedbackNode);
         feedbackNode.connect(delayNode);
         delayNode.connect(audioCtx.destination);
 
-        // Acid Filter (TB-303 style)
         filterNode = audioCtx.createBiquadFilter();
         filterNode.type = 'lowpass';
-        filterNode.frequency.value = 800;
-        filterNode.Q.value = 10;
+        filterNode.frequency.value = 1000;
+        filterNode.Q.value = 15;
         
         let nextTime = audioCtx.currentTime + 0.05;
         setInterval(() => {
