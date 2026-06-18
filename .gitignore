@@ -18,4 +18,7 @@ docs/vercel_cloudflare_status.md
 docs/vercel_cloudflare_status.html
 sprol_audits/
 .DS_Store
-**/.DS_Store
+# Vector Zeta data files
+apps/vector_zeta/subscribers_mock.csv
+apps/vector_zeta/thermal_mass.json
+apps/vector_zeta/leads_db.json
