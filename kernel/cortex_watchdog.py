@@ -12,13 +12,43 @@ def enforce_autopoiesis() -> None:
     import platform
     import shutil
     
+    # List of legacy agents to purge
+    LEGACY_AGENTS = [
+        "com.moskv.board",
+        "com.moskv.deathprotocol",
+        "com.moskv.exergy",
+        "com.moskv.v_omega"
+    ]
+    
     if platform.system() == "Darwin":
-        print("[WATCHDOG-OMEGA] macOS detected. Enforcing launchd autopoiesis...")
-        plist_name = "com.moskv.board.plist"
+        print("[WATCHDOG-OMEGA] macOS detected. Enforcing launchd cronos autopoiesis...")
+        
+        # 1. Purge legacy agents
+        try:
+            output = subprocess.check_output(["launchctl", "list"]).decode("utf-8")
+        except Exception:
+            output = ""
+            
+        uid = os.getuid()
+        for agent in LEGACY_AGENTS:
+            dest_legacy = os.path.expanduser(f"~/Library/LaunchAgents/{agent}.plist")
+            if agent in output:
+                print(f"[WATCHDOG-OMEGA] Unloading legacy agent: {agent}")
+                # Unload legacy bootstrap gui if possible
+                subprocess.run(["launchctl", "bootout", f"gui/{uid}", dest_legacy], capture_output=True)
+                subprocess.run(["launchctl", "unload", dest_legacy], capture_output=True)
+            if os.path.exists(dest_legacy):
+                print(f"[WATCHDOG-OMEGA] Removing legacy plist file: {dest_legacy}")
+                try:
+                    os.remove(dest_legacy)
+                except Exception as e:
+                    print(f"[C4-ERROR] Failed to delete legacy plist {dest_legacy}: {e}")
+                    
+        # 2. Setup Cronos agent
+        plist_name = "com.moskv.cronos.plist"
         src_plist = os.path.join(ROOT_DIR, plist_name)
         dest_plist = os.path.expanduser(f"~/Library/LaunchAgents/{plist_name}")
         
-        # Copy plist if missing or out of sync
         should_load = False
         if not os.path.exists(dest_plist):
             print(f"[WATCHDOG-OMEGA] Copying plist to {dest_plist}")
@@ -34,23 +64,20 @@ def enforce_autopoiesis() -> None:
         except Exception:
             output = ""
             
-        if "com.moskv.board" not in output or should_load:
-            print("[WATCHDOG-OMEGA] Loading launchd job...")
-            # Use bootstrap gui domain if possible
-            uid = os.getuid()
+        if "com.moskv.cronos" not in output or should_load:
+            print("[WATCHDOG-OMEGA] Loading launchd cronos job...")
             subprocess.run(["launchctl", "bootstrap", f"gui/{uid}", dest_plist], capture_output=True)
-            # Legacy fallback
             subprocess.run(["launchctl", "load", dest_plist], capture_output=True)
-            print("[WATCHDOG-OMEGA] launchd agent active.")
+            print("[WATCHDOG-OMEGA] launchd cronos agent active.")
         else:
-            print("[WATCHDOG-OMEGA] launchd agent already loaded.")
+            print("[WATCHDOG-OMEGA] launchd cronos agent already loaded.")
             
         # Clean up legacy crontab board job if exists
         try:
             current_cron = subprocess.check_output(["crontab", "-l"]).decode("utf-8")
-            if BOARD_SCRIPT in current_cron:
-                print("[WATCHDOG-OMEGA] Removing legacy crontab board job...")
-                new_lines = [line for line in current_cron.splitlines() if BOARD_SCRIPT not in line]
+            if BOARD_SCRIPT in current_cron or "cronos_scheduler.py" in current_cron:
+                print("[WATCHDOG-OMEGA] Removing legacy crontab jobs on macOS...")
+                new_lines = [line for line in current_cron.splitlines() if BOARD_SCRIPT not in line and "cronos_scheduler.py" not in line]
                 if new_lines:
                     new_cron = "\n".join(new_lines) + "\n"
                 else:
@@ -64,31 +91,33 @@ def enforce_autopoiesis() -> None:
                     os.remove(tmp_cron_file)
                 else:
                     subprocess.run(["crontab", "-r"], check=True)
-                print("[WATCHDOG-OMEGA] Legacy crontab board job successfully purged.")
+                print("[WATCHDOG-OMEGA] Legacy crontab jobs successfully purged.")
         except Exception:
             pass
             
     else:
         # Fallback to crontab for Linux
-        print("[WATCHDOG-OMEGA] Linux/POSIX detected. Enforcing crontab autopoiesis...")
-        # Use sys.executable to ensure we use the active Python interpreter
+        print("[WATCHDOG-OMEGA] Linux/POSIX detected. Enforcing crontab cronos autopoiesis...")
         python_exe = sys.executable or "python3"
-        cron_command = f"0 * * * * {python_exe} {BOARD_SCRIPT} >> {ROOT_DIR}/board_cron.log 2>&1"
+        cronos_script = os.path.join(ROOT_DIR, "kernel", "cronos_scheduler.py")
+        cron_command = f"* * * * * pgrep -f {cronos_script} >/dev/null || {python_exe} {cronos_script} >> {ROOT_DIR}/cronos_scheduler.log 2>&1"
         try:
             current_cron = subprocess.check_output(["crontab", "-l"]).decode("utf-8")
         except subprocess.CalledProcessError:
             current_cron = ""
-        if BOARD_SCRIPT in current_cron:
-            print("[WATCHDOG-OMEGA] Board script already registered in crontab.")
-        else:
-            print("[WATCHDOG-OMEGA] Ingesting crontab job...")
-            new_cron = current_cron.strip() + "\n" + cron_command + "\n"
-            tmp_cron_file = os.path.join(ROOT_DIR, "tmp_cron.txt")
-            with open(tmp_cron_file, 'w') as f:
-                f.write(new_cron)
-            subprocess.run(["crontab", tmp_cron_file], check=True)
-            os.remove(tmp_cron_file)
-            print("[WATCHDOG-OMEGA] crontab autopoiesis enabled.")
+            
+        clean_lines = [line for line in current_cron.splitlines() if BOARD_SCRIPT not in line and "cronos_scheduler.py" not in line]
+        
+        print("[WATCHDOG-OMEGA] Ingesting crontab Cronos watchdog...")
+        clean_lines.append(cron_command)
+        new_cron = "\n".join(clean_lines) + "\n"
+        
+        tmp_cron_file = os.path.join(ROOT_DIR, "tmp_cron.txt")
+        with open(tmp_cron_file, 'w') as f:
+            f.write(new_cron)
+        subprocess.run(["crontab", tmp_cron_file], check=True)
+        os.remove(tmp_cron_file)
+        print("[WATCHDOG-OMEGA] crontab Cronos autopoiesis enabled.")
 
 def trigger_immediate_board() -> None:
     print(f"[{datetime.now(timezone.utc).isoformat()}] [WATCHDOG-OMEGA] Triggering board execution...")
