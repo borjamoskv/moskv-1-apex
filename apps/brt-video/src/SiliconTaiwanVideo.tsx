@@ -1,5 +1,5 @@
 import React, { useRef, useMemo } from 'react';
-import { useCurrentFrame, useVideoConfig, spring, interpolate, AbsoluteFill, random, Audio, staticFile } from 'remotion';
+import { useCurrentFrame, useVideoConfig, spring, interpolate, AbsoluteFill, random, Audio, staticFile, Img } from 'remotion';
 import { ThreeCanvas } from '@remotion/three';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
@@ -210,6 +210,9 @@ export const SiliconTaiwanVideo: React.FC = () => {
   const beatScale = spring({ frame: frame % framesPerBeat, fps, config: { damping: 10, mass: 0.4, stiffness: 350 } });
   const uiScale = inDrop ? interpolate(beatScale, [0, 1], [0.98, 1.03]) : 1.0;
 
+  const imgOpacity = interpolate(frame, [0, 250, 400], [1, 1, 0], { extrapolateRight: 'clamp' });
+  const imgScale = interpolate(frame, [0, 400], [1.0, 1.15]);
+
   const shadowR = isKick ? '12px 0 0 rgba(255,59,48,0.9)' : '3px 0 0 rgba(255,59,48,0.6)';
   const shadowB = isKick ? '-12px 0 0 rgba(43,59,229,0.9)' : '-3px 0 0 rgba(43,59,229,0.6)';
   const glitchShadow = `${shadowR}, ${shadowB}`;
@@ -230,6 +233,14 @@ export const SiliconTaiwanVideo: React.FC = () => {
           </group>
         </ThreeCanvas>
       </div>
+
+      {/* Intro Cover Image Overlay */}
+      {frame < 400 && (
+        <AbsoluteFill style={{ opacity: imgOpacity, pointerEvents: 'none', overflow: 'hidden' }}>
+          <Img src={staticFile('portada.png')} style={{ width: '100%', height: '100%', objectFit: 'cover', transform: `scale(${imgScale})`, filter: 'brightness(0.6) contrast(1.2)' }} />
+          <div style={{ position: 'absolute', width: '100%', height: '100%', boxShadow: 'inset 0 0 350px rgba(0,0,0,1)' }} />
+        </AbsoluteFill>
+      )}
 
       <AbsoluteFill style={{ pointerEvents: 'none', padding: 60, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', transform: `scale(${uiScale})` }}>
         
