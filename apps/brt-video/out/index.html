@@ -3,139 +3,183 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BRT_KERNEL // EXERGY_MAX</title>
+  <title>BRT_KERNEL // SINGULARITY</title>
   <style>
-    :root {
-      --bg: #040404;
-      --fg: #ffffff;
-      --blood: #e52b2b;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; cursor: crosshair; }
+    :root { --bg: #020202; --fg: #fff; --blood: #e52b2b; }
+    * { box-sizing: border-box; margin: 0; padding: 0; cursor: crosshair; user-select: none; }
     body {
       background-color: var(--bg);
       color: var(--fg);
-      font-family: "Impact", "Helvetica Neue", sans-serif;
+      font-family: "Impact", sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: 100vh;
+      height: 100vh;
       overflow: hidden;
-      perspective: 1000px;
+      perspective: 1200px;
     }
-    /* CRT Scanlines */
-    body::before {
-      content: " ";
-      display: block;
+    canvas {
       position: absolute;
-      top: 0; left: 0; bottom: 0; right: 0;
-      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-      z-index: 100;
-      background-size: 100% 2px, 3px 100%;
-      pointer-events: none;
-    }
-    .glitch-layer {
-      position: absolute;
-      top: 0; left: 0; width: 100vw; height: 100vh;
-      background-color: var(--blood);
-      mix-blend-mode: color-burn;
-      opacity: 0;
-      pointer-events: none;
-      z-index: 50;
-      transition: opacity 0.05s ease-out;
-    }
-    .container {
-      position: relative;
-      width: 100vw;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100vw; height: 100vh;
       max-width: 500px;
       aspect-ratio: 9/16;
-      border: 2px solid #333;
-      transform-style: preserve-3d;
-      transition: transform 0.1s ease-out;
-    }
-    video {
-      width: 100%;
-      height: 100%;
       object-fit: cover;
-      filter: contrast(1.4) grayscale(1);
-      mix-blend-mode: screen;
+      mix-blend-mode: exclusion;
+      z-index: 10;
+      pointer-events: none;
+    }
+    video { display: none; } /* Oculto. El canvas asume el renderizado. */
+    .container {
+      position: relative;
+      width: 100vw; max-width: 500px;
+      aspect-ratio: 9/16;
+      border: 1px solid #222;
+      transform-style: preserve-3d;
+      transition: transform 0.05s linear;
+      z-index: 5;
     }
     .overlay-text {
       position: absolute;
       top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 3rem;
-      letter-spacing: 0.2em;
+      font-size: 4rem;
+      line-height: 0.8;
+      letter-spacing: 0.1em;
       color: transparent;
-      -webkit-text-stroke: 2px var(--blood);
-      pointer-events: none;
+      -webkit-text-stroke: 1px var(--blood);
       text-align: center;
-      z-index: 10;
-      mix-blend-mode: exclusion;
+      z-index: 15;
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+    .hud {
+      position: absolute;
+      bottom: 20px; left: 20px;
+      font-family: monospace;
+      font-size: 0.8rem;
+      color: #666;
+      z-index: 20;
     }
     .instruction {
       position: absolute;
-      bottom: 20px;
-      font-family: monospace;
-      font-size: 0.9rem;
-      color: #555;
+      top: 50%; left: 50%; transform: translate(-50%, -50%);
+      font-family: monospace; font-size: 1rem; color: #fff;
+      z-index: 100;
       letter-spacing: 0.2em;
-      z-index: 101;
     }
   </style>
 </head>
 <body>
-  <div class="glitch-layer" id="strobe"></div>
+  <div class="instruction" id="start-btn">CLICK FOR SINGULARITY</div>
   <div class="container" id="box">
     <video id="vid" src="video.mp4" loop muted playsinline></video>
-    <div class="overlay-text" id="hud">INITIATE<br/>C5-REAL</div>
+    <canvas id="c"></canvas>
+    <div class="overlay-text" id="hud-text"></div>
   </div>
-  <div class="instruction">CLICK TO ENGAGE 130 BPM WEB-AUDIO KICK</div>
+  <div class="hud" id="metrics">AWAITING IGNITION</div>
 
   <script>
     const box = document.getElementById('box');
-    const strobe = document.getElementById('strobe');
-    const hud = document.getElementById('hud');
     const vid = document.getElementById('vid');
+    const canvas = document.getElementById('c');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    const hudText = document.getElementById('hud-text');
+    const metrics = document.getElementById('metrics');
     
-    let audioCtx;
+    let audioCtx, distortionNode, gainNode;
     let isPlaying = false;
+    let kineticFriction = 0; // Se retroalimenta con el ratón
     const BPM = 130;
     const interval = 60 / BPM;
+    
+    // Curva de Distorsión Algorítmica (Daft Punk / Noah Goldstein overdrive)
+    function makeDistortionCurve(amount) {
+      const k = typeof amount === 'number' ? amount : 50;
+      const n_samples = 44100;
+      const curve = new Float32Array(n_samples);
+      const deg = Math.PI / 180;
+      for (let i = 0; i < n_samples; ++i) {
+        let x = i * 2 / n_samples - 1;
+        curve[i] = (3 + k) * x * 20 * deg / (Math.PI + k * Math.abs(x));
+      }
+      return curve;
+    }
 
-    // Fricción Cinética con el cursor
+    // Rasterización Entrópica (Chromatic Aberration a 130 BPM)
+    let isStrobing = false;
+    function renderFrame() {
+      if (vid.paused || vid.ended) return;
+      
+      canvas.width = box.clientWidth;
+      canvas.height = box.clientHeight;
+      ctx.drawImage(vid, 0, 0, canvas.width, canvas.height);
+      
+      if (isStrobing || kineticFriction > 10) {
+        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imgData.data;
+        const offset = Math.floor(kineticFriction * 2) * 4; // Desplazamiento de canal Rojo
+        
+        for (let i = 0; i < data.length; i += 4) {
+          if (i + offset < data.length) {
+            data[i] = data[i + offset]; // Desgarre cromático (Reliquia sharding)
+          }
+        }
+        ctx.putImageData(imgData, 0, 0);
+      }
+      requestAnimationFrame(renderFrame);
+    }
+
     document.addEventListener('mousemove', (e) => {
-      const x = (e.clientX / window.innerWidth - 0.5) * 20;
-      const y = (e.clientY / window.innerHeight - 0.5) * -20;
+      const px = e.clientX / window.innerWidth;
+      const py = e.clientY / window.innerHeight;
+      const x = (px - 0.5) * 40;
+      const y = (py - 0.5) * -40;
+      
       box.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
+      
+      // La fricción física aumenta la distorsión del audio y la aberración visual
+      kineticFriction = Math.abs(px - 0.5) * 100 + Math.abs(py - 0.5) * 100;
+      if (distortionNode) {
+        distortionNode.curve = makeDistortionCurve(kineticFriction * 10);
+      }
+      metrics.innerText = `KINETIC_FRICTION: ${kineticFriction.toFixed(2)}\nOVERDRIVE: ${(kineticFriction*10).toFixed(0)}`;
     });
 
-    // Motor Sintetizador 808 Kick
     function playKick(time) {
       const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
+      const kickGain = audioCtx.createGain();
       
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
+      osc.connect(distortionNode);
+      distortionNode.connect(kickGain);
+      kickGain.connect(audioCtx.destination);
       
-      osc.frequency.setValueAtTime(150, time);
-      osc.frequency.exponentialRampToValueAtTime(0.01, time + 0.5);
+      osc.frequency.setValueAtTime(120, time);
+      osc.frequency.exponentialRampToValueAtTime(0.001, time + 0.4);
       
-      gain.gain.setValueAtTime(1, time);
-      gain.gain.exponentialRampToValueAtTime(0.01, time + 0.5);
+      kickGain.gain.setValueAtTime(1, time);
+      kickGain.gain.exponentialRampToValueAtTime(0.01, time + 0.4);
       
       osc.start(time);
-      osc.stop(time + 0.5);
+      osc.stop(time + 0.4);
 
-      // Sincronización DOM/Strobe
+      // Sincronización DOM/Video Render
       setTimeout(() => {
-        strobe.style.opacity = '1';
-        setTimeout(() => strobe.style.opacity = '0', 50);
+        isStrobing = true;
+        hudText.innerHTML = (Math.random() > 0.5) ? "DEMASIADAS<br/>MUJERES" : "RELIQUIA<br/>SANTA";
+        document.body.style.backgroundColor = '#e52b2b';
+        setTimeout(() => {
+          isStrobing = false;
+          hudText.innerHTML = "";
+          document.body.style.backgroundColor = '#020202';
+        }, 80);
       }, (time - audioCtx.currentTime) * 1000);
     }
 
     function scheduleKicks() {
-      let nextNoteTime = audioCtx.currentTime + 0.1;
+      let nextNoteTime = audioCtx.currentTime + 0.05;
       setInterval(() => {
         while (nextNoteTime < audioCtx.currentTime + 0.1) {
           playKick(nextNoteTime);
@@ -144,13 +188,18 @@
       }, 25);
     }
 
-    document.addEventListener('click', () => {
+    document.getElementById('start-btn').addEventListener('click', () => {
       if (!isPlaying) {
+        document.getElementById('start-btn').style.display = 'none';
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        distortionNode = audioCtx.createWaveShaper();
+        distortionNode.curve = makeDistortionCurve(0);
+        distortionNode.oversample = '4x';
+        
         scheduleKicks();
         vid.play();
-        hud.innerHTML = "BERGHAIN<br/>[ACTIVE]";
-        document.querySelector('.instruction').style.opacity = '0';
+        renderFrame();
         isPlaying = true;
       }
     });
