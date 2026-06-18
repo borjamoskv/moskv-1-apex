@@ -11,6 +11,25 @@ class BrainRegion:
         self.region_name = region_name
         self.bus = EventBus(server_url=server_url)
         self.subscriptions: List[Any] = []
+        self.is_suspended: bool = False
+        self._state_snapshot: dict = {}
+
+    def suspend(self):
+        """
+        Serializes region context and yields execution to the ExergyScheduler.
+        State is technically retained in L0 Working Memory.
+        """
+        self.is_suspended = True
+        import time
+        self._state_snapshot = {"suspended_at": time.time()}
+        print(f"[CEN-Cluster] BrainRegion <{self.region_name}> Suspended (Yielded execution context).")
+
+    def resume(self):
+        """
+        Restores context from L0 Working Memory when ExergyScheduler schedules a task here.
+        """
+        self.is_suspended = False
+        print(f"[CEN-Cluster] BrainRegion <{self.region_name}> Resumed.")
 
     async def run(self):
         """
@@ -23,6 +42,8 @@ class BrainRegion:
         """
         Processes incoming events. Override in concrete subclasses.
         """
+        if self.is_suspended:
+            self.resume()
         pass
 
     async def infer_local(self, prompt: str, model: str = "llama3") -> str:

@@ -1,6 +1,8 @@
 import json
 import time
 import asyncio
+import os
+from enum import Enum
 from typing import Optional, Dict, Any, List
 from moskv_1.event_bus import CortexEvent
 from moskv_1.immunity import ImmunityLayer, ImmuneState
@@ -9,6 +11,48 @@ try:
     from neo4j import AsyncGraphDatabase
 except ImportError:
     AsyncGraphDatabase = None
+
+try:
+    import lancedb
+except ImportError:
+    lancedb = None
+
+class MemoryRoutingDecision(Enum):
+    DISCARD = "discard"
+    WORKING = "working"      # L0
+    EPISODIC = "episodic"    # L1
+    SEMANTIC = "semantic"    # L2
+    PROCEDURAL = "procedural"  # L3
+    LEDGER = "ledger"        # L4
+
+class MemoryGovernor:
+    """
+    Arbitrates the cognitive retention of events across the L0-L4 Memory Stack.
+    """
+    def __init__(self, immunity_layer: ImmunityLayer):
+        self.immunity = immunity_layer
+
+    def evaluate(self, event: CortexEvent, entropy: float, immune_state: ImmuneState) -> MemoryRoutingDecision:
+        payload = event.payload
+        is_procedural = payload.get("is_procedural", False)
+        is_transaction = payload.get("is_transaction", False)
+
+        if immune_state == ImmuneState.NECROTIC:
+            return MemoryRoutingDecision.DISCARD
+            
+        if is_transaction:
+            return MemoryRoutingDecision.LEDGER
+            
+        if is_procedural:
+            return MemoryRoutingDecision.PROCEDURAL
+
+        if entropy > self.immunity.high_threshold:
+            return MemoryRoutingDecision.SEMANTIC
+        elif entropy > self.immunity.mid_threshold:
+            return MemoryRoutingDecision.EPISODIC
+        else:
+            return MemoryRoutingDecision.WORKING
+
 
 class InMemoryNode:
     def __init__(self, element_id: str, labels: list, properties: dict):
@@ -61,16 +105,25 @@ class MemoryStore:
     Sovereign Graph Database interface. Simulates the Neo4j API in-memory
     when no real driver is connected, but uses the Neo4j transaction context properly when driver is set.
     """
-    def __init__(self, uri: str = "bolt://localhost:7687", user: str = "neo4j", password: str = "password"):
+    def __init__(self, uri: str = "bolt://localhost:7687", user: str = "neo4j", password: str = "password", data_dir: str = ".moskv_data"):
         self.uri = uri
         self.user = user
         self.password = password
+        self.data_dir = data_dir
         self.driver: Any = None
         self._nodes: Dict[str, Dict[str, Any]] = {}
         self._regions: Dict[str, Dict[str, Any]] = {}
         self._relationships: List[tuple] = []
         self.immunity = ImmunityLayer()
+        self.governor = MemoryGovernor(self.immunity)
         self._pruning_in_progress = False
+        self.lancedb_db = None
+        self.l1_table = None
+        
+        # Ensure data dir exists for L1 and L4
+        if not os.path.exists(self.data_dir):
+            os.makedirs(self.data_dir)
+        self.ledger_path = os.path.join(self.data_dir, "l4_ledger.ndjson")
 
     async def connect(self):
         """
@@ -98,6 +151,13 @@ class MemoryStore:
                 print(f"[MemoryStore] Failed to connect to Neo4j: {e}")
                 raise e
         print("[MemoryStore] Using in-memory mode (Neo4j driver not available).")
+        
+        if lancedb is not None:
+            try:
+                self.lancedb_db = lancedb.connect(os.path.join(self.data_dir, "lancedb"))
+                print("[MemoryStore] LanceDB (L1_Episodic) initialized.")
+            except Exception as e:
+                print(f"[MemoryStore] Failed to connect to LanceDB: {e}")
 
     async def crystallize(self, event: CortexEvent) -> List[Any]:
         """
@@ -127,7 +187,33 @@ class MemoryStore:
 
         node_id = payload.get("nodeId") or event.hash
 
-        # Event-driven Apoptosis: If the incoming entropy is extreme, trigger a full graph prune asynchronously.
+        routing_decision = self.governor.evaluate(event, entropy, immune_state_obj)
+        
+        if routing_decision == MemoryRoutingDecision.DISCARD:
+            return []
+            
+        if routing_decision == MemoryRoutingDecision.LEDGER:
+            try:
+                with open(self.ledger_path, "a") as f:
+                    f.write(json.dumps({"hash": event.hash, "timestamp": time.time(), "payload": payload}) + "\n")
+            except Exception as e:
+                print(f"[MemoryStore] Failed to write to Ledger: {e}")
+            return []
+
+        if routing_decision == MemoryRoutingDecision.EPISODIC and self.lancedb_db is not None:
+            try:
+                data = [{"id": node_id, "vector": [0.0]*128, "content": content_str, "entropy": float(entropy)}]
+                if self.l1_table is None:
+                    if "episodic" in self.lancedb_db.table_names():
+                        self.l1_table = self.lancedb_db.open_table("episodic")
+                        self.l1_table.add(data)
+                    else:
+                        self.l1_table = self.lancedb_db.create_table("episodic", data=data)
+                else:
+                    self.l1_table.add(data)
+            except Exception as e:
+                print(f"[MemoryStore] LanceDB L1 routing error: {e}")
+
         if entropy > self.immunity.high_threshold * 1.5:
             if not self._pruning_in_progress:
                 self._pruning_in_progress = True
@@ -141,7 +227,7 @@ class MemoryStore:
                 
                 asyncio.create_task(run_prune_task())
 
-        if self.driver:
+        if self.driver and routing_decision in (MemoryRoutingDecision.SEMANTIC, MemoryRoutingDecision.WORKING, MemoryRoutingDecision.PROCEDURAL):
             cypher = """
                 MERGE (r:BrainRegion {name: $sourceRegion})
                 MERGE (n:MemoryNode {id: $id}) 

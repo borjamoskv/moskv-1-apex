@@ -3,7 +3,7 @@ import json
 import hashlib
 import asyncio
 from typing import Callable, Any, Dict, Optional, Awaitable, List
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, field
 
 @dataclass
 class CortexEvent:
@@ -76,6 +76,21 @@ class EventBus:
         self._lock = asyncio.Lock()
         self.nc: Any = None
         self.js: Any = None
+        self.task_queue = asyncio.PriorityQueue()
+        self._scheduler_task = asyncio.create_task(self._exergy_scheduler_worker())
+
+    async def _exergy_scheduler_worker(self):
+        while True:
+            try:
+                priority, task_time, callback, event, msg = await self.task_queue.get()
+                try:
+                    await callback(event, msg)
+                except Exception as e:
+                    print(f"[ExergyScheduler] Task execution failed: {e}")
+                finally:
+                    self.task_queue.task_done()
+            except asyncio.CancelledError:
+                break
 
     async def connect(self):
         """
@@ -118,14 +133,20 @@ class EventBus:
             return event
 
     async def _dispatch(self, topic: str, event: CortexEvent):
-        tasks = []
+        payload = event.payload
+        urgency = float(payload.get("urgency", 1.0))
+        novelty = float(payload.get("novelty", 1.0))
+        expected_value = float(payload.get("expected_value", 1.0))
+        entropy = float(payload.get("entropy", 1.0))
+        
+        score = urgency * novelty * expected_value * entropy
+        priority_score = -score
+
         for sub_topic, callbacks in self._subscriptions.items():
             if _topic_matches(sub_topic, topic):
                 for cb in callbacks:
                     msg = MockMsg(event.to_json().encode('utf-8'))
-                    tasks.append(cb(event, msg))
-        if tasks:
-            await asyncio.gather(*tasks)
+                    await self.task_queue.put((priority_score, time.time(), cb, event, msg))
 
     async def subscribe(self, topic: str, callback: Callable[[CortexEvent, Any], Awaitable[None]], durable_name: Optional[str] = None):
         """
