@@ -8,8 +8,12 @@ def get_github_token():
     token = os.getenv("GITHUB_TOKEN")
     if token and token != "tu_token_aqui":
         return token
+    
+    clean_env = os.environ.copy()
+    clean_env.pop("GITHUB_TOKEN", None)
+    
     try:
-        result = subprocess.run(["gh", "auth", "token"], capture_output=True, text=True, check=True)
+        result = subprocess.run(["gh", "auth", "token"], capture_output=True, text=True, check=True, env=clean_env)
         return result.stdout.strip()
     except Exception:
         return None
