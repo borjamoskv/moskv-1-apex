@@ -2,12 +2,25 @@ import os
 import time
 import requests
 import json
+import subprocess
 
-GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
+def get_github_token():
+    token = os.getenv("GITHUB_TOKEN")
+    if token and token != "tu_token_aqui":
+        return token
+    try:
+        result = subprocess.run(["gh", "auth", "token"], capture_output=True, text=True, check=True)
+        return result.stdout.strip()
+    except Exception:
+        return None
+
+GITHUB_TOKEN = get_github_token()
 HEADERS = {
-    "Authorization": f"token {GITHUB_TOKEN}" if GITHUB_TOKEN else "",
     "Accept": "application/vnd.github.v3+json"
 }
+if GITHUB_TOKEN:
+    HEADERS["Authorization"] = f"token {GITHUB_TOKEN}"
+
 
 def search_repos(query):
     repos = []

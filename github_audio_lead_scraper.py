@@ -21,6 +21,10 @@ def search_users(query):
     url = f"https://api.github.com/search/repositories?q={query}&sort=stars&order=desc"
     
     response = requests.get(url, headers=HEADERS)
+    if response.status_code == 401 and "Authorization" in HEADERS:
+        print("[-] Token invu00e1lido (401). Reintentando sin token...")
+        del HEADERS["Authorization"]
+        response = requests.get(url, headers=HEADERS)
     if response.status_code == 200:
         items = response.json().get("items", [])
         for item in items:
@@ -36,6 +40,10 @@ def get_user_email(username):
     """Fuerza la resolución del email si es público."""
     url = f"https://api.github.com/users/{username}"
     response = requests.get(url, headers=HEADERS)
+    if response.status_code == 401 and "Authorization" in HEADERS:
+        print("[-] Token invu00e1lido (401). Reintentando sin token...")
+        del HEADERS["Authorization"]
+        response = requests.get(url, headers=HEADERS)
     if response.status_code == 200:
         data = response.json()
         return {
