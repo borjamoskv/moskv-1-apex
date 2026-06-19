@@ -1,1 +1,1685 @@
-[]
+[
+  {
+    "username": "Dhatu",
+    "name": "Sudhin Domala",
+    "email": "sudhin.domala@gmail.com",
+    "bio": null,
+    "company": null,
+    "location": null,
+    "url": "https://github.com/Dhatu"
+  },
+  {
+    "username": "Sayali19-cell",
+    "name": "Sayali Khot",
+    "email": "sayalikhot21@gmail.com",
+    "bio": "I am a Data Scientist. I love programming, reading, writing and speaking.\r\nI enjoy using my obsessive attention to details.",
+    "company": "UST globals",
+    "location": "Pune, Maharashtra, India",
+    "url": "https://github.com/Sayali19-cell"
+  },
+  {
+    "username": "Neel2904",
+    "name": "Neel Gorasiya",
+    "email": "mgorasiya1974@gmail.com",
+    "bio": null,
+    "company": null,
+    "location": "Gujarat ,India",
+    "url": "https://github.com/Neel2904"
+  },
+  {
+    "username": "Ruthvik-Bandari",
+    "name": "Ruthvik Bandari",
+    "email": "bandari.ru@northeastern.edu",
+    "bio": "Applied AI @Northeasternuniversity | ML Engineer | AI Systems, Deep Learning, Computer Vision, Cybersecurity, Automation.",
+    "company": null,
+    "location": "Boston, Massachusetts. ",
+    "url": "https://github.com/Ruthvik-Bandari"
+  },
+  {
+    "username": "Mridulvatsal",
+    "name": "Mridul Vatsal",
+    "email": "mridul07vatsal05@gmail.com",
+    "bio": "\"Turning raw data into reality checks, models into movements, and dashboards into decisions.\"",
+    "company": null,
+    "location": "India",
+    "url": "https://github.com/Mridulvatsal"
+  },
+  {
+    "username": "abideenml",
+    "name": "Zain",
+    "email": "zaiinn440@gmail.com",
+    "bio": "ML",
+    "company": null,
+    "location": null,
+    "url": "https://github.com/abideenml"
+  },
+  {
+    "username": "ArindamDeka09",
+    "name": "Arindam Deka",
+    "email": "arindamdeka001@gmail.com",
+    "bio": "Data and AI practitioner exploring LLMs, agents, and RAG. Building small, useful tools and learning in public.",
+    "company": null,
+    "location": null,
+    "url": "https://github.com/ArindamDeka09"
+  },
+  {
+    "username": "24-amit",
+    "name": "Amit",
+    "email": "amitjangra2004@gmail.com",
+    "bio": "I am a MCA student at Lloyd Institutions of Engineering and Technology, Greater Noida, Uttar Pradesh",
+    "company": "Student",
+    "location": "Greater Noida, Uttar Pradesh",
+    "url": "https://github.com/24-amit"
+  },
+  {
+    "username": "itsshakthi",
+    "name": "Shakthivel Parimalam K P C",
+    "email": "shakthivellakshmikanthan@gmail.com",
+    "bio": null,
+    "company": null,
+    "location": null,
+    "url": "https://github.com/itsshakthi"
+  },
+  {
+    "username": "4ndr0666",
+    "name": "4ndr0666",
+    "email": "01_dolor.loftier@icloud.com",
+    "bio": "Lasciate ogne speranza, voi ch'intrate",
+    "company": null,
+    "location": "Texas",
+    "url": "https://github.com/4ndr0666"
+  },
+  {
+    "username": "kumarvis",
+    "name": "Kumar Vishal",
+    "email": "kumarvis@gmail.com",
+    "bio": null,
+    "company": "Have 6+ year work ex currently MS candidate at IIIT Hyderbad",
+    "location": "Bengaluru",
+    "url": "https://github.com/kumarvis"
+  },
+  {
+    "username": "whitebearhands",
+    "name": "Seunghwan Cha",
+    "email": "hwansys@naver.com",
+    "bio": null,
+    "company": null,
+    "location": null,
+    "url": "https://github.com/whitebearhands"
+  },
+  {
+    "username": "JanuHanisha",
+    "name": "Janu Bala Satya Hanisha Gajula",
+    "email": "januhanisha3@gmail.com",
+    "bio": "Coding isn't just a syntax, it's an art of Innovation. I thrive on crafting elegant solutions to complex problems. With a deep-rooted passion for coding.",
+    "company": null,
+    "location": "vishakapatanam",
+    "url": "https://github.com/JanuHanisha"
+  },
+  {
+    "username": "vikas07-vk",
+    "name": "Vikas Kumar ",
+    "email": "vkviki0786@gmail.com",
+    "bio": null,
+    "company": null,
+    "location": null,
+    "url": "https://github.com/vikas07-vk"
+  },
+  {
+    "username": "Rishikesh-123",
+    "name": "Rishikesh",
+    "email": "kumarrishikesh1418@gmail.com",
+    "bio": "I love to code and solve problems",
+    "company": null,
+    "location": null,
+    "url": "https://github.com/Rishikesh-123"
+  },
+  {
+    "username": "TivenTux",
+    "name": "Dimitris Oupas",
+    "email": "dimitris@oupas.org",
+    "bio": null,
+    "company": null,
+    "location": "Athens, Greece",
+    "url": "https://github.com/TivenTux"
+  },
+  {
+    "username": "priyashni",
+    "name": "Priyadharshini ",
+    "email": "priyadharshiniparimeru@gmail.com",
+    "bio": "BE Biomedical Engineer; ME Medical Electronics Student\r\nInterest in Machine Learning with Python(Medical Image, Signal Processing)\r\n",
+    "company": null,
+    "location": null,
+    "url": "https://github.com/priyashni"
+  },
+  {
+    "username": "Abdullah321Umar",
+    "name": "Abdullah Umar",
+    "email": "umerabdullah048@gmail.com",
+    "bio": "Software Engineer | Jr. Data Analyst | Data Scientist | SQL, Python, Excel & Power BI | MS Office Expert | LLU'28 | BSSE",
+    "company": "Arch Technologies Intern",
+    "location": "Lahore, Pakistan",
+    "url": "https://github.com/Abdullah321Umar"
+  },
+  {
+    "username": "barisohail4-dev",
+    "name": "Sohail Bari Shams",
+    "email": "barisohail4@gmail.com",
+    "bio": "As a dedicated Software Engineer, I am eager to work in a challenging and growing industry. I aim to apply and enhance my skills while contributing to company.",
+    "company": "Nitte Meenakshi Institute of Technology, Bangalore",
+    "location": "Yelahanka, Bangalore",
+    "url": "https://github.com/barisohail4-dev"
+  },
+  {
+    "username": "Gaurikadu13",
+    "name": "Gauri Kadu ",
+    "email": "gaurikadu324@gmail.com",
+    "bio": "In the journey of learning ",
+    "company": null,
+    "location": null,
+    "url": "https://github.com/Gaurikadu13"
+  },
+  {
+    "username": "sivasks2004",
+    "name": "Siva Kulanthaisamy",
+    "email": "sivakulanthaisamy1804@gmail.com",
+    "bio": "Aspiring data analyst | SQL | Power BI | Data visualization",
+    "company": null,
+    "location": "Erode",
+    "url": "https://github.com/sivasks2004"
+  },
+  {
+    "username": "Bilal-abbasi662",
+    "name": "Muhammad Bilal Abbasi",
+    "email": "i240078@isb.nu.edu.pk",
+    "bio": null,
+    "company": null,
+    "location": null,
+    "url": "https://github.com/Bilal-abbasi662"
+  },
+  {
+    "username": "Quinn-Kiwalabye",
+    "name": "Quinn kiwalabye",
+    "email": "kiwalabyequinn00@gmail.com",
+    "bio": "front end developer",
+    "company": null,
+    "location": null,
+    "url": "https://github.com/Quinn-Kiwalabye"
+  },
+  {
+    "username": "ZohaibSattarDataAI",
+    "name": "Zohaib Sattar",
+    "email": "zabizubi86@gmail.com",
+    "bio": "Mid-Level Data Scientist | Machine Learning Engineer (Supervised & Unsupervised Learning) | Expert Data & Business Analyst | Full-Stack Digital Marketer ",
+    "company": null,
+    "location": "Sahiwal , Pakistan ",
+    "url": "https://github.com/ZohaibSattarDataAI"
+  },
+  {
+    "username": "stefanfountain",
+    "name": "Spif",
+    "email": "stefan@setso.com",
+    "bio": null,
+    "company": "Setflow BV",
+    "location": "Amsterdam",
+    "url": "https://github.com/stefanfountain"
+  },
+  {
+    "username": "malaybanerjee1",
+    "name": "MALAY BANERJEE",
+    "email": "banerjeeconsultant1@gmail.com",
+    "bio": "I am from , Kolkata, India. Working as a Freelancer by creating coding with AI.",
+    "company": null,
+    "location": "India ",
+    "url": "https://github.com/malaybanerjee1"
+  },
+  {
+    "username": "hamad123-tech",
+    "name": "Hammad Khattak",
+    "email": "khattakhamad09@gmail.com",
+    "bio": "(ML/AI Learner | Python | JavaScript Eng | Exploring AI in Healthcare | Clean Code Advocate)",
+    "company": "Brandora, CodeAlpha, Rhombix Tech. ",
+    "location": "Kohat kp Pakistan",
+    "url": "https://github.com/hamad123-tech"
+  },
+  {
+    "username": "OmPatil2806",
+    "name": "Om Patil",
+    "email": "ompatil24@zohomail.in",
+    "bio": "MSc in Artificial Intelligence and Data Science | Aspiring Data Scientist passionate about transforming large volumes of data into valuable insights.",
+    "company": null,
+    "location": "Berlin Germany",
+    "url": "https://github.com/OmPatil2806"
+  },
+  {
+    "username": "diegovaldesjr",
+    "name": "Diego Valdes",
+    "email": "diego.valdes14@gmail.com",
+    "bio": null,
+    "company": null,
+    "location": "Chile",
+    "url": "https://github.com/diegovaldesjr"
+  },
+  {
+    "username": "llegomark",
+    "name": "Mark Anthony Llego",
+    "email": "markllego@gmail.com",
+    "bio": "Full-Stack Developer specializing in AI-powered web applications. Leveraging LLMs and other AI technologies to build intelligent and engaging user experiences.",
+    "company": null,
+    "location": "Philippines",
+    "url": "https://github.com/llegomark"
+  },
+  {
+    "username": "avi-ai-git",
+    "name": null,
+    "email": "avai.hp01@gmail.com",
+    "bio": null,
+    "company": null,
+    "location": null,
+    "url": "https://github.com/avi-ai-git"
+  },
+  {
+    "username": "cpmpercussion",
+    "name": "Charles Martin",
+    "email": "cpm@charlesmartin.au",
+    "bio": "Computer scientist and music technology researcher.",
+    "company": "Australian National University",
+    "location": "Canberra",
+    "url": "https://github.com/cpmpercussion"
+  },
+  {
+    "username": "SmirnovValeriy",
+    "name": "Smirnov Valeriy",
+    "email": "vss1307@yandex.ru",
+    "bio": "Computer Science Student.\r\nInterested in ML and data science.",
+    "company": "CMC Faculty of  Lomonosov MSU",
+    "location": "Moscow, Russia",
+    "url": "https://github.com/SmirnovValeriy"
+  },
+  {
+    "username": "Vedvyas1999",
+    "name": "Debasish Mahanta",
+    "email": "debasish.vedvyas@outlook.com",
+    "bio": "Data Analyst passionate about transforming raw datasets into actionable business insights.",
+    "company": null,
+    "location": "Odisha",
+    "url": "https://github.com/Vedvyas1999"
+  },
+  {
+    "username": "SoumilMalik24",
+    "name": "Soumil Malik",
+    "email": "soumil4malik@gmail.com",
+    "bio": "An AI engineer\r\nFluent in Machine Learning Fundamentals with MLOps\r\nStepping into Generative and Agentic AI",
+    "company": null,
+    "location": null,
+    "url": "https://github.com/SoumilMalik24"
+  },
+  {
+    "username": "nabeelpervaiz759-stack",
+    "name": "Muhammad Nabeel",
+    "email": "nabeelpervaiz759@gmail.com",
+    "bio": "I am a final-year Data Science undergraduate with a strong passion for Machine Learning, Deep Learning, and Computer Vision.\r\nI enjoy building practical, real-w",
+    "company": null,
+    "location": null,
+    "url": "https://github.com/nabeelpervaiz759-stack"
+  },
+  {
+    "username": "oguzokdotdev",
+    "name": "oguzok.dev",
+    "email": "git@oguzok.tech",
+    "bio": null,
+    "company": null,
+    "location": "Qaragandy, Kazakhstan",
+    "url": "https://github.com/oguzokdotdev"
+  },
+  {
+    "username": "migperfer",
+    "name": "Miguel P\u00e9rez",
+    "email": "miguel_on_94@hotmail.com",
+    "bio": null,
+    "company": "Ph.D. Student at Pompeu Fabra University",
+    "location": "Munich",
+    "url": "https://github.com/migperfer"
+  },
+  {
+    "username": "pritamsingh-antenna",
+    "name": "Pritam Singh Bakariya",
+    "email": "pritam.gs@gmail.com",
+    "bio": "Ph.D. RF & EM Engineer | HFSS \u2022 CST | AI-driven antenna design | Founder @CAEAD | 14 SCI papers | Building AI-driven antenna design automation system",
+    "company": "https://maihu.in/",
+    "location": "Indore, Madhya Pradesh, India",
+    "url": "https://github.com/pritamsingh-antenna"
+  },
+  {
+    "username": "Gaurangclasher6556-prog",
+    "name": "Gaurang Sharma ",
+    "email": "gaurangsharma2006@gmail.com",
+    "bio": null,
+    "company": null,
+    "location": null,
+    "url": "https://github.com/Gaurangclasher6556-prog"
+  },
+  {
+    "username": "mmirthula02",
+    "name": "M. Mirthula",
+    "email": "mmirthula02@gmail.com",
+    "bio": "A programmer and a machine learning enthusiast | Blogger | ",
+    "company": "Technocolabs",
+    "location": null,
+    "url": "https://github.com/mmirthula02"
+  },
+  {
+    "username": "hasnainyaqub",
+    "name": "Hasnain Yaqoob",
+    "email": "hasnainyaqubakm@gmail.com",
+    "bio": "AI Engineer focused on LLM systems, Retrieval Augmented Generation, Agent workflows, and deep learning with PyTorch, TensorFlow, and Hugging Face.",
+    "company": null,
+    "location": null,
+    "url": "https://github.com/hasnainyaqub"
+  },
+  {
+    "username": "esiebomaj",
+    "name": "Esieboma Jeremiah",
+    "email": "esiebomaj@gmail.com",
+    "bio": "Software developer ",
+    "company": null,
+    "location": "Nigeria",
+    "url": "https://github.com/esiebomaj"
+  },
+  {
+    "username": "KomalAzam",
+    "name": "Komal Azam",
+    "email": "qomalazm06@gmail.com",
+    "bio": "Learning Python & Cybersecurity \ud83d\udc69\u200d\ud83d\udcbb\r\nBuilding small projects to sharpen my skills every day \ud83d\ude80",
+    "company": null,
+    "location": null,
+    "url": "https://github.com/KomalAzam"
+  },
+  {
+    "username": "chiranjeev9292",
+    "name": "Chiranjeev Sharma",
+    "email": "chiranjeev9292@gmail.com",
+    "bio": "Structural Engineer | Data Analyst | Data Scientist",
+    "company": null,
+    "location": "Bengaluru",
+    "url": "https://github.com/chiranjeev9292"
+  },
+  {
+    "username": "AbdurRahmaneee",
+    "name": "Abdur Rahman",
+    "email": "ar.abdurrahmaneee@gmail.com",
+    "bio": null,
+    "company": null,
+    "location": null,
+    "url": "https://github.com/AbdurRahmaneee"
+  },
+  {
+    "username": "KashishMudliyar103",
+    "name": "Kashish Mudliyar",
+    "email": "kashmudliar@gmail.com",
+    "bio": "Fresher Data Analyst and BI Developer with a strong foundation in SQL, Python, and Power BI, focused on delivering data-driven business intelligence. ",
+    "company": null,
+    "location": null,
+    "url": "https://github.com/KashishMudliyar103"
+  },
+  {
+    "username": "aryanmahawar205",
+    "name": "Aryan Mahawar",
+    "email": "aryanmahawar205@gmail.com",
+    "bio": "CS @ VIT Chennai | Passionate about leveraging emerging technologies for innovation to a brighter Open Source future | Nec Dextrorsum! Nec Sinistrorsum!",
+    "company": "Vellore Institute of Technology, Chennai",
+    "location": "Bangalore, India",
+    "url": "https://github.com/aryanmahawar205"
+  },
+  {
+    "username": "svdepasquale",
+    "name": "Silvio Valerio De Pasquale",
+    "email": "silvio@depasquale.dev",
+    "bio": "Engineering Manager, Cloud Engineer",
+    "company": "Satispay",
+    "location": "Como",
+    "url": "https://github.com/svdepasquale"
+  },
+  {
+    "username": "mindcatch",
+    "name": "Hwang SH",
+    "email": "mindcatch@hanmail.net",
+    "bio": null,
+    "company": null,
+    "location": null,
+    "url": "https://github.com/mindcatch"
+  },
+  {
+    "username": "rhishikeshpadole",
+    "name": "Rhishikesh Sukram Padole",
+    "email": "rhishikesh.padole@gmail.com",
+    "bio": null,
+    "company": null,
+    "location": null,
+    "url": "https://github.com/rhishikeshpadole"
+  },
+  {
+    "username": "malikhamza912",
+    "name": "Malik Hamza Nawaz",
+    "email": "malikh.aamzaa912@gmail.com",
+    "bio": "\ud83d\ude80 Front-End Developer & QA Engineer | Transitioning into quality-first web architecture | AI-Native Workflows | Former Content Specialist & Game Dev.",
+    "company": null,
+    "location": "Pakistan",
+    "url": "https://github.com/malikhamza912"
+  },
+  {
+    "username": "gayathri1462",
+    "name": "Gayathri Devi Nagalapuram",
+    "email": "gayathri1462@gmail.com",
+    "bio": "\ud83d\udc4b I\u2019m a Frontend Engineer building fast, scalable web applications with React and TypeScript, with a strong focus on performance and user experience.",
+    "company": null,
+    "location": "Bangalore,India",
+    "url": "https://github.com/gayathri1462"
+  },
+  {
+    "username": "cbaez1",
+    "name": "Carlos Baez",
+    "email": "carlos.l.baez@usda.gov",
+    "bio": "Chemist at the Forest Products Laboratory ",
+    "company": null,
+    "location": null,
+    "url": "https://github.com/cbaez1"
+  },
+  {
+    "username": "yash-makadia",
+    "name": "Yash Makadia",
+    "email": "yashmakadia1908@gmail.com",
+    "bio": "\ud83d\ude80 Data Analyst | SQL \u2022 Python \u2022 Power BI \u2022 Tableau | Turning data into actionable insights and smarter decisions.",
+    "company": null,
+    "location": "Pennsylvania, USA",
+    "url": "https://github.com/yash-makadia"
+  },
+  {
+    "username": "ntbnaren7",
+    "name": "Naren A",
+    "email": "a.naren1308@gmail.com",
+    "bio": null,
+    "company": null,
+    "location": "INDIA",
+    "url": "https://github.com/ntbnaren7"
+  },
+  {
+    "username": "gagan-aditya01",
+    "name": "G. GAGAN ADITYA ",
+    "email": "gaganaditya.shloka@gmail.com",
+    "bio": "B.Tech student | Learning Python & Ai/ML | started to build cool projects",
+    "company": null,
+    "location": null,
+    "url": "https://github.com/gagan-aditya01"
+  },
+  {
+    "username": "nadir-sheikh09",
+    "name": "Nadir Sheikh",
+    "email": "nadkhannan@gmail.com",
+    "bio": "Agentic AI Engineer | LangGraph \u00b7 CrewAI \u00b7 LangChain \u00b7 MCP | 50+ autonomous systems shipped",
+    "company": null,
+    "location": "Baytown, Texas, USA ",
+    "url": "https://github.com/nadir-sheikh09"
+  },
+  {
+    "username": "kumarmaruthi",
+    "name": "Kumar Maruthi",
+    "email": "kumarmaruthi.ind@gmail.com",
+    "bio": "Java, Python and DevOps Engineer | Fresher",
+    "company": null,
+    "location": "Bangalore",
+    "url": "https://github.com/kumarmaruthi"
+  },
+  {
+    "username": "furkan-ersoz",
+    "name": "Furkan Ers\u00f6z",
+    "email": "hfurkanersoz@gmail.com",
+    "bio": "Ankara University, Computer Engineering, Ankara, Turkey.\r\nInterested in Sound Engineering, Data Analysis, Data Science, and Artificial Intelligence.",
+    "company": "Shall We Entertainment Community",
+    "location": "Turkey, Ankara",
+    "url": "https://github.com/furkan-ersoz"
+  },
+  {
+    "username": "Naveengp1990",
+    "name": "Gnanaprakash",
+    "email": "gnana.hr@gmail.com",
+    "bio": "Currently: doing a Diploma in Data Science at IIT Madras. \r\nAspiring Data Scientist | Machine Learning & Deep Learning | NLP & Computer Vision.",
+    "company": null,
+    "location": "Coimbatore, TN, India",
+    "url": "https://github.com/Naveengp1990"
+  },
+  {
+    "username": "sarangKP",
+    "name": "sarang_kp",
+    "email": "sarangskp@gmail.com",
+    "bio": null,
+    "company": null,
+    "location": null,
+    "url": "https://github.com/sarangKP"
+  },
+  {
+    "username": "adarshakumarsahu95-ship-it",
+    "name": "Adarsha Sahu",
+    "email": "adarshakumarsahu95@gmail.com",
+    "bio": "i was export on python,java,javacript,ai/ml,cloud computing,cybersecurity",
+    "company": "nothing",
+    "location": null,
+    "url": "https://github.com/adarshakumarsahu95-ship-it"
+  },
+  {
+    "username": "muhammad-azeem-deve",
+    "name": "Muhammad Azeem",
+    "email": "mrazeem633@gmail.com",
+    "bio": "Software Engineering Student @NTU Faisalabad | Web Developer | C++ \u2022 C# \u2022 Python \u2022 React | Agentic AI & Automation | OpenAI SDK",
+    "company": null,
+    "location": "Faisalabad, Punjab, Pakistan",
+    "url": "https://github.com/muhammad-azeem-deve"
+  },
+  {
+    "username": "dhairyaj2004",
+    "name": "Dhairya Shah",
+    "email": "dhairyaj2004@gmail.com",
+    "bio": "Web Developer",
+    "company": null,
+    "location": null,
+    "url": "https://github.com/dhairyaj2004"
+  },
+  {
+    "username": "surinder2000",
+    "name": "Surinder Kumar",
+    "email": "surinder20002017@gmail.com",
+    "bio": "Software Engineer",
+    "company": "miniOrange",
+    "location": "Pune",
+    "url": "https://github.com/surinder2000"
+  },
+  {
+    "username": "Oceanestars",
+    "name": "Oceane",
+    "email": "ocan3794@colorado.edu",
+    "bio": "\ud83d\udcbb Software Engineer\r\n\ud83c\udf63 Sushi Lover\r\n\ud83c\udfeb CU Boulder Alumni",
+    "company": null,
+    "location": "Colorado",
+    "url": "https://github.com/Oceanestars"
+  },
+  {
+    "username": "Corpse-dead",
+    "name": "Krrish Sharma",
+    "email": "krrishsharma321@gmail.com",
+    "bio": null,
+    "company": null,
+    "location": null,
+    "url": "https://github.com/Corpse-dead"
+  },
+  {
+    "username": "gudurujeevankumar",
+    "name": "Guduru Jeevan Kumar",
+    "email": "jeevankumarguduru3@gmail.com",
+    "bio": null,
+    "company": null,
+    "location": "Banglore",
+    "url": "https://github.com/gudurujeevankumar"
+  },
+  {
+    "username": "hetvis-pro",
+    "name": "Hetvi Sodha",
+    "email": "hetvis.pro@gmail.com",
+    "bio": "Code, data, and a little bit of curiosity \u2728",
+    "company": null,
+    "location": "Ottawa, Ontario, Canada",
+    "url": "https://github.com/hetvis-pro"
+  },
+  {
+    "username": "accoderoverseas",
+    "name": "accoderoverseas \u7559\u5b66\u751fCS\u5168\u79d1\u8f85\u5bfc",
+    "email": "accoder_overseas@163.com",
+    "bio": "CS tutor, 10 years of tutoring experience in C C++ C# Java Python Go JavaScript Algorithm DS OS Network Software Architecture ML DL AI DataScience Cloud etc. ",
+    "company": null,
+    "location": null,
+    "url": "https://github.com/accoderoverseas"
+  },
+  {
+    "username": "muskan-dhawan",
+    "name": "Muskan Dhawan",
+    "email": "muskan.dhawan2023@gmail.com",
+    "bio": "3rd-Year B.Tech CSE Student | AI & ML Enthusiast | Problem Solver\r\n\r\n\ud83d\udd2d Working on AI/ML projects, data-driven applications, and cybersecurity challenges  \r\n\ud83c\udf31 ",
+    "company": null,
+    "location": null,
+    "url": "https://github.com/muskan-dhawan"
+  },
+  {
+    "username": "hamnashahzadashraf18",
+    "name": "Hamna Shahzad Ashraf",
+    "email": "hamnashahzadashraf@gmail.com",
+    "bio": "Final-Year SE Student | Scikit-learn, Pandas, Numpy | ML Model Training | Junior Data Scientist | Faisalabad |ML Intern @CodeAlpha |AI intern @HEX SOFTWARES",
+    "company": null,
+    "location": "faisalabad",
+    "url": "https://github.com/hamnashahzadashraf18"
+  },
+  {
+    "username": "UsmanShaikh24",
+    "name": "Usman24",
+    "email": "usman5583@gmail.com",
+    "bio": "\ud83c\udf93Pursuing B.Tech CSE\u2013AI @ VIIT | Enthusiast in AI, ML & Software Development \ud83e\udd16| Skilled in Python & Java | Passionate about Innovation, Technology & Teamwork.",
+    "company": null,
+    "location": null,
+    "url": "https://github.com/UsmanShaikh24"
+  },
+  {
+    "username": "alinasahoo",
+    "name": "Alina Sahoo",
+    "email": "alinasahoo09@gmail.com",
+    "bio": "*B-Tech (CSE) | 2017-2021 | Data Science | Memes & Movies*\r\n\r\nDreams under lease waiting to ignite!",
+    "company": "Google",
+    "location": "Bhubaneswar, India",
+    "url": "https://github.com/alinasahoo"
+  },
+  {
+    "username": "immazahmed101-maker",
+    "name": "Immaz Ahmed Data Science & ML Enthusiast",
+    "email": "immazahmed101@gmail.com",
+    "bio": "Aspiring Machine Learning Engineer | Python | Data Analysis | Scikit-learn | Learning & building daily",
+    "company": null,
+    "location": "karachi",
+    "url": "https://github.com/immazahmed101-maker"
+  },
+  {
+    "username": "navinilla12",
+    "name": "Vaishnavi Surnilla",
+    "email": "navinilla12@gmail.com",
+    "bio": null,
+    "company": null,
+    "location": null,
+    "url": "https://github.com/navinilla12"
+  },
+  {
+    "username": "GeniusPilot2016",
+    "name": "GeniusPilot2016 (Nisa \u00d6zdo\u011fan)",
+    "email": "nisaozdogan280@gmail.com",
+    "bio": null,
+    "company": null,
+    "location": "T\u00fcrkiye",
+    "url": "https://github.com/GeniusPilot2016"
+  },
+  {
+    "username": "AFIGA97",
+    "name": "Afiga",
+    "email": "afiga97@gmail.com",
+    "bio": "Final-year B.Tech AI & Data Science student building ML, LLM and GenAI projects, with a strong interest in data analytics and deploying real-world AI products a",
+    "company": null,
+    "location": null,
+    "url": "https://github.com/AFIGA97"
+  },
+  {
+    "username": "Aman-Amarjit",
+    "name": "Fullstack & Backend Developer | AI, Security & Robotics Enthusiast. Engineering intelligent and secure systems.",
+    "email": "amanamarjit243222@gmail.com",
+    "bio": "AI/ML Engineer \u00b7 Computer Vision \u00b7 Autonomous Systems",
+    "company": null,
+    "location": null,
+    "url": "https://github.com/Aman-Amarjit"
+  },
+  {
+    "username": "Warayut-Muknumporn",
+    "name": "Warayut Muknumporn",
+    "email": "warayut.mu1@gmail.com",
+    "bio": "MSc Data Science at the University of Southampton. - to reach personal career goals by seeking the opportunity to junior data science ",
+    "company": null,
+    "location": null,
+    "url": "https://github.com/Warayut-Muknumporn"
+  },
+  {
+    "username": "johnpaulbin",
+    "name": "johnpaulbin",
+    "email": "johnpaulbin@gmail.com",
+    "bio": "nice",
+    "company": null,
+    "location": null,
+    "url": "https://github.com/johnpaulbin"
+  },
+  {
+    "username": "THEIOTGUY",
+    "name": "Ayush Ravindra Vaidande",
+    "email": "vaidandeayush.av@gmail.com",
+    "bio": "Hi i am Ayush Ravindra Vaidande, i am studying engineering in electronics and telecommincation from university of mumbai",
+    "company": null,
+    "location": "Mumbai, India",
+    "url": "https://github.com/THEIOTGUY"
+  },
+  {
+    "username": "alexjameswilliams",
+    "name": "Alex Williams",
+    "email": "alexander.j.williams@qmul.ac.uk",
+    "bio": "PhD researcher in AI and Music at QMUL, in collaboration with Sony CSL; ",
+    "company": "Queen Mary University of London",
+    "location": "UK",
+    "url": "https://github.com/alexjameswilliams"
+  },
+  {
+    "username": "veerakarthick235",
+    "name": "Karthickkumar S",
+    "email": "veerakarthick235@gmail.com",
+    "bio": "AI Developer, Backend Developer, Innovator and web developer passionate about solving real-world problems through AI and technology.",
+    "company": "Founder of Innovation Hacks",
+    "location": "Krishnagiri",
+    "url": "https://github.com/veerakarthick235"
+  },
+  {
+    "username": "mano552",
+    "name": null,
+    "email": "minahilsamreen138@gmail.com",
+    "bio": null,
+    "company": null,
+    "location": null,
+    "url": "https://github.com/mano552"
+  },
+  {
+    "username": "srashtigupta-25",
+    "name": "Srashti Gupta",
+    "email": "sg.srashtigupta@gmail.com",
+    "bio": "Full stack Engineer with 5+ years experience | MS CS @ Northeastern (4.0 GPA) | Seeking Summer 2026 SWE Internship",
+    "company": null,
+    "location": "Boston",
+    "url": "https://github.com/srashtigupta-25"
+  },
+  {
+    "username": "Ambika2405",
+    "name": "Ambika",
+    "email": "ambikahulsure5@gmail.com",
+    "bio": "Computer Science Engineering student |  Java FullStack Developer | Passionate Python & Software Development .\r\n",
+    "company": null,
+    "location": "Mysore, Karnataka",
+    "url": "https://github.com/Ambika2405"
+  },
+  {
+    "username": "Ankit-raj1234",
+    "name": "Ankit Raj",
+    "email": "idankit28raj@gmail.com",
+    "bio": null,
+    "company": null,
+    "location": null,
+    "url": "https://github.com/Ankit-raj1234"
+  },
+  {
+    "username": "devayyan137",
+    "name": "M Ayan",
+    "email": "malikayyan7476@gmail.com",
+    "bio": "AI/ML learner | Passionate about building real-world ML projects using Python\r\n",
+    "company": null,
+    "location": null,
+    "url": "https://github.com/devayyan137"
+  },
+  {
+    "username": "muneer062",
+    "name": "Muneer Abbas",
+    "email": "muneerabbas062@gmail.com",
+    "bio": " I\u2019m a Machine Learning & Artificial Intelligence developer with **3+ years of hands-on experience** building intelligent systems, predictive models, and deploy",
+    "company": null,
+    "location": "Lahore",
+    "url": "https://github.com/muneer062"
+  },
+  {
+    "username": "vasantheeswaran",
+    "name": "Vasantheeswaran R",
+    "email": "vasantheeswaran3108@gmail.com",
+    "bio": "Java \u2615",
+    "company": null,
+    "location": "Tiruchengode",
+    "url": "https://github.com/vasantheeswaran"
+  },
+  {
+    "username": "nglebm19",
+    "name": "Andrew Le",
+    "email": "nguyenld.work@gmail.com",
+    "bio": "Engineer",
+    "company": null,
+    "location": "Elk Grove, CA, USA",
+    "url": "https://github.com/nglebm19"
+  },
+  {
+    "username": "Adithya-R-K",
+    "name": "ADITHYA RK",
+    "email": "adhithyashadow@gmail.com",
+    "bio": "\ud83d\udcbb Integrated MSc Student in Decision & Computing Sciences  \r\n\ud83d\udcca Data Science \u2022 Machine Learning \u2022 Analytics  \r\n\ud83d\ude80 Building ML apps, analytics dashboards & auto",
+    "company": null,
+    "location": null,
+    "url": "https://github.com/Adithya-R-K"
+  },
+  {
+    "username": "sathishkumar201318",
+    "name": "S A Sathish Kumar",
+    "email": "kumarsathish36166@gmail.com",
+    "bio": null,
+    "company": null,
+    "location": null,
+    "url": "https://github.com/sathishkumar201318"
+  },
+  {
+    "username": "VedantPatil0525",
+    "name": "Vedant Patil",
+    "email": "vedpatil1432@gmail.com",
+    "bio": "AI | Data Science | Machine Learning | Workflow Automation | Development | Tech Enthusiast",
+    "company": null,
+    "location": null,
+    "url": "https://github.com/VedantPatil0525"
+  },
+  {
+    "username": "xxy111703",
+    "name": "RUNYAN XIN",
+    "email": "runyanxin@gmail.com",
+    "bio": null,
+    "company": "Washington University in St.Louis",
+    "location": "STL",
+    "url": "https://github.com/xxy111703"
+  },
+  {
+    "username": "kinoooshnik",
+    "name": "Alexander Semiletov",
+    "email": "alexander@semiletov.me",
+    "bio": null,
+    "company": null,
+    "location": "Saint Petersburg",
+    "url": "https://github.com/kinoooshnik"
+  },
+  {
+    "username": "NoxVesper",
+    "name": "Rashid Iqbal",
+    "email": "echoinject@gmail.com",
+    "bio": "Penetration Tester | Cybersecurity & Network Specialist | Red Team Operation Enthusiast | Godot Game Developer",
+    "company": null,
+    "location": "University road, Peshawar",
+    "url": "https://github.com/NoxVesper"
+  },
+  {
+    "username": "FF-GardenFn",
+    "name": null,
+    "email": "faycal.farhat@mail.mcgill.ca",
+    "bio": null,
+    "company": null,
+    "location": null,
+    "url": "https://github.com/FF-GardenFn"
+  },
+  {
+    "username": "surikov",
+    "name": "Srgy Surkv",
+    "email": "sss1024@gmail.com",
+    "bio": "Web Audio Developer",
+    "company": null,
+    "location": "Nizhniy Novgorod, Russia",
+    "url": "https://github.com/surikov"
+  },
+  {
+    "username": "gagankm27",
+    "name": "Gagan K M",
+    "email": "gagangagan2702@gmail.com",
+    "bio": "DevOps and AWS Engineer specializing in cloud automation, CI/CD pipeline development, and containers with Docker and Kubernetes",
+    "company": "Futise technologies Pvt Ltd",
+    "location": "Bengaluru, Karnataka ",
+    "url": "https://github.com/gagankm27"
+  },
+  {
+    "username": "cryptoisaactheeconomist-alt",
+    "name": "ISAAC TOYIN JOLAYEMI",
+    "email": "cryptoisaactheeconomist@gmail.com",
+    "bio": "Researcher & Economics Lecturer interested in Data Analytics \u2022 Public Policy\r\nPassionate about repurposing government administrative & survey data to strengthen",
+    "company": "Federal Polytechnic Bida, ",
+    "location": "Nigeria Africa",
+    "url": "https://github.com/cryptoisaactheeconomist-alt"
+  },
+  {
+    "username": "wavhalkomal",
+    "name": "Komal Wavhal",
+    "email": "wavhalkomal7@gmail.com",
+    "bio": "Hi! I'm Komal Wavhal. \r\nA Technology Enthusiast. I \u2665 to Code & Make cool stuff. A Software Developer who loves to learn and try new tools & technologies.",
+    "company": "JPMorgan & Chase Co",
+    "location": "United States of America",
+    "url": "https://github.com/wavhalkomal"
+  },
+  {
+    "username": "kartik-015",
+    "name": "GULERIA KARTIK RAJESH",
+    "email": "23dit015@charusat.edu.in",
+    "bio": "3nd-year IT student @Charusat University \r\nCybersecurity enthusiast ",
+    "company": "Charotar University of Science and Technology",
+    "location": "Anand, Gujarat",
+    "url": "https://github.com/kartik-015"
+  },
+  {
+    "username": "yakunliu-aimusic",
+    "name": "Yakun Liu",
+    "email": "13898115982@163.com",
+    "bio": "Master's student in Electronic Music Composition, exploring AI + Music. Interested in PhD in Music & AI.",
+    "company": "Shenyang Conservatory of Music",
+    "location": "China",
+    "url": "https://github.com/yakunliu-aimusic"
+  },
+  {
+    "username": "sarmathasiva-web",
+    "name": "sarmatha S",
+    "email": "sarmathasiva@gmail.com",
+    "bio": "AI/ML Developer | Machine Learning Data Science Enthusiast | Smart Manufacturing & IoT Explorer | Building AI-powered real-world systems.",
+    "company": "V.S.B Engineering College",
+    "location": "Tamil Nadu ,India",
+    "url": "https://github.com/sarmathasiva-web"
+  },
+  {
+    "username": "bat52",
+    "name": "Marco Merlin",
+    "email": "marcomerli+github@gmail.com",
+    "bio": null,
+    "company": null,
+    "location": "Antibes, France",
+    "url": "https://github.com/bat52"
+  },
+  {
+    "username": "umerfarooq8769",
+    "name": "Umer Farooq",
+    "email": "omarfarooq6798@gmail.com",
+    "bio": "\ud83d\ude80 AI Developer | Certified AI Level 2 | Python & Machine Learning Enthusiast",
+    "company": null,
+    "location": null,
+    "url": "https://github.com/umerfarooq8769"
+  },
+  {
+    "username": "sudarshanvenkatesh13",
+    "name": "Sudarshan Venkatesh",
+    "email": "sudarshan.venkateshv@gmail.com",
+    "bio": "AI Engineer \u00b7 Building RAG pipelines, multi-agent systems & production LLM apps \u00b7 Open to roles",
+    "company": null,
+    "location": "Bangalore, Karnataka",
+    "url": "https://github.com/sudarshanvenkatesh13"
+  },
+  {
+    "username": "mayurikaje0-cpu",
+    "name": "Mayuri Kaje",
+    "email": "mayurikaje0@gmail.com",
+    "bio": "CSE Undergraduate | python | learning DSA & AI | AI & ML Enthusiast",
+    "company": null,
+    "location": "India",
+    "url": "https://github.com/mayurikaje0-cpu"
+  },
+  {
+    "username": "sanjeevini178",
+    "name": "Sanjeevini",
+    "email": "sanjeevinir17@outlook.com",
+    "bio": "Developing recently!",
+    "company": null,
+    "location": null,
+    "url": "https://github.com/sanjeevini178"
+  },
+  {
+    "username": "gh0stless",
+    "name": "Andreas Schumm",
+    "email": "info@crazy-midi.de",
+    "bio": null,
+    "company": null,
+    "location": "Saxony",
+    "url": "https://github.com/gh0stless"
+  },
+  {
+    "username": "juansilvadesign",
+    "name": "Juan Silva",
+    "email": "jaypy.uxdesign@gmail.com",
+    "bio": "Product Designer | UX/UI Designer | Full Stack Developer",
+    "company": "@ZokuWebDesign",
+    "location": "Rio de Janeiro, Brazil",
+    "url": "https://github.com/juansilvadesign"
+  },
+  {
+    "username": "vinozzxx",
+    "name": "VINOTHKUMAR S",
+    "email": "vinoesec@gmail.com",
+    "bio": "AI Engineer Junior | Ethicatec Indian Pvt Ltd",
+    "company": "AI Engineer Junior ",
+    "location": "Tamil Nadu , India",
+    "url": "https://github.com/vinozzxx"
+  },
+  {
+    "username": "aynurrahimova",
+    "name": "Aynur Rahimova",
+    "email": "raynur.ar@gmail.com",
+    "bio": "Junior Data Scientist | ML, Python, SQL, Power BI",
+    "company": null,
+    "location": null,
+    "url": "https://github.com/aynurrahimova"
+  },
+  {
+    "username": "ruturaj0626",
+    "name": "Ruturaj Ranpise",
+    "email": "ruturaj26201@gmail.com",
+    "bio": "Data Scientist | AI & ML Enthusiast | AWS Cloud | Passionate about turning data into insights. \ud83d\udcca\ud83e\udd16 #DataScience #AI #ML",
+    "company": "Dr. DY Patil Institute of Technology",
+    "location": "Pune",
+    "url": "https://github.com/ruturaj0626"
+  },
+  {
+    "username": "DheeMach05",
+    "name": "Dheemanth Macherla",
+    "email": "dheemanth246@gmail.com",
+    "bio": "Tech Enthusiast, \r\nLearning and growing through AI, \r\nBuilding skill by skill for success in my career!\r\n",
+    "company": null,
+    "location": null,
+    "url": "https://github.com/DheeMach05"
+  },
+  {
+    "username": "Norsninja",
+    "name": null,
+    "email": "norsninja@gmail.com",
+    "bio": null,
+    "company": null,
+    "location": null,
+    "url": "https://github.com/Norsninja"
+  },
+  {
+    "username": "SamuelGladly",
+    "name": "Samuel Solomon",
+    "email": "samuelrosy0210@gmail.com",
+    "bio": "Hi all. I'm Samuel from Sri Muthukumaran Institute of  technology. Currently, I am doing 1st year in computer science engineering. ",
+    "company": null,
+    "location": "Chennai",
+    "url": "https://github.com/SamuelGladly"
+  },
+  {
+    "username": "Zain-ul-abdeen-773",
+    "name": "Zain Ul Abdeen",
+    "email": "u2023773@giki.edu.pk",
+    "bio": null,
+    "company": "Ghulam Ishaq Khan Institute of Engineering Sciences and Technology",
+    "location": null,
+    "url": "https://github.com/Zain-ul-abdeen-773"
+  },
+  {
+    "username": "zainshaki22",
+    "name": "Zain Ul Arifeen Qureshi",
+    "email": "zshaki79@gmail.com",
+    "bio": "\ud83d\udc4b Hi, I\u2019m Zain  \r\n\ud83c\udf93 Student at University of Haripur  \r\n\ud83d\udcda Pursuing BS in Artificial Intelligence  \r\n\ud83d\udcbb Interested in AI, Machine Learning, and Software Devel",
+    "company": null,
+    "location": null,
+    "url": "https://github.com/zainshaki22"
+  },
+  {
+    "username": "chinthalucharan-gif",
+    "name": "Chinthalu charan",
+    "email": "chinthalucharan@gmail.com",
+    "bio": null,
+    "company": null,
+    "location": "Tirupati ",
+    "url": "https://github.com/chinthalucharan-gif"
+  },
+  {
+    "username": "nanotower",
+    "name": "Fernando de la Torre",
+    "email": "fernandodelatorre4@gmail.com",
+    "bio": "Fullstack developer",
+    "company": "Orbitant",
+    "location": "Madrid",
+    "url": "https://github.com/nanotower"
+  },
+  {
+    "username": "thirupathikannan-ai",
+    "name": "THIRUPATHI KANNAN K",
+    "email": "kariyamalperumalsamy@gmail.com",
+    "bio": null,
+    "company": null,
+    "location": null,
+    "url": "https://github.com/thirupathikannan-ai"
+  },
+  {
+    "username": "shailendrayadav239",
+    "name": "Shailendra Kumar Yadav",
+    "email": "sailendrayadav239@gmail.com",
+    "bio": null,
+    "company": null,
+    "location": "Kathmandu,Nepal",
+    "url": "https://github.com/shailendrayadav239"
+  },
+  {
+    "username": "ishfaque2000",
+    "name": "Ishfaque Ahmed",
+    "email": "ishfaqueahmed2090@gmail.com",
+    "bio": "BS Mathematics Student | Machine Learning \u00b7 Data Science ",
+    "company": "Sukkur IBA University",
+    "location": " Sukkur, Pakistan",
+    "url": "https://github.com/ishfaque2000"
+  },
+  {
+    "username": "foziaali1122",
+    "name": "Fozia Roshan ",
+    "email": "foziabalosh@gmail.com",
+    "bio": "AI & Data Science Enthusiast | Learning Python & Machine Learning | Passionate about coding & growth \ud83c\udf31",
+    "company": null,
+    "location": "karachi - pakistan",
+    "url": "https://github.com/foziaali1122"
+  },
+  {
+    "username": "Clark-Wallace",
+    "name": "Clark Wallace",
+    "email": "randomnavychief@gmail.com",
+    "bio": "Cognitive AI Architect",
+    "company": null,
+    "location": null,
+    "url": "https://github.com/Clark-Wallace"
+  },
+  {
+    "username": "shresthh",
+    "name": "Shresth Mishra",
+    "email": "sumuandmishra@gmail.com",
+    "bio": "Data Scientist | NLP | Machine Learning | Deep Learning",
+    "company": "@aavaz-ai ",
+    "location": "Lucknow  , Uttar Pradesh",
+    "url": "https://github.com/shresthh"
+  },
+  {
+    "username": "mishajw",
+    "name": "Misha Wagner",
+    "email": "mishajw@gmail.com",
+    "bio": null,
+    "company": null,
+    "location": "Birmingham / London",
+    "url": "https://github.com/mishajw"
+  },
+  {
+    "username": "pragathi9480",
+    "name": "Pragathi P H",
+    "email": "p1606318@gmail.com",
+    "bio": null,
+    "company": null,
+    "location": null,
+    "url": "https://github.com/pragathi9480"
+  },
+  {
+    "username": "anitman",
+    "name": "Afula",
+    "email": "god.shangdi@gmail.com",
+    "bio": null,
+    "company": null,
+    "location": null,
+    "url": "https://github.com/anitman"
+  },
+  {
+    "username": "erickv",
+    "name": "Erick",
+    "email": "erickvogel@me.com",
+    "bio": null,
+    "company": null,
+    "location": "Charlotte, NC",
+    "url": "https://github.com/erickv"
+  },
+  {
+    "username": "OkenHaha",
+    "name": "Oken Keithellakpam",
+    "email": "keithellakpamoken@gmail.com",
+    "bio": "I like to code and make stuff.",
+    "company": "Looking for Oppourtunities",
+    "location": "Remote",
+    "url": "https://github.com/OkenHaha"
+  },
+  {
+    "username": "baivab85",
+    "name": "Baivab Mukherjee",
+    "email": "shiladityamukherjee5486@gmail.com",
+    "bio": "\"Science is not only a disciple of reason but, also, one of romance and passion.\" \u2015 Stephen Hawking",
+    "company": null,
+    "location": "Kolkata,WestBengal",
+    "url": "https://github.com/baivab85"
+  },
+  {
+    "username": "NIXON-KOH",
+    "name": "NIXON KOH",
+    "email": "Nixon.kohjy@gmail.com",
+    "bio": null,
+    "company": null,
+    "location": null,
+    "url": "https://github.com/NIXON-KOH"
+  },
+  {
+    "username": "amananku26",
+    "name": "AMAN ANKU",
+    "email": "amankumaranku@gmail.com",
+    "bio": "Software Engineer \r\nHR - /amananku26\r\nSandBoxes: codesandbox.io/u/amananku26",
+    "company": "Pintar",
+    "location": "Bengaluru",
+    "url": "https://github.com/amananku26"
+  },
+  {
+    "username": "dmkalash",
+    "name": "Dmitry Kalashnikov",
+    "email": "dmkalash.mail@gmail.com",
+    "bio": "Data scientist ",
+    "company": null,
+    "location": "Moscow",
+    "url": "https://github.com/dmkalash"
+  },
+  {
+    "username": "Adejare-ml",
+    "name": "Adelugba Adejare",
+    "email": "adelugbaadejare34@gmail.com",
+    "bio": "Data Science & ML Engineer | Specializing in Multimodal Models & AI Agents ",
+    "company": null,
+    "location": "Abuja,NIgeria",
+    "url": "https://github.com/Adejare-ml"
+  },
+  {
+    "username": "ssenkus",
+    "name": "Steven Senkus",
+    "email": "steve.senkus@gmail.com",
+    "bio": "Software developer interested in all sorts of technology!",
+    "company": null,
+    "location": "New York",
+    "url": "https://github.com/ssenkus"
+  },
+  {
+    "username": "mfaaizi",
+    "name": "FAAIZI",
+    "email": "faaizimtiaz17@gmail.com",
+    "bio": null,
+    "company": null,
+    "location": "Lahore",
+    "url": "https://github.com/mfaaizi"
+  },
+  {
+    "username": "benyell",
+    "name": "Venkata (Ben) Yellapragada",
+    "email": "ben.yellap@gmail.com",
+    "bio": null,
+    "company": null,
+    "location": null,
+    "url": "https://github.com/benyell"
+  },
+  {
+    "username": "CosmoLuminous",
+    "name": "Aman Bhardwaj",
+    "email": "aman.nith26@gmail.com",
+    "bio": "Researcher | AI4Health | Digital Health | AI Agents | RAG | Neural Machine Translation\r\n    \r\n",
+    "company": "IIT Delhi || IBM Research Labs",
+    "location": "New Delhi",
+    "url": "https://github.com/CosmoLuminous"
+  },
+  {
+    "username": "malavika-AIML24",
+    "name": "Malavika",
+    "email": "smalavika739@gmail.com",
+    "bio": " AI & ML student @KRCE | Passionate about Python , ML & Projects | Exploring GitHub, LeetCode &  Real-World Data | Preparing for internships | #ContinuouLearner",
+    "company": "K. Ramakrishnan College of Engineering",
+    "location": "Tiruchirapalli",
+    "url": "https://github.com/malavika-AIML24"
+  },
+  {
+    "username": "umaimasif",
+    "name": "Umaima Asif",
+    "email": "umaimaasif367@gmail.com",
+    "bio": null,
+    "company": null,
+    "location": "Karachi",
+    "url": "https://github.com/umaimasif"
+  },
+  {
+    "username": "SebastianSchwank",
+    "name": "Sebastian Schwank",
+    "email": "sebastian.schwank@googlemail.com",
+    "bio": "KI-Technologies\r\n(N\u00fcrnberg Germany)",
+    "company": null,
+    "location": "N\u00fcrnberg",
+    "url": "https://github.com/SebastianSchwank"
+  },
+  {
+    "username": "NandiniDevadiga",
+    "name": "Nandini Devadiga",
+    "email": "nandinideepa16@gmail.com",
+    "bio": "Connect on LinkedIn :\r\nwww.linkedin.com/in/nandini-deepa",
+    "company": null,
+    "location": null,
+    "url": "https://github.com/NandiniDevadiga"
+  },
+  {
+    "username": "JekRus",
+    "name": "Artur Elokhov",
+    "email": "elohov-artur@yandex.ru",
+    "bio": null,
+    "company": null,
+    "location": null,
+    "url": "https://github.com/JekRus"
+  },
+  {
+    "username": "Aldhanekaa",
+    "name": "Aldhanekai",
+    "email": "aldhanekadev@gmail.com",
+    "bio": null,
+    "company": null,
+    "location": "Jakarta, Indonesia",
+    "url": "https://github.com/Aldhanekaa"
+  },
+  {
+    "username": "BROWNBOY047",
+    "name": "MUHAMMAD UMER",
+    "email": "iamumer34@gmail.com",
+    "bio": "Aspiring ML Engineer & Researcher | Aspiring DL Engineer & Researcher Passionate about Deep Learning & AI | Exploring DEEP LEARNING | Learning on Daily Basis",
+    "company": null,
+    "location": "pakistan",
+    "url": "https://github.com/BROWNBOY047"
+  },
+  {
+    "username": "SevdanurGENC",
+    "name": "Dr. Nano / Sevdanur GENC",
+    "email": "sevdanurgenc@gmail.com",
+    "bio": "Asst. Prof. Dr. at Balikesir University, \r\nComputer Engineer,\r\nhttps://www.youtube.com/c/SevdanurGENC",
+    "company": "Balikesir University",
+    "location": "Balikesir",
+    "url": "https://github.com/SevdanurGENC"
+  },
+  {
+    "username": "uribrecher",
+    "name": "Uri Brecher",
+    "email": "uri.brecher@gmail.com",
+    "bio": "\r\n    I am a  software developer focusing on cloud computing and functional programming.\r\n",
+    "company": "@sentraio",
+    "location": "Israel",
+    "url": "https://github.com/uribrecher"
+  },
+  {
+    "username": "Abdul-Basit-Sanaullah",
+    "name": "Abdul_Basit_Sanaullah ",
+    "email": "ab9919353@gmail.com",
+    "bio": null,
+    "company": null,
+    "location": null,
+    "url": "https://github.com/Abdul-Basit-Sanaullah"
+  },
+  {
+    "username": "Mr-Eka",
+    "name": "Putturu Ekambaram Reddy",
+    "email": "mr.eka160604@gmail.com",
+    "bio": "Aspiring Software Engineer| Machine Learning | Data Analyst | Python | SQL ",
+    "company": null,
+    "location": null,
+    "url": "https://github.com/Mr-Eka"
+  },
+  {
+    "username": "umair594",
+    "name": "Muhammad Umair",
+    "email": "mmumairkhattak@gmail.com",
+    "bio": "Data Scientist | Data Analysis & Machine Learning | Python, SQL & Predictive Analytics",
+    "company": null,
+    "location": null,
+    "url": "https://github.com/umair594"
+  },
+  {
+    "username": "Tribhuwansingh2023",
+    "name": "Tribhuwan Singh",
+    "email": "webosingh93@gmail.com",
+    "bio": "My name is  Tribhuwan Singh, and I'm a 21-year-old student currently in the 6th semester of my B.Tech in CSE(AI &Ml)",
+    "company": null,
+    "location": "Bhubaneswar",
+    "url": "https://github.com/Tribhuwansingh2023"
+  },
+  {
+    "username": "akashprasadniravath",
+    "name": "Akash Prasad",
+    "email": "akashprasadniravath@gmail.com",
+    "bio": null,
+    "company": null,
+    "location": "Birmingham",
+    "url": "https://github.com/akashprasadniravath"
+  },
+  {
+    "username": "2sjin",
+    "name": "Seungjin Yi",
+    "email": "options3224@gmail.com",
+    "bio": null,
+    "company": "Dong-Eui University",
+    "location": "Busan, Republic of Korea",
+    "url": "https://github.com/2sjin"
+  },
+  {
+    "username": "hmnshudhmn24",
+    "name": "Himanshu Dhiman",
+    "email": "himanshu.dhiman2023@GMAIL.COM",
+    "bio": "Talk is cheap. Show me the code\ud83d\udcbb",
+    "company": null,
+    "location": "India",
+    "url": "https://github.com/hmnshudhmn24"
+  },
+  {
+    "username": "ralouekapoor06",
+    "name": "Raloue R Kapoor",
+    "email": "ralouekapoor@gmail.com",
+    "bio": "Software Engineer at Bazaarvoice",
+    "company": "Bazaarvoice",
+    "location": "Bangalore",
+    "url": "https://github.com/ralouekapoor06"
+  },
+  {
+    "username": "Spandanamk264",
+    "name": "SPANDANA MAHADEVAPPA KANDAGAL",
+    "email": "spandanakandagal5@gmail.com",
+    "bio": null,
+    "company": null,
+    "location": null,
+    "url": "https://github.com/Spandanamk264"
+  },
+  {
+    "username": "sithunaveen",
+    "name": "Naveenram",
+    "email": "sithunaveen@gmail.com",
+    "bio": null,
+    "company": null,
+    "location": "Chennai",
+    "url": "https://github.com/sithunaveen"
+  },
+  {
+    "username": "Sandhya1825",
+    "name": "Sandhya Maddula",
+    "email": "sandhya.m760@gmail.com",
+    "bio": "\u201cThe goal is to turn data into information, and information into insight.\u201d\r\nExperienced data/business analyst with 2.5 yrs of experience.",
+    "company": "Affine Analytics",
+    "location": "Hyderabad",
+    "url": "https://github.com/Sandhya1825"
+  },
+  {
+    "username": "Janani-Palanichamy",
+    "name": "Janani_Palanichamy",
+    "email": "jananipalanichamy8@gmail.com",
+    "bio": null,
+    "company": null,
+    "location": null,
+    "url": "https://github.com/Janani-Palanichamy"
+  },
+  {
+    "username": "syedahafsafatima",
+    "name": null,
+    "email": "hafsa.fatima2365@gmail.com",
+    "bio": null,
+    "company": null,
+    "location": null,
+    "url": "https://github.com/syedahafsafatima"
+  },
+  {
+    "username": "sushantlokhande14",
+    "name": "Sushant Lokhande ",
+    "email": "sushantlokhande094@gmail.com",
+    "bio": "I build software that learns, scales, and solves problems. Interested in AI, backend systems, and engineering products that make an impact.",
+    "company": null,
+    "location": "San Jose",
+    "url": "https://github.com/sushantlokhande14"
+  },
+  {
+    "username": "Brrrryry",
+    "name": "Bryan Chan",
+    "email": "bryanthechan@gmail.com",
+    "bio": "I'm a high school programmer who likes Java and interesting Challenges \ud83d\ude04 ",
+    "company": "MCVTS",
+    "location": null,
+    "url": "https://github.com/Brrrryry"
+  },
+  {
+    "username": "e0pashko4sky",
+    "name": "Eugene Pashkovsky",
+    "email": "pashkovskiy.eugen@gmail.com",
+    "bio": "Software Engineer, graduate of National Technical University of Ukraine \"Igor Sikorsky Kyiv Polytechnic Institute\"",
+    "company": "NTUU KPI",
+    "location": "Kyiv",
+    "url": "https://github.com/e0pashko4sky"
+  },
+  {
+    "username": "pranaycharde01",
+    "name": null,
+    "email": "pranaycharde005@gmail.com",
+    "bio": null,
+    "company": null,
+    "location": "Amravati ",
+    "url": "https://github.com/pranaycharde01"
+  },
+  {
+    "username": "hackers108",
+    "name": "Arpit Yadav",
+    "email": "arpit799yadav@gmail.com",
+    "bio": null,
+    "company": null,
+    "location": null,
+    "url": "https://github.com/hackers108"
+  },
+  {
+    "username": "pratikmpp22",
+    "name": "Pratik Patil",
+    "email": "patilmpratik456@gmail.com",
+    "bio": null,
+    "company": null,
+    "location": null,
+    "url": "https://github.com/pratikmpp22"
+  },
+  {
+    "username": "Sagleft",
+    "name": "Sagleft",
+    "email": "public@mfc.click",
+    "bio": null,
+    "company": null,
+    "location": "Infospace",
+    "url": "https://github.com/Sagleft"
+  },
+  {
+    "username": "KennethJefferson",
+    "name": "Kenneth Jefferson",
+    "email": "shatterstar6457@gmail.com",
+    "bio": null,
+    "company": null,
+    "location": null,
+    "url": "https://github.com/KennethJefferson"
+  },
+  {
+    "username": "charles-read",
+    "name": "Charles Read",
+    "email": "charles-read@outlook.com",
+    "bio": null,
+    "company": null,
+    "location": "Cardiff",
+    "url": "https://github.com/charles-read"
+  },
+  {
+    "username": "chrkspln",
+    "name": "Polina Cherkasova",
+    "email": "polina_cherkasova@outlook.com",
+    "bio": "Internet of Things program student at LPNU, Junior Software Engineer at SoftServe",
+    "company": "Lviv Politechnic National University | SoftServe ",
+    "location": "Ukraine",
+    "url": "https://github.com/chrkspln"
+  },
+  {
+    "username": "Alex-Garcia-G",
+    "name": "Alex Garcia",
+    "email": "wheelergarciaa@gmail.com",
+    "bio": "Building AI systems and multi-agent pipelines. Open to junior SWE roles.",
+    "company": null,
+    "location": "Zaragoza, Spain",
+    "url": "https://github.com/Alex-Garcia-G"
+  },
+  {
+    "username": "janat-llc",
+    "name": "Janat Initiative",
+    "email": "mat@janat.org",
+    "bio": "I Am and You Are therefore We Are You and I",
+    "company": "Janat, LLC",
+    "location": "Fargo, ND",
+    "url": "https://github.com/janat-llc"
+  },
+  {
+    "username": "SiddaDinesh",
+    "name": "Sidda Dinesh",
+    "email": "siddadinesh8@gmail.com",
+    "bio": "Data Scientist | Machine learning with Artificial Intelligence | Deep Learning |",
+    "company": null,
+    "location": null,
+    "url": "https://github.com/SiddaDinesh"
+  },
+  {
+    "username": "tderivation-arch",
+    "name": "techno derivation",
+    "email": "tderivation@gmail.com",
+    "bio": "Techno Derivation is an AI app development company delivering intelligent, scalable, and secure mobile and web solutions. We specialize in AI-driven application",
+    "company": "Techno Derivation ",
+    "location": "Newsworld, 30 Charles St, Leicester LE1 3FG, United Kingdom",
+    "url": "https://github.com/tderivation-arch"
+  },
+  {
+    "username": "ThePrashanna-062",
+    "name": "Prashanna Karmacharya",
+    "email": "prashanna2062@gmail.com",
+    "bio": "Computer Engineering student | \r\nLearning - Building - Improving",
+    "company": null,
+    "location": null,
+    "url": "https://github.com/ThePrashanna-062"
+  },
+  {
+    "username": "pertyjons",
+    "name": "Per Jonsson",
+    "email": "per.jonsson@erinaco.se",
+    "bio": "https://www.linkedin.com/in/perjonsson/",
+    "company": "Erinaco AB",
+    "location": "Stockholm / Sweden",
+    "url": "https://github.com/pertyjons"
+  },
+  {
+    "username": "agpenamx",
+    "name": "Alejandro Gonzalez P",
+    "email": "agpenamx@gmail.com",
+    "bio": "AI & ML Engineer | Data Scientist (in progress) | PhD in Digital Transformation Technologies (SEP, 2025\u20132027) | MSc Mgmt | MA Finance | BEng Mech Eng | LSSBB",
+    "company": "MAGNA International Canada",
+    "location": "Puebla, Mexico",
+    "url": "https://github.com/agpenamx"
+  },
+  {
+    "username": "ethicalinsight",
+    "name": "Shambhavi Srivastava",
+    "email": "shambhavipranjal0113@gmail.com",
+    "bio": "Data Science student skilled in Python, ML, dashboarding, internships, certifications, ethical data use, and actionable insights.",
+    "company": "Student at SRM University | BCA Data Science | Open to Collaborations| Interned remotely at Intern at Krutanic Solutions & Cognifyz Technologies ",
+    "location": "India",
+    "url": "https://github.com/ethicalinsight"
+  },
+  {
+    "username": "harrybraviner",
+    "name": "Harry Braviner",
+    "email": "harry.braviner@gmail.com",
+    "bio": "Mathematician and astrophysicist by training. Machine Learning Scientist at Layer 6 AI.  I also enjoy tinkering with hardware on the side.",
+    "company": "Layer 6 AI",
+    "location": "Toronto, Ontario",
+    "url": "https://github.com/harrybraviner"
+  },
+  {
+    "username": "bubbly76",
+    "name": "Chandan",
+    "email": "chandanchandanbn49@gmail.com",
+    "bio": "CSE Student @Gopalan college of engineering and management",
+    "company": null,
+    "location": "banahalli",
+    "url": "https://github.com/bubbly76"
+  },
+  {
+    "username": "banishangural",
+    "name": "Banish Angural",
+    "email": "anguralbanish2@gmail.com",
+    "bio": "Banish Angural is a digital marketing specialist with a focus on Search Engine Optimization (SEO) and Pay-Per-Click (PPC) advertising.",
+    "company": "Banish Media",
+    "location": "Edmonton",
+    "url": "https://github.com/banishangural"
+  }
+]
