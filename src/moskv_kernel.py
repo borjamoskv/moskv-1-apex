@@ -15,6 +15,7 @@ from moskv_1.memory import MemoryStore
 from moskv_1.brain import BrainRegion
 from sortu_apex_forge import SortuApexMitosis, SwarmVector
 from redteam_auditor import RedTeamCrucible
+from api_server import run_in_background
 
 # ==============================================================================
 # MOSKV-1 APEX KERNEL (v10.0)
@@ -292,6 +293,7 @@ class OuroborosInfinity:
 
 async def main():
     print("BOOTING MOSKV-1 KERNEL...")
+    run_in_background(8011)
     engine = OuroborosInfinity()
     await engine.initialize()
     intent = "MEJORA LAS CAPACIDADES PARA ULTRADETERMINISTA Y END to END de MOSKV-1"
