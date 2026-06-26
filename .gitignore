@@ -1,0 +1,12 @@
+
+cortex.db
+
+swarm_os.sqlite
+
+kernel/crypto/pq_seed.key
+
+*.db
+
+*.sqlite
+
+*.key
