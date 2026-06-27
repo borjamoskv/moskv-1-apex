@@ -57,5 +57,5 @@ if __name__ == "__main__":
     emit_pheromone("worker-2", intent)
     # Assume a swarm of 3 nodes, 2 votes = 66% (Quorum reached)
     reached = check_quorum(intent, required_nodes=3)
-    assert reached == True
+    assert reached
     print("Self-Test: PASSED")

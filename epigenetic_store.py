@@ -2,7 +2,6 @@
 import sqlite3
 import hashlib
 import json
-import os
 
 DB_PATH = "swarm_os.sqlite"
 

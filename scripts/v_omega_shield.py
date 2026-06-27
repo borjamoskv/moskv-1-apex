@@ -67,7 +67,7 @@ def audit_connections(kill_violators=False):
         
         command = parts[0]
         pid = int(parts[1])
-        connection_type = parts[4] # IPv4 or IPv6
+        parts[4] # IPv4 or IPv6
         name = parts[8] # e.g. 127.0.0.1:4222 or *:53 or 104.18.23.41:443
         
         # Extract IP/Host and Port

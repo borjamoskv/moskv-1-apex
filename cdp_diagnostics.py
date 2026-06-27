@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import sys
 import json
 import urllib.request
 import urllib.error

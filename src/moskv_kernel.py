@@ -5,14 +5,13 @@ import sys
 import subprocess
 import os
 import ctypes
-from typing import Dict, Any, List, Optional
+from typing import List, Optional
 from dataclasses import dataclass
 from enum import Enum
 
 # Import the foundational Python core components
-from moskv_1.event_bus import EventBus, CortexEvent
+from moskv_1.event_bus import EventBus
 from moskv_1.memory import MemoryStore
-from moskv_1.brain import BrainRegion
 from sortu_apex_forge import SortuApexMitosis, SwarmVector
 from redteam_auditor import RedTeamCrucible
 from api_server import run_in_background
@@ -60,7 +59,7 @@ float calculate_exergy_ratio(int mutations, int token_cost) {
     def compile_so(self) -> bool:
         try:
             # Compile command for macOS
-            res = subprocess.run(
+            subprocess.run(
                 ["clang", "-shared", "-o", self.so_file, "-fPIC", self.c_file],
                 capture_output=True,
                 check=True
