@@ -14,7 +14,7 @@ try:
         print("Iniciando validación C4-SIM de Mac-Maestro (Hito 5)...")
         
         # Construcción de topología simulada (Epistemic Membrane Test)
-        root = AXNodeSnapshot(
+        AXNodeSnapshot(
             element_id="root", role="AXWindow", title="Main",
             children=[
                 AXNodeSnapshot(element_id="deploy_btn", role="AXButton", title="Deploy L5 Kernel"),

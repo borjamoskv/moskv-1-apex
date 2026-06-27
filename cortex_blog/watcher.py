@@ -83,8 +83,8 @@ def run_daemon():
     IMAGES_DIR.mkdir(parents=True, exist_ok=True)
     ENTRIES_DIR.mkdir(parents=True, exist_ok=True)
     
-    print(f"C5-REAL Cortex Daemon Init (V2 - OMEGA). Operador: borjamoskv.")
-    print(f"Features: FSEvents Watchdog | Compresión WebP | Git Autómata")
+    print("C5-REAL Cortex Daemon Init (V2 - OMEGA). Operador: borjamoskv.")
+    print("Features: FSEvents Watchdog | Compresión WebP | Git Autómata")
     
     event_handler = CortexBlogHandler()
     observer = Observer()

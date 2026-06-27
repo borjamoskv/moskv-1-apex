@@ -44,7 +44,7 @@ def main():
     layout = generate_layout()
     layout["header"].update(Panel("MOSKV-1 APEX: Singular Dashboard", style="bold white on blue"))
     
-    with Live(layout, refresh_per_second=4) as live:
+    with Live(layout, refresh_per_second=4):
         for _ in range(10): # Mocking a 10 tick dashboard lifecycle for testing
             layout["left"].update(Panel(generate_status_table(), border_style="cyan"))
             layout["right"].update(generate_exergy_panel())

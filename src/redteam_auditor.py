@@ -1,7 +1,6 @@
 import os
 import ast
 import glob
-import time
 
 # ==============================================================================
 # AGENT-PAPER-REDTEAM (v1.0)
@@ -78,11 +77,11 @@ class RedTeamCrucible:
             print(f"  [=] FINAL EXERGY YIELD: E={auditor.score:.2f}")
             
             if auditor.score < self.MINIMUM_YIELD:
-                print(f"  [X] YIELD TOO LOW. INITIATING DESTRUCTION PROTOCOL.")
+                print("  [X] YIELD TOO LOW. INITIATING DESTRUCTION PROTOCOL.")
                 os.remove(filepath)
                 print(f"  [X] {agent_name} ERASED FROM PHYSICAL SUBSTRATE.")
             else:
-                print(f"  [+] AGENT VERIFIED. CLEARED FOR VESICULAR RUNTIME.")
+                print("  [+] AGENT VERIFIED. CLEARED FOR VESICULAR RUNTIME.")
                 
         except SyntaxError:
             print(f"\\n[X] CRITICAL: {agent_name} failed base compilation. Erasing.")
