@@ -1,3 +1,4 @@
+import ast
 import numpy as np
 import soundfile as sf
 import os
@@ -70,7 +71,7 @@ def main():
         drop_mix_mx = v_mx + o_mx + d_mx + b_mx
         
         # Evaluate lazily executed graph and retrieve as numpy
-        mx.eval(drop_mix_mx)
+        mx.ast.literal_eval(drop_mix_mx)
         drop_mix = np.array(drop_mix_mx)
         print("[+] MLX Tensor compilation & execution complete.")
         
