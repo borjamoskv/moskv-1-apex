@@ -10,3 +10,12 @@ kernel/crypto/pq_seed.key
 *.sqlite
 
 *.key
+
+__pycache__/
+node_modules/
+.venv/
+*.pyc
+*.mp4
+*.wav
+Dossier*
+docs/INFORME_FISCAL_ABOGADO.md
