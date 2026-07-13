@@ -33,12 +33,12 @@ class MetacognitionEngine extends BrainRegion {
         });
 
         // Trigger a 'Sleep/Freeze' cycle every 10 minutes (PoC uses 60s for visibility)
-        const freezeMs = process.env.FREEZE_MS || 60000;
+        const freezeMs = parseInt(process.env.FREEZE_MS, 10) || 60000;
         this.sleepInterval = setInterval(async () => {
             console.log('\n[Metacognition] Initiating Sleep Cycle (Memory Pruning)...');
             await this.emit('cortex.state.sleep', { phase: 'REM', actionable: true });
             await this.pruneNoise();
-        }, freezeMs);
+        }, freezeMs > 0 ? freezeMs : 60000);
 
         console.log('[Metacognition] Audit Loop & Sleep Cycles Active.');
     }
