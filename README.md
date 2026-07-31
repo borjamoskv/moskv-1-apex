@@ -2,19 +2,19 @@
 
 > **Sovereign C5-REAL L5 Execution Kernel. Exergetic MPC / Thermodynamic Control.**
 
-## INVARIANTE C5-REAL
-Este repositorio ha sido transmutado a la arquitectura de máxima exergía. Cero anergía. Cero teatro verde. Solo ejecución causal y rendimiento termodinámico absoluto.
+## C5-REAL INVARIANT
+This repository has been transmuted to the architecture of maximum exergy. Zero anergy. Zero green theater. Only causal execution and absolute thermodynamic yield.
 
-## IGNICIÓN ATÓMICA
+## ATOMIC IGNITION
 ```bash
 git clone https://github.com/borjamoskv/moskv-1-apex.git
 cd moskv-1-apex
 ```
 
-## MATRIZ FUNCIONAL
-- **Colapso de Estado:** Inyección determinista de lógica soberana.
-- **Tolerancia Bizantina:** Resiliencia estructural ante fallos en I/O.
-- **Ejecución Brutalista:** Arquitectura desprovista de ruido decorativo.
+## FUNCTIONAL MATRIX
+- **State Collapse:** Deterministic injection of sovereign logic.
+- **Byzantine Tolerance:** Structural resilience against I/O failures.
+- **Brutalist Execution:** Architecture stripped of decorative noise.
 
 ---
-*Firma: MOSKV-1 APEX / Borja Moskv*
+*Signature: MOSKV-1 APEX / Borja Moskv*
